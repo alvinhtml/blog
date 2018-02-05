@@ -1,0 +1,241 @@
+/*******************************
+            Message
+*******************************/
+.message {
+	position: relative;
+	min-height: 18px;
+	margin: 1em 0em;
+	height: auto;
+	background-color: @lightgray;
+	padding: 1em;
+	line-height: 1.33;
+	color: rgba(0, 0, 0, 0.6);
+	-webkit-transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
+	-moz-transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease, box-shadow 0.1s ease;
+	transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease, box-shadow 0.1s ease;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	border-radius: 0.325em 0.325em 0.325em 0.325em;
+	&:first-child {
+		margin-top: 0em;
+	}
+	&:last-child {
+		margin-bottom: 0em;
+	}
+	.header {
+		margin: 0em;
+		font-size: 1.33em;
+		font-weight: bold;
+	}
+}
+
+/*--------------
+     Content
+---------------*/
+/* block with paragraphs */
+.message p {
+	opacity: 0.85;
+	margin: 1em 0em;
+}
+.message p:first-child {
+	margin-top: 0em;
+}
+.message p:last-child {
+	margin-bottom: 0em;
+}
+.message .header + p {
+	margin-top: 0.3em;
+}
+.message > :first-child {
+	margin-top: 0em;
+}
+.message > :last-child {
+  margin-bottom: 0em;
+}
+/* block with child list */
+.message ul.list {
+	opacity: 0.85;
+	list-style-position: inside;
+	margin: 0.2em 0em;
+	padding: 0em;
+}
+.message ul.list li {
+	position: relative;
+	list-style-type: none;
+	margin: 0em 0em 0.3em 1em;
+	padding: 0em;
+}
+.message ul.list li:before {
+	position: absolute;
+	top: -0.05em;
+	left: -0.8em;
+	height: 100%;
+	vertical-align: baseline;
+	opacity: 0.5;
+}
+.message ul.list li:first-child {
+	margin-top: 0em;
+}
+/* dismissable block */
+.message > .close.icon {
+	cursor: pointer;
+	position: absolute;
+	right: 0em;
+	top: 0em;
+	width: 2.5em;
+	height: 2.5em;
+	opacity: 0.7;
+	padding: 0.75em 0em 0em 0.75em;
+	z-index: 2;
+	transition: opacity 0.1s linear;
+	z-index: 10;
+}
+.message > .close.icon:hover {
+	opacity: 1;
+}
+
+
+
+
+/*--------------
+     Types
+---------------*/
+.message-style(@color){
+	background-color: lighten(@color, 30%);
+	color: @color;
+}
+.red.message,
+.error.message { .message-style(@red); }
+.orange.message { .message-style(@orange); }
+.yellow.message,
+.warning.message { .message-style(@yellow); }
+.green.message,
+.success.message { .message-style(@green); }
+.teal.message { .message-style(@teal); }
+.blue.message { .message-style(@blue); }
+.purple.message { .message-style(@purple); }
+.default.message { .message-style(@lightgray); }
+.grey.message { .message-style(@gray); }
+
+
+
+
+
+/*******************************
+          Check
+*******************************/
+.mui-checkbox,
+.mui-radio {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	background: #fff;
+	border: 1px solid #d4d4d5;
+	border-radius: 0.2142em;
+	display: inline-block;
+	height: 15px;
+	transition: border 0.1s ease 0s, opacity 0.1s ease 0s, transform 0.1s ease 0s, box-shadow 0.1s ease 0s;
+	width: 15px;
+	box-sizing: border-box;
+}
+
+.mui-radio { border-radius: 2em; }
+
+.mui-checkbox:hover,
+.mui-radio:hover,
+.mui-checkbox.checked,
+.mui-radio.checked { border-color: rgba(34,36,38,0.35); }
+
+.mui-checkbox.checked::after {
+	content: "\f00c";
+	font: normal normal normal 12px/1 FontAwesome;
+	position: absolute;
+	color: rgba(0,0,0,0.87);
+	left: 1px;
+	top: 1px;
+}
+
+.mui-radio.checked::after {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	position: absolute;
+	content: "";
+	background-color: rgba(0,0,0,0.87);
+	left: 3px;
+	top: 3px;
+	border-radius: 1em;
+}
+
+.mui-checkbox.disabled,
+.mui-radio.disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+	background-color: #eee;
+}
+
+.mui-switch {
+	display: inline-block;
+	height: 1.4285em;
+	vertical-align: middle;
+	width: 3.5714em;
+	background: #eff3f8;
+	border-radius: 0.7142em;
+	cursor: pointer;
+	line-height: 1em;
+	position: relative;
+	transition: all ease-out 0.2s;
+}
+
+.mui-checkbox input,
+.mui-radio input {
+	opacity: 0;
+	background: red;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 1.2857em;
+	height: 1.2857em;
+}
+
+.mui-switch {
+	opacity: 0.3;
+	background: red;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 1.2857em;
+	height: 1.2857em;
+}
+
+/* iswitch */
+
+
+
+.switch:hover { background: #f4f6f9; }
+
+.switch span {
+	display: inline-block;
+	background: #fff;
+	width: 1.4285em;
+	height: 1.4285em;
+	border-radius: 50%;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(39, 41, 43, 0.15) inset;
+	transition: all ease-out 0.2s;
+	margin-left: 0;
+}
+
+.switch.on { background: #58cb73; }
+
+.switch.on span {
+	margin-left: 2.1429em;
+	transition: all ease-out 0.2s;
+}
+
+.switch input { display: none; }
+
+.switch.disabled { cursor: default; }
+
+.switch.disabled span { background: #f5f5f5; }

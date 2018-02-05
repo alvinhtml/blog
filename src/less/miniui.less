@@ -1,0 +1,86 @@
+/*!
+ *  mui2017
+ *  http://www.xuehtml.com/
+ *  Copyright 2016, Alvin.Yang
+ */
+
+/*******************************
+            Variable
+*******************************/
+
+
+@red: #fa5a64;
+@orange: #f48804;
+@yellow: #f1c40f;
+@olive: #c3d72d;
+@green: #1bbc9b;
+@teal: #32c5d2;
+@blue: #50d2fa;
+@violet: #6e37e6;
+@purple: #8c50c8;
+@pink: #eb41a0;
+@brown: #c87846;
+@white: #ffffff;
+@dark: #2f353b;
+@gray: #aeaeae;
+@lightgray: #e0e1e2;
+
+@blue-sharp: #5bbd72;
+@blue-steel: #4B77BE;
+@code-color: #838fa1;
+
+
+
+
+
+/*******************************
+            Mixin
+*******************************/
+
+
+
+
+/*******************************
+            @import
+*******************************/
+
+@import "global.less";
+@import "layout.less";
+@import "button.less";
+@import "form.less";
+@import "plugins.less";
+
+
+/*******************************
+            Animates
+*******************************/
+.animates {
+    -webkit-animation-iteration-count: 1;
+     -moz-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+  -webkit-animation-duration: 1s;
+     -moz-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-timing-function: ease;
+     -moz-animation-timing-function: ease;
+          animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+     -moz-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+
+/* MODULE STYLE
+ * -------------------------- */
+body {  }
+
+@media screen and (min-width:1278px){
+  .layout.center { max-width: 1278px; }
+}
+
+@media screen and (min-width:1000px) and (max-width:1277px) {
+	.layout.center { max-width: 1000px; }
+}
+
+@media screen and (max-width:999px) {
+	.layout.center { max-width: 999px; }
+}

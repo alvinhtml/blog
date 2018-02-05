@@ -1,0 +1,269 @@
+/*******************************
+            Button
+*******************************/
+/* Prototype */
+
+.button {
+	cursor: pointer;
+	display: inline-block;
+	vertical-align: middle;
+	min-height: 1em;
+	outline: none;
+	border: none;
+ 	background-color: @lightgray;
+	color: @gray;
+	margin: 0em;
+	padding: 0.7142em 1.5em;
+	font-size: 1em;
+	line-height: 1;
+	font-weight: bold;
+	font-style: normal;
+	text-align: center;
+	text-decoration: none;
+	font-family: Lato, "Helvetica Neue", Helvetica, 'Microsoft YaHei' Arial, "\5b8b\4f53", sans-serif;
+	background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.05));
+	border-radius: 0.25em;
+	box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.08) inset;
+	user-select: none;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	transition: opacity 0.25s ease, background-color 0.25s ease, color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+button::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner {
+	border:none;
+	padding:0;
+}
+
+/*--------------
+     Hover
+---------------*/
+
+.button:hover,
+.button.hover { background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.08)); }
+
+.button.active:hover { background-image: none; }
+
+.button:hover icon { opacity: 0.85; }
+
+/*--------------
+     Active
+---------------*/
+
+.button.active,
+.button:active {
+	background-color: #EAEAEA;
+	background-image: none;
+	-webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset !important;
+	box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset !important;
+	color: rgba(0, 0, 0, 0.7);
+}
+
+/*--------------------
+    Size
+---------------------*/
+
+.button.mini {
+	font-size: 12px !important;
+	padding: 0.25em 0.5em;
+	font-weight: normal;
+}
+.button.label.mini { padding-left: 2.1666em; }
+.button.label.mini i {
+	width: 1.6666em;
+	padding: 0.333em 0.25em  0.25em  0.25em;
+}
+
+.button.tiny {
+	padding: 0.4285em 0.5em;
+	font-weight: normal;
+}
+.button.label.tiny { padding-left: 2.5em; }
+.button.label.tiny i {
+	width: 2em;
+	padding: 0.4285em;
+}
+
+.button.small {
+	font-size: 14px !important;
+	padding: 0.5714em 0.5em;
+}
+.button.label.small { padding-left: 2.7857em; }
+.button.label.small i {
+	width: 2.2857em;
+	padding: 0.5714em;
+}
+
+.button.large { font-size: 16px !important; }
+.button.big { font-size: 20px !important; }
+.button.huge { font-size: 24px !important; }
+.button.massive { font-size: 30px !important; }
+
+.button.mini.circular { border-radius: 1em; }
+
+/*--------------
+     group
+---------------*/
+
+.button.label {
+	padding-left: 3.6428em;
+	position: relative;
+}
+
+.button.label i {
+	background-color: rgba(0, 0, 0, 0.05);
+	box-sizing: border-box;
+	line-height: 1em;
+	font-size: 1em;
+	width: 2.5714em;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 0.7857em;
+	box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.05) inset;
+}
+
+/*--------------
+    Loading
+---------------*/
+
+.loading.button {
+	position: relative;
+	cursor: default;
+	background-color: #FFFFFF !important;
+	color: transparent !important;
+	-webkit-transition: all 0s linear;
+	-moz-transition: all 0s linear;
+	transition: all 0s linear;
+}
+
+.loading.button::after {
+	position: absolute;
+	top: 0em;
+	left: 0em;
+	width: 100%;
+	height: 100%;
+	content: '';
+	background: transparent url(../images/loader-mini.gif) no-repeat 50% 50%;
+}
+
+/*-------------------
+      Disabled
+--------------------*/
+
+
+.button.disabled,
+.button.disabled:hover,
+.button.disabled:active {
+	background-color: #DDDDDD !important;
+	cursor: not-allowed;
+	color: rgba(0, 0, 0, 0.5) !important;
+	opacity: 0.3 !important;
+	background-image: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+}
+
+/*-------------------
+       Color
+--------------------*/
+
+.button-style(@name;@color){
+	.@{name}.button {
+		background-color: @color;
+		color: @white;
+		border: 1px solid @color;
+	}
+	.@{name}.button:hover {
+		background-color: lighten(@color,5%);
+		border: 1px solid lighten(@color,5%);
+	}
+	.@{name}.button:active {
+		background-color: darken(@color,10%);
+		border: 1px solid darken(@color,10%);
+	}
+}
+
+.button-style( lightgray; @lightgray );
+.button-style( gray; @gray );
+.button-style( dark; @dark );
+.button-style( red; @red );
+.button-style( orange; @orange );
+.button-style( yellow; @yellow );
+.button-style( olive; @olive );
+.button-style( green; @green );
+.button-style( teal; @teal );
+.button-style( blue; @blue );
+.button-style( violet; @violet );
+.button-style( purple; @purple );
+.button-style( pink; @pink );
+.button-style( brown; @brown );
+.button.lightgray { color: @gray; }
+
+
+/*--------------
+     style
+---------------*/
+
+.button-basic(@name;@color){
+	.@{name}.button.basic {
+		background-color: transparent !important;
+		color: @color;
+		border: 1px solid @color;
+		font-weight: normal;
+	}
+	.@{name}.button.basic:hover {
+		border-color: lighten(@color,5%);
+		color: lighten(@color,5%);
+	}
+	.@{name}.button.basic:active {
+		border-color: darken(@color,10%);
+		color: darken(@color,10%);
+	}
+}
+
+.button-basic( lightgray; @lightgray );
+.button-basic( gray; @gray );
+.button-basic( dark; @dark );
+.button-basic( red; @red );
+.button-basic( orange; @orange );
+.button-basic( yellow; @yellow );
+.button-basic( olive; @olive );
+.button-basic( green; @green );
+.button-basic( teal; @teal );
+.button-basic( blue; @blue );
+.button-basic( violet; @violet );
+.button-basic( purple; @purple );
+.button-basic( pink; @pink );
+.button-basic( brown; @brown );
+
+
+.button.circular {
+	border-radius: 1.2857em;
+	min-width: 2.5714em;
+	padding-left: 0;
+	padding-right: 0;
+	text-align: center;
+}
+.button.circular.mini {
+	border-radius: 0.8333em;
+	min-width: 1.6666em;
+	padding-left: 0;
+	padding-right: 0;
+}
+.button.circular.tiny {
+	border-radius: 1em;
+	min-width: 2em;
+	padding-left: 0;
+	padding-right: 0;
+}
+.button.circular.small {
+	border-radius: 1.1428em;
+	min-width: 2.2857em;
+	padding-left: 0;
+	padding-right: 0;
+}

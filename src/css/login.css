@@ -1,0 +1,61 @@
+
+html,
+body {
+  padding: 0;
+  background-color: #263645;
+}
+
+.web-application { position: absolute; left: 0; top: 0; right: 0; bottom: 0;}
+
+.error-message { color: #fa5a64; font-size: 14px; }
+
+@keyframes move {  0% {
+ background-position: 0 0px, 0px center;
+}
+ 100% {
+ background-position: 0 826px, 800px center;
+}
+}
+
+
+.container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url('../fonts/network.svg'), radial-gradient(300px 600px at center, #ff8300 0%, rgba(0,0,0,0) 240px, rgba(0,0,0,0));
+  background-size: 2000px, 800px 1600px;
+  background-position: 0 0, 0 center;
+  animation: move 8s linear infinite;
+  border-right: 0;
+  border-left: 0;
+}
+
+.login { position: absolute; z-index: 9; width: 400px; left: 50%; margin-left: -200px; height: 420px; top: 50%; margin-top: -220px; }
+
+.logo { text-align: center; margin-bottom: 16px;}
+
+.login input.type-text { 
+  background-color: rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #d9ecf9;
+  height: 43px;
+  padding: 5px 10px;
+  width: 400px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  cursor: default;
+}
+
+.login input.type-text:focus {
+  border: 1px solid rgba(255,255,255,0.4); transition: all 0.15s ease-in-out 0s;
+  box-shadow: 0 1px 1px rgba(255,255,255,0.075) inset, 0 0 6px rgba(255,255,255,0.2);
+}
+
+.login .type-button { height: 43px; width: 400px; background-color: #ff7e6f; color: #fff; padding: 0; margin: 0; border: 0; cursor: pointer; margin-bottom: 16px;}
+.login .type-button:hover { background-color: #f36a5a; }
+
+.remember-me { font-size: 12px; color: rgba(255,255,255,0.7); text-align: center; }
+.logo span.type-checkbox { border: 1px solid rgba(255,255,255,0.7); display: inline-block; width: 9px; height: 9px; vertical-align: middle; }
+.logo p { text-indent: 0; margin: 0;}
