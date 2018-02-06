@@ -45,7 +45,7 @@ class SidebarUI extends Component {
 							<ul className="sub-nav">
 	                            <li className="nav-item"><Link to="/admin/article" className="nav-link">日志列表</Link></li>
 	                            <li className="nav-item"><Link to="/admin/classify" className="nav-link">日志分类</Link></li>
-	                            <li className="nav-item"><Link to="/admin/article/add" className="nav-link">写日志</Link></li>
+	                            <li className="nav-item"><Link to="/admin/article/form" className="nav-link">写日志</Link></li>
 	                        </ul>
 						</li>
 						<li className="nav-item"><Link to="/admin/media" className="nav-link"><i className="icon-camera"></i><span className="text">媒体</span><span className="arrow"></span></Link>

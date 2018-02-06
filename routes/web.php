@@ -29,19 +29,19 @@ $router->get('/register', 'UserController@register');
 |--------------------------------------------------------------------------
 |
 */
-$router->get('/admin', 'UserController@index');
-$router->get('/admin/login', 'UserController@index');
-$router->get('/admin/home', 'UserController@index');
+$router->get('/admin', 'HomeController@index');
+$router->get('/admin/login', 'HomeController@index');
+$router->get('/admin/home', 'HomeController@index');
 
-$router->get('/admin/user', 'UserController@index');
-$router->get('/admin/user/list', 'UserController@index');
-$router->get('/admin/user/form/{id}', 'UserController@index');
-$router->get('/admin/user/form', 'UserController@index');
+$router->get('/admin/user', 'HomeController@index');
+$router->get('/admin/user/list', 'HomeController@index');
+$router->get('/admin/user/form/{id}', 'HomeController@index');
+$router->get('/admin/user/form', 'HomeController@index');
 
-$router->get('/admin/article', 'ArticleController@index');
-$router->get('/admin/article/list', 'ArticleController@index');
-$router->get('/admin/article/form/{id}', 'ArticleController@index');
-$router->get('/admin/article/form', 'ArticleController@index');
+$router->get('/admin/article', 'HomeController@index');
+$router->get('/admin/article/list', 'HomeController@index');
+$router->get('/admin/article/form/{id}', 'HomeController@index');
+$router->get('/admin/article/form', 'HomeController@index');
 
 /*
 |--------------------------------------------------------------------------
@@ -61,8 +61,10 @@ $router->get('/api/user/info/{id}', ['middleware' => 'auth', 'uses' => 'UserCont
 
 //article
 $router->get('/api/article/list', ['middleware' => 'auth', 'uses' => 'ArticleController@list']);
-$router->get('/api/article/update', ['middleware' => 'auth', 'uses' => 'ArticleController@update']);
-$router->get('/api/article/info', ['middleware' => 'auth', 'uses' => 'ArticleController@info']);
+$router->post('/api/article/form/{id}', ['middleware' => 'auth', 'uses' => 'ArticleController@form']);
+$router->post('/api/article/form', ['middleware' => 'auth', 'uses' => 'ArticleController@form']);
+$router->get('/api/article/del/{id}', ['middleware' => 'auth', 'uses' => 'ArticleController@del']);
+$router->get('/api/article/info/{id}', ['middleware' => 'auth', 'uses' => 'ArticleController@info']);
 
 //classify
 $router->get('/api/classify/list', ['middleware' => 'auth', 'uses' => 'ClassifyController@list']);

@@ -224,7 +224,7 @@ class UserFormUI extends Component {
 	}
 
 	submitEvent(e) {
-		const forms = document.forms.adminform
+		const forms = document.forms.userform
 		const formdata = {
 			id: forms.id.value,
 			name: Validator(forms.name),
@@ -263,7 +263,7 @@ class UserFormUI extends Component {
 	                <div className="page-bar-right"><i className="icon-calendar"></i> Wed Aug 10 2016 10:51:20 GMT+0800</div>
 	            </div>
 				<div className="form-box">
-					<form className="form" name="adminform">
+					<form className="form" name="userform">
 						<input type="hidden" name="id" value={this.state.id} onChange={this.handleChange} />
 						<section className="section">
 							<h3 className="section-head">{(this.state.id ? '修改' : '新增') + '用户'}</h3>

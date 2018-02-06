@@ -8,7 +8,7 @@ import {Login} from './container/user/login'
 import {Home} from './container/home/home'
 
 import {UserList, UserForm} from './container/user/user'
-// import {TermList, TermForm} from './container/company/term'
+import {ArticleList, ArticleForm} from './container/article/article'
 // import {TermView} from './container/company/termview'
 // import {OuList, OuForm} from './container/company/ou'
 
@@ -58,6 +58,9 @@ class Manage extends Component {
                     <Route path="/admin/user/form/:id" component={UserForm}/>
                     <Route path="/admin/user/form" component={UserForm}/>
 					<Route path="/admin/user" component={UserList}/>
+                    <Route path="/admin/article/form/:id" component={ArticleForm}/>
+                    <Route path="/admin/article/form" component={ArticleForm}/>
+					<Route path="/admin/article" component={ArticleList}/>
                 </Switch>
             </div>
         )

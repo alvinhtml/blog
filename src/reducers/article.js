@@ -35,22 +35,36 @@ const articleInitialState = {
         search: '',
         order: [],
         column: [{
-            key: 'id',
-            title: '序号',
+            key: 'title',
+            title: '标题',
             order: true,
             visibility: true,
             width: 60,
             resize: 0
         },{
-            key: 'name',
-            title: '标题',
+            key: 'author',
+            title: '作者',
             order: true,
             visibility: true,
             width: 200,
             resize: 1
         },{
-            key: 'classify',
-            title: '分类',
+            key: 'classify_id',
+            title: '类型',
+            order: true,
+            visibility: true,
+            width: 200,
+            resize: 1
+        },{
+            key: 'tags',
+            title: '标签',
+            order: true,
+            visibility: false,
+            width: 200,
+            resize: 1
+        },{
+            key: 'created_at',
+            title: '时间',
             order: true,
             visibility: false,
             width: 200,

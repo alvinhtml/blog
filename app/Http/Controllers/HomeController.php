@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -22,30 +21,8 @@ class UserController extends Controller
         $token = $request->session()->get('_token');
 
         return view('admin.index',[
-            'title' => '登录',
-            'name' => $token,
+            'title' => '你爱谁如鲸向海',
+            'csrf_token' => $token,
         ]);
-    }
-
-    
-
-    public function login(Request $request) {
-
-        $email = $request->input('email');
-        $password = $request->input('password');
-
-        $admin = DB::table('users')->where('password',app('hash')->orWhere('email', $email)->make($password))->first();
-
-        if ( !empty($admin) ) {
-            $request->session()->regenerate();
-            $token = $request->session()->get('_token');
-            DB::table('users')->where('email', $email)->update(['remember_token' => $token]);
-        }
-    }
-
-    public function logout(Request $request) {
-
-        $request->session()->flush();
-
     }
 }

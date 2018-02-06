@@ -10,7 +10,11 @@ import {Dropmenu, Droptool} from '../../components/dropdown'
 
 //引入弹出提示组件
 import {Popup} from '../../components/popup'
-import {OuSelect} from '../../components/select'
+
+//引入文本编辑器组件
+import {Editor} from '../../components/editor'
+
+import {ArticleSelect} from '../../components/select'
 import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 
@@ -32,7 +36,7 @@ import {
 //引入Action创建函数
 import {ActionCreator, ActionGet, ActionPost, FetchPost} from '../../actions/actions'
 
-class OuListUI extends Component {
+class ArticleListUI extends Component {
 
 	constructor(props) {
 		super(props)
@@ -100,10 +104,10 @@ class OuListUI extends Component {
 
 
 
-export const OuList = connect(
+export const ArticleList = connect(
 	(state) => {
 		return {
-			...state.oulist
+			...state.article
 		}
 	},
 	(dispatch, ownProps) => {
@@ -111,7 +115,7 @@ export const OuList = connect(
 		return {
 			getList: (where) => {
 				console.log("getlist:ou where", where)
-				dispatch(ActionGet(GET_ARTICLE_LIST, '/api/ou/list' ,where, 'oulist'))
+				dispatch(ActionGet(GET_ARTICLE_LIST, '/api/ou/list' ,where, 'article'))
 			},
 			//更新配置
 			updateConfigs: (configs, isPost) => {
@@ -123,16 +127,16 @@ export const OuList = connect(
 					})
 				}
 				//更新store配置
-				dispatch(ActionCreator(UPDATE_LIST_CONFIGS, configs, 'oulist'))
+				dispatch(ActionCreator(UPDATE_LIST_CONFIGS, configs, 'article'))
 			},
 			//单选框
 			checkEvent: (list) => {
 				//更新store配置
-				dispatch(ActionCreator(CHANGE_LIST_CHECKBOX, list, 'oulist'))
+				dispatch(ActionCreator(CHANGE_LIST_CHECKBOX, list, 'article'))
 			},
 			deleteEvent: (id) => {
 				//删除一条
-				dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + id, 'oulist'))
+				dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + id, 'article'))
 			},
 			toolsClickEvent: (value) => {
 				let idArray = []
@@ -148,13 +152,13 @@ export const OuList = connect(
 
 				switch (value) {
 					case '0':
-						dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + idArray.join(','), 'oulist'))
+						dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + idArray.join(','), 'article'))
 						break;
 					case '1':
-						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 1}, 'oulist'))
+						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 1}, 'article'))
 						break;
 					case '2':
-						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 0}, 'oulist'))
+						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 0}, 'article'))
 						break;
 					default:
 				}
@@ -162,21 +166,25 @@ export const OuList = connect(
 			}
 		};
 	}
-)(OuListUI)
+)(ArticleListUI)
 
 
 
-class OuFormUI extends Component {
+class ArticleFormUI extends Component {
 
 	constructor(props) {
 		super(props)
 
 		this.state = {
 			id: '',
-			name: '',
-			ou_id: 1,
-			path: '',
-			desp: '',
+			title: '',
+			classify_id: 1,
+			author: '',
+			media: '',
+			abstract: '',
+			content: '',
+			markdown: '',
+			state: ''
 		}
 
 		//ES6 类中函数必须手动绑定
@@ -230,38 +238,59 @@ class OuFormUI extends Component {
 		return (
 			<div className="main-box">
 				<div className="page-bar clear">
-	                <div className="page-bar-left">新增部门</div>
+	                <div className="page-bar-left"></div>
 	                <div className="page-bar-right"><i className="icon-calendar"></i> Wed Aug 10 2016 10:51:20 GMT+0800</div>
 	            </div>
 				<div className="form-box">
-					<form className="form" name="adminform">
+					<form className="form articleform" name="articleform">
 						<input type="hidden" name="id" value={this.state.id} onChange={this.handleChange} />
-						<section className="section">
-							<h3 className="section-head">新增部门</h3>
-							<div className="control">
-								<span className="control-label">名称：</span>
-								<div className="controls">
-									<label className="input-prepend labled inline-span6"><input type="text" name="name" value={this.state.name} onChange={this.handleChange} /><span className="add-on"><i className="icon-user"></i></span></label>
+						<div className="row">
+							<div className="col-span9">
+								<div className="row article-title-size">
+									<label className="input-prepend labled inline-span12"><input type="text" name="title" value={this.state.title} onChange={this.handleChange} placeholder="请输入文章标题" /><span className="add-on"><i className="icon-notebook"></i></span></label>
+								</div>
+								<div className="row">
+									<Editor value={this.state.content}></Editor>
 								</div>
 							</div>
-							<div className="control">
-								<span className="control-label">上级部门：</span>
-								<div className="controls">
-									<OuSelect name="ou_id" value={this.state.ou_id} parent='all' search="" className="inline-span4" />
-								</div>
+							<div className="col-span3 article-sidebar">
+								<section className="section">
+									<h3 className="section-head">发布</h3>
+									<div className="control">
+										<span className="control-label">状态：</span>
+										<div className="controls"><b>草稿</b></div>
+									</div>
+									<div className="control">
+										<span className="control-label">作者：</span>
+										<div className="controls"><b>Alvin</b></div>
+									</div>
+									<div className="control">
+										<span className="button blue">发布</span>
+										<span className="button teal">存草稿</span>
+									</div>
+								</section>
+								<section className="section">
+									<h3 className="section-head">分类</h3>
+									<div className="row">
+										<select name="" id="">
+											<option value="1">文章分类1</option>
+											<option value="2">文章分类2</option>
+											<option value="3">文章分类3</option>
+										</select>
+									</div>
+								</section>
+								<section className="section">
+									<h3 className="section-head">标签</h3>
+									<div className="row">
+										<select name="" id="">
+											<option value="1">文章分类1</option>
+											<option value="2">文章分类2</option>
+											<option value="3">文章分类3</option>
+										</select>
+									</div>
+								</section>
 							</div>
-							<div className="control">
-								<span className="control-label">描述：</span>
-								<div className="controls">
-									<textarea className="inline-span8" name="desp" value={this.state.desp} onChange={this.handleChange} />
-								</div>
-							</div>
-							<div className="control">
-								<div className="controls">
-									<FetchButton isFetching={isFetching} submitEvent={this.submitEvent} className="button green">提交</FetchButton>
-								</div>
-							</div>
-						</section>
+						</div>
 					</form>
 				</div>
             </div>
@@ -270,17 +299,17 @@ class OuFormUI extends Component {
 }
 
 
-export const OuForm = connect(
+export const ArticleForm = connect(
 	(state) => {
 		return {
-			isFetching: state.oulist.isFetching,
-			info: state.oulist.info
+			isFetching: state.article.isFetching,
+			info: state.article.info
 		}
 	},
 	(dispatch, ownProps) => {
 		return {
 			getInfo: (id) => {
-				dispatch(ActionGet(GET_ARTICLE_INFO, '/api/ou/view/' + id, 'oulist'))
+				dispatch(ActionGet(GET_ARTICLE_INFO, '/api/article/info/' + id, 'article'))
 			},
 			submit: (formdata, callback) => {
 				let url = '/api/ou/edit'
@@ -289,8 +318,8 @@ export const OuForm = connect(
 					url += '/' + formdata.id
 				}
 
-				dispatch(ActionPost(POST_ARTICLE_INFO, url, formdata, 'oulist', callback))
+				dispatch(ActionPost(POST_ARTICLE_INFO, url, formdata, 'article', callback))
 			}
 		};
 	}
-)(OuFormUI)
+)(ArticleFormUI)

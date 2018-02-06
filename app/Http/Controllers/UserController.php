@@ -18,15 +18,6 @@ class UserController extends Controller
         //$this->middleware('auth', ['except' => 'logout']);
     }
 
-    public function index(Request $request) {
-
-        $token = $request->session()->get('_token');
-
-        return view('admin.index',[
-            'title' => '登录',
-            'csrf_token' => $token,
-        ]);
-    }
 
     /**
      * [register description]
