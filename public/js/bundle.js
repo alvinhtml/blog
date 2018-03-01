@@ -27103,6 +27103,10 @@ var _query = __webpack_require__(88);
 
 var _query2 = _interopRequireDefault(_query);
 
+var _editor = __webpack_require__(709);
+
+var _editor2 = _interopRequireDefault(_editor);
+
 var _validator = __webpack_require__(281);
 
 var _validator2 = _interopRequireDefault(_validator);
@@ -27110,8 +27114,6 @@ var _validator2 = _interopRequireDefault(_validator);
 var _dropdown = __webpack_require__(159);
 
 var _popup = __webpack_require__(282);
-
-var _editor = __webpack_require__(709);
 
 var _select = __webpack_require__(283);
 
@@ -27142,7 +27144,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 //引入文本编辑器组件
-
+//import {Editor} from '../../components/editor'
 
 //引入组件
 
@@ -27354,7 +27356,7 @@ var ArticleFormUI = function (_Component2) {
 			author: '',
 			media: '',
 			abstract: '',
-			content: '',
+			content: '这是正文',
 			markdown: '',
 			state: ''
 
@@ -27368,6 +27370,11 @@ var ArticleFormUI = function (_Component2) {
 		key: 'componentWillMount',
 		value: function componentWillMount() {
 			this.props.getInfo(this.props.match.params.id);
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			(0, _editor2.default)('editorInitBox');
 		}
 	}, {
 		key: 'componentWillReceiveProps',
@@ -27396,22 +27403,19 @@ var ArticleFormUI = function (_Component2) {
 	}, {
 		key: 'submitEvent',
 		value: function submitEvent(e) {
-			var _this3 = this;
-
-			var forms = document.forms.adminform;
-			var ou_id = (0, _query2.default)(forms.ou_id).val();
+			var forms = document.forms.articleform;
+			var id = (0, _query2.default)(forms.id).val();
 
 			var formdata = {
 				id: forms.id.value,
-				name: (0, _validator2.default)(forms.name),
-				ou_id: ou_id,
-				desp: (0, _validator2.default)(forms.desp)
+				title: (0, _validator2.default)(forms.title),
+				content: (0, _validator2.default)(forms.content)
 			};
 
 			console.log(formdata);
-			this.props.submit(formdata, function (data) {
-				_this3.props.history.push('/ou/list');
-			});
+			// this.props.submit(formdata, (data) => {
+			// 	this.props.history.push('/ou/list')
+			// })
 		}
 	}, {
 		key: 'render',
@@ -27460,11 +27464,7 @@ var ArticleFormUI = function (_Component2) {
 										)
 									)
 								),
-								_react2.default.createElement(
-									'div',
-									{ className: 'row' },
-									_react2.default.createElement(_editor.Editor, { value: this.state.content })
-								)
+								_react2.default.createElement('div', { className: 'row', id: 'editorInitBox' })
 							),
 							_react2.default.createElement(
 								'div',
@@ -27518,12 +27518,12 @@ var ArticleFormUI = function (_Component2) {
 										{ className: 'control' },
 										_react2.default.createElement(
 											'span',
-											{ className: 'button blue' },
+											{ className: 'button blue', 'data-val': '0', onClick: this.submitEvent },
 											'\u53D1\u5E03'
 										),
 										_react2.default.createElement(
 											'span',
-											{ className: 'button teal' },
+											{ className: 'button teal', 'data-val': '1', onClick: this.submitEvent },
 											'\u5B58\u8349\u7A3F'
 										)
 									)
@@ -27633,339 +27633,157 @@ var ArticleForm = exports.ArticleForm = (0, _reactRedux.connect)(function (state
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
-exports.Editor = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(1);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(15);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+var Editor = exports.Editor = function Editor(element) {
+    _classCallCheck(this, Editor);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+    var editorbox = document.getElementById(element);
 
-var Iselect = function (_Component) {
-	_inherits(Iselect, _Component);
+    editorbox.innerHTML = ['<div class="editor-box">', '    <input type="hidden" name={name} value={this.state.content} />', '    <div class="editor-box-head">', '        <span id="writingModeText" class="active">文本</span>', '        <span id="writingModeMarkdown"  >Markdown</span>', '    </div>', '    <div class="editor-main">', '        <div class="editor-head" id="editorHead">', '            <div class="editor-addons row">', '                <button type="button" class="editor-btn" id="execCommandBolde"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9 17.025V13h4.418c1.19 0 2.415.562 2.415 2.012s-1.608 2.013-2.9 2.013H9zM9 7h4.336c1 0 1.814.888 1.814 2 0 .89-.814 2-1.814 2H9V7zm8.192 1.899a3.893 3.893 0 0 0-3.888-3.889S9.334 5 8.167 5C7 5 7 6.167 7 6.167v11.666C7 19 8.167 19 8.167 19l5.572.01c2.333 0 4.231-1.86 4.231-4.148a4.122 4.122 0 0 0-1.77-3.372 3.873 3.873 0 0 0 .992-2.591z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn" id="execCommandItalic"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M15.751 5h-5.502a.751.751 0 0 0-.749.75c0 .417.336.75.749.75H12l-2 11H8.249a.751.751 0 0 0-.749.75c0 .417.336.75.749.75h5.502a.751.751 0 0 0 .749-.75.748.748 0 0 0-.749-.75H12l2-11h1.751a.751.751 0 0 0 .749-.75.748.748 0 0 0-.749-.75" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn" id="execCommandHeader"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M7 6.007C7 5.45 7.444 5 8 5c.552 0 1 .45 1 1.007v11.986C9 18.55 8.556 19 8 19c-.552 0-1-.45-1-1.007V6.007zm8 0C15 5.45 15.444 5 16 5c.552 0 1 .45 1 1.007v11.986C17 18.55 16.556 19 16 19c-.552 0-1-.45-1-1.007V6.007zM9 11h6v2H9v-2z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn" id="execCommandBlockquote"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M17.975 12.209c.504.454.822 1.05.952 1.792.061.35.055.715-.022 1.096-.075.379-.209.718-.4 1.018-.465.73-1.155 1.175-2.07 1.337-.874.153-1.684-.06-2.432-.638a3.6 3.6 0 0 1-.916-1.043 3.92 3.92 0 0 1-.506-1.336c-.172-.98-.03-2.026.425-3.142.455-1.116 1.155-2.118 2.1-3.007.8-.757 1.456-1.182 1.97-1.273a.72.72 0 0 1 .544.104.656.656 0 0 1 .286.452c.054.31-.095.601-.45.877-.856.67-1.455 1.27-1.796 1.798-.323.513-.467.873-.43 1.079.034.196.21.287.524.274l.191-.001.249-.029a2.436 2.436 0 0 1 1.781.642zm-7.51 0c.504.454.821 1.05.951 1.792.062.35.056.715-.02 1.096-.077.379-.21.718-.401 1.018-.465.73-1.155 1.175-2.07 1.337-.874.153-1.684-.06-2.432-.638a3.6 3.6 0 0 1-.916-1.043 3.92 3.92 0 0 1-.506-1.336c-.172-.98-.03-2.026.424-3.142.455-1.116 1.156-2.118 2.101-3.007.8-.757 1.456-1.182 1.97-1.273a.72.72 0 0 1 .544.104.656.656 0 0 1 .285.452c.055.31-.094.601-.45.877-.855.67-1.454 1.27-1.796 1.798-.322.513-.466.873-.43 1.079.034.196.21.287.525.274l.191-.001.248-.029a2.436 2.436 0 0 1 1.782.642z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn" id="execCommandCode"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M19.718 11.559a.961.961 0 0 1 .007 1.352l-2.201 2.033-1.319 1.219a.937.937 0 0 1-1.33-.005.961.961 0 0 1-.001-1.345l2.813-2.576-2.804-2.568a.96.96 0 0 1-.008-1.352.963.963 0 0 1 1.337 0l2.475 2.289 1.031.953zm-7.462-5.567a1.001 1.001 0 0 1 1.16-.818c.544.096.907.616.81 1.165l-2.082 11.804a1.001 1.001 0 0 1-1.16.818 1.003 1.003 0 0 1-.81-1.165l2.082-11.804zM9.123 8.316a.96.96 0 0 1 0 1.345l-2.812 2.575 2.806 2.569a.962.962 0 0 1 .006 1.35.935.935 0 0 1-1.337 0l-2.093-1.934-1.412-1.305a.961.961 0 0 1-.007-1.352l2.833-2.62.685-.634c.345-.35.976-.354 1.331.006z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn" id="execCommandOrderedList"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9 6.5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 6.5zM5.884 7.893v-2.09h-.643L5.402 5h1.285v2.893h-.803zm.898 3.83l-.393.395h.862v.733H5v-.482l1.057-.892c.371-.312.461-.434.463-.566.003-.202-.135-.368-.396-.368-.289 0-.418.206-.418.43H5c0-.642.482-1.073 1.125-1.073s1.125.457 1.125.945c0 .307-.106.516-.468.877zM9 11.5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01a.995.995 0 0 1-.995-1zm0 5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01a.995.995 0 0 1-.995-1zm-1.759.624c0 .14-.025.27-.076.388a.902.902 0 0 1-.217.309 1.017 1.017 0 0 1-.336.205c-.13.05-.275.074-.437.074-.166 0-.32-.027-.462-.08a1.166 1.166 0 0 1-.367-.217 1.062 1.062 0 0 1-.246-.318.914.914 0 0 1-.1-.38v-.055h.765v.054a.343.343 0 0 0 .367.352c.117 0 .207-.03.27-.09.062-.06.093-.152.093-.277 0-.117-.039-.206-.117-.268a.506.506 0 0 0-.32-.091h-.14v-.516h.144c.117 0 .205-.03.264-.09a.31.31 0 0 0 .087-.226.27.27 0 0 0-.087-.209.332.332 0 0 0-.233-.08c-.107 0-.185.027-.236.08a.275.275 0 0 0-.076.197v.055h-.695v-.055a.915.915 0 0 1 .295-.644c.178-.161.436-.242.775-.242.14 0 .27.021.39.064s.224.102.312.176a.802.802 0 0 1 .207.262c.05.1.075.206.075.318 0 .258-.116.46-.348.605v.008a.625.625 0 0 1 .193.119.777.777 0 0 1 .256.572z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn" id="execCommandUnorderedList"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9 7c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 7zM6 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm3-6c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 12zm0 5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 17z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M6.77 17.23c-.905-.904-.94-2.333-.08-3.193l3.059-3.06-1.192-1.19-3.059 3.058c-1.489 1.489-1.427 3.954.138 5.519s4.03 1.627 5.519.138l3.059-3.059-1.192-1.192-3.059 3.06c-.86.86-2.289.824-3.193-.08zm3.016-8.673l1.192 1.192 3.059-3.06c.86-.86 2.289-.824 3.193.08.905.905.94 2.334.08 3.194l-3.059 3.06 1.192 1.19 3.059-3.058c1.489-1.489 1.427-3.954-.138-5.519s-4.03-1.627-5.519-.138L9.786 8.557zm-1.023 6.68c.33.33.863.343 1.177.029l5.34-5.34c.314-.314.3-.846-.03-1.176-.33-.33-.862-.344-1.176-.03l-5.34 5.34c-.314.314-.3.846.03 1.177z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M21 17.444C21 18.3 20.1 19 19 19H5c-1.1 0-2-.7-2-1.556V6.556C3 5.7 3.9 5 5 5h14c1.1 0 2 .7 2 1.556v10.888zm-9.437-3.919a.5.5 0 0 1-.862.013l-1.26-2.065a.5.5 0 0 0-.861.012l-2.153 3.767a.5.5 0 0 0 .435.748h10.292a.5.5 0 0 0 .438-.741L14.573 9.78a.5.5 0 0 0-.872-.006l-2.138 3.75z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M10.546 15c-.466.273-.86.053-.86-.5V9.505c0-.565.385-.778.86-.501l4.278 2.497c.466.272.475.726 0 1.003L10.546 15zM5 5S3 5 3 7v10s0 2 2.002 2H19c2 0 2-2 2-2V7c0-2-2-2-2-2H5z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9.033 16.182l3.083-4.133a.885.885 0 0 0 .003-1.12L9.033 6.817h7.985c.606-.03.982-.362.982-.92C18 5.34 17.611 5 17.018 5H6.922a.93.93 0 0 0-.83.509.882.882 0 0 0 .109.946L10 11.5l-3.782 5.037c-.29.289-.246.743-.122.974.172.316.455.489.799.489v-.211l.029.21h10.094c.501 0 .982-.32.982-.909 0-.59-.483-.857-.982-.908H9.033z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M4 7c0-.552.445-1 1-1h14c.552 0 1 .444 1 1 0 .552-.445 1-1 1H5c-.552 0-1-.444-1-1zm0 5a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2H5.01C4.451 13 4 12.556 4 12zm6 0a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2h-1.98c-.558 0-1.01-.444-1.01-1zm6 0a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2h-1.98c-.558 0-1.01-.444-1.01-1zM4 17c0-.552.445-1 1-1h14c.552 0 1 .444 1 1 0 .552-.445 1-1 1H5c-.552 0-1-.444-1-1z" fill-rule="evenodd"></path></svg></button>', '                <button type="button" class="editor-btn" id="execCommandRemoveFormat"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9.864 12.83l1.641 1.642-1.171 2.874a1.693 1.693 0 0 1-1.585 1.055.782.782 0 0 1-.716-1.077l1.83-4.494zM11.5 8.811L12.24 7H9.69l-2-2h10.672a1 1 0 1 1 0 2h-3.813l-1.406 3.452L11.5 8.811zM5.293 6.845a1 1 0 0 1 1.414 0l10.046 10.046a1 1 0 0 1-1.414 1.414L5.293 8.26a1 1 0 0 1 0-1.415z" fill-rule="evenodd"></path></svg></button>', '            </div>', '        </div>', '        <div class="editor">', '            <div class="editor-text mui" id="contentEditable" contentEditable="true"></div>', '        </div>', '    </div>', '</div>'].join('');
 
-	function Iselect(props) {
-		_classCallCheck(this, Iselect);
+    //编辑框
+    var editor = document.getElementById('contentEditable');
 
-		var _this = _possibleConstructorReturn(this, (Iselect.__proto__ || Object.getPrototypeOf(Iselect)).call(this, props));
+    //定义最后光标对象
+    var lastEditRange = void 0;
 
-		_this.state = {
-			opened: false,
-			value: '',
-			text: '标题'
-		};
+    //编辑框点击事件
+    editor.onclick = function () {
+        //获取选定对象
+        var selection = getSelection();
+        //设置最后光标对象
+        lastEditRange = selection.getRangeAt(0);
+        console.log("selection", selection);
+        console.log("lastEditRange", lastEditRange);
+        console.log(112);
+    };
 
-		_this.timeout;
+    //编辑框按键弹起事件
+    editor.onkeyup = function () {
+        //获取选定对象
+        var selection = getSelection();
+        //设置最后光标对象
+        lastEditRange = selection.getRangeAt(0);
+        console.log(223);
+    };
+    //
+    console.log("lastEditRange", lastEditRange);
 
-		//ES6 类中函数必须手动绑定
-		_this.handleClick = _this.handleClick.bind(_this);
-		_this.selectEvent = _this.selectEvent.bind(_this);
-		_this.mouseupCallback = _this.mouseupCallback.bind(_this);
+    editor.onkeypress = function (e) {
+        //获取选定对象
+        var selection = getSelection();
+        //设置最后光标对象
+        lastEditRange = selection.getRangeAt(0);
+    };
 
-		document.addEventListener('mouseup', _this.mouseupCallback);
-		return _this;
-	}
+    //粗体
+    var execCommandBolde = document.getElementById('execCommandBolde');
+    execCommandBolde.addEventListener('click', function () {
+        //if (execCommandBolde.classList.contains('active')) {
+        //   execCommandBolde.classList.remove('active')
+        //} else {
+        //   execCommandBolde.classList.add('active')
+        //}
+        document.execCommand('bold', false, null);
+        editor.focus();
+    });
 
-	_createClass(Iselect, [{
-		key: 'componentWillMount',
-		value: function componentWillMount() {
-			document.addEventListener('mouseup', this.mouseupCallback);
-		}
-	}, {
-		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {
-			document.removeEventListener('mouseup', this.mouseupCallback);
-		}
-	}, {
-		key: 'handleClick',
-		value: function handleClick(event) {
-			this.setState({
-				opened: !this.state.opened
-			});
-		}
-	}, {
-		key: 'mouseupCallback',
-		value: function mouseupCallback(e) {
-			this.setState({
-				opened: false
-			});
-		}
-	}, {
-		key: 'mouseupEvent',
-		value: function mouseupEvent(event) {
-			event.nativeEvent.stopImmediatePropagation();
-			event.stopPropagation();
-		}
-	}, {
-		key: 'selectEvent',
-		value: function selectEvent(event) {
-			this.setState({
-				opened: false,
-				value: event.target.getAttribute('data-val'),
-				text: event.target.textContent
-			});
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _props = this.props,
-			    name = _props.name,
-			    className = _props.className,
-			    value = _props.value;
+    //斜体
+    var execCommandItalic = document.getElementById('execCommandItalic');
+    execCommandItalic.addEventListener('click', function () {
+        document.execCommand('italic', false, null);
+        editor.focus();
+    });
 
+    var hasTag = function hasTag(node, tag) {
+        if (node.nodeName === tag) {
+            return true;
+        } else {
+            while (node.parentElement) {
+                node = node.parentElement;
+                if (node.nodeName === tag) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
 
-			return _react2.default.createElement(
-				'div',
-				{ className: 'iselect iselect-nosearch ' + className + (this.state.opened ? ' open' : ''), onMouseUp: this.mouseupEvent },
-				_react2.default.createElement('input', { name: name, type: 'hidden', value: this.state.value, ref: 'inputSelect' }),
-				_react2.default.createElement('div', { className: 'iselect-handle', onClick: this.handleClick }),
-				_react2.default.createElement(
-					'div',
-					{ className: 'iselect-value', onClick: this.handleClick },
-					this.state.text
-				),
-				_react2.default.createElement(
-					'ul',
-					{ onClick: this.selectEvent },
-					this.props.children
-				)
-			);
-		}
-	}]);
+    //标题
+    var execCommandHeader = document.getElementById('execCommandHeader');
+    execCommandHeader.addEventListener('click', function () {
+        if (lastEditRange) {
+            var node = lastEditRange.commonAncestorContainer;
+            if (!hasTag(node, "LI")) {
+                if (hasTag(node, "H3")) {
+                    document.execCommand('formatBlock', false, 'div');
+                } else {
+                    document.execCommand('formatBlock', false, 'h3');
+                }
+            }
+        }
+        editor.focus();
+        //获取选定对象
+        var selection = getSelection();
+        //设置最后光标对象
+        lastEditRange = selection.getRangeAt(0);
+    });
 
-	return Iselect;
-}(_react.Component);
+    //引用
+    var execCommandBlockquote = document.getElementById('execCommandBlockquote');
+    execCommandBlockquote.addEventListener('click', function () {
+        if (lastEditRange) {
+            var node = lastEditRange.commonAncestorContainer;
+            if (hasTag(node, "BLOCKQUOTE")) {
+                document.execCommand('formatBlock', false, 'div');
+            } else {
+                document.execCommand('formatBlock', false, 'blockquote');
+            }
+        }
+        editor.focus();
+        //获取选定对象
+        var selection = getSelection();
+        //设置最后光标对象
+        lastEditRange = selection.getRangeAt(0);
+    });
 
-var Editor = exports.Editor = function (_Component2) {
-	_inherits(Editor, _Component2);
+    //有序
+    var execCommandOrderedList = document.getElementById('execCommandOrderedList');
+    execCommandOrderedList.addEventListener('click', function () {
+        document.execCommand('insertOrderedList', false, null);
+        editor.focus();
+    });
 
-	function Editor(props) {
-		_classCallCheck(this, Editor);
+    //无序
+    var execCommandUnorderedList = document.getElementById('execCommandUnorderedList');
+    execCommandUnorderedList.addEventListener('click', function () {
+        document.execCommand('insertUnorderedList', false, null);
+        editor.focus();
+    });
 
-		var _this2 = _possibleConstructorReturn(this, (Editor.__proto__ || Object.getPrototypeOf(Editor)).call(this, props));
+    //去除格式
+    var execCommandRemoveFormat = document.getElementById('execCommandRemoveFormat');
+    execCommandRemoveFormat.addEventListener('click', function () {
+        document.execCommand('removeFormat', false, null);
+        document.execCommand('formatBlock', false, 'div');
+        editor.focus();
+    });
+};
 
-		_this2.state = {
-			tab: 1,
-			content: ''
+Object.assign(Editor.prototype, {
+    setContent: function setContent(content) {},
+    getContent: function getContent(content) {}
+});
 
-			//ES6 类中函数必须手动绑定
-		};_this2.handleClick = _this2.handleClick.bind(_this2);
+var EditorInit = function EditorInit(element, params) {
+    return new Editor(element, params);
+};
 
-		return _this2;
-	}
-
-	_createClass(Editor, [{
-		key: 'componentWillMount',
-		value: function componentWillMount() {}
-	}, {
-		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {}
-	}, {
-		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(nextProps) {}
-	}, {
-		key: 'handleClick',
-		value: function handleClick(event) {}
-	}, {
-		key: 'render',
-		value: function render() {
-			var value = this.props.value;
-
-
-			return _react2.default.createElement(
-				'div',
-				{ className: 'editor-box' },
-				_react2.default.createElement(
-					'div',
-					{ className: 'editor-box-head' },
-					_react2.default.createElement(
-						'span',
-						{ className: 'active' },
-						'\u6587\u672C'
-					),
-					_react2.default.createElement(
-						'span',
-						null,
-						'Markdown'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'editor-main' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'editor-head' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'editor-addons row' },
-							_react2.default.createElement(
-								Iselect,
-								{ name: 'ou_id', value: 1, className: 'iselect-little editor-title-select' },
-								_react2.default.createElement(
-									'li',
-									{ 'data-val': '1' },
-									'\u6807\u9898 H1'
-								),
-								_react2.default.createElement(
-									'li',
-									{ 'data-val': '1' },
-									'\u6807\u9898 H2'
-								),
-								_react2.default.createElement(
-									'li',
-									{ 'data-val': '1' },
-									'\u6807\u9898 H3'
-								),
-								_react2.default.createElement(
-									'li',
-									{ 'data-val': '1' },
-									'\u6807\u9898 H4'
-								),
-								_react2.default.createElement(
-									'li',
-									{ 'data-val': '1' },
-									'\u6807\u9898 H5'
-								),
-								_react2.default.createElement(
-									'li',
-									{ 'data-val': '1' },
-									'\u6807\u9898 H6'
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M9 17.025V13h4.418c1.19 0 2.415.562 2.415 2.012s-1.608 2.013-2.9 2.013H9zM9 7h4.336c1 0 1.814.888 1.814 2 0 .89-.814 2-1.814 2H9V7zm8.192 1.899a3.893 3.893 0 0 0-3.888-3.889S9.334 5 8.167 5C7 5 7 6.167 7 6.167v11.666C7 19 8.167 19 8.167 19l5.572.01c2.333 0 4.231-1.86 4.231-4.148a4.122 4.122 0 0 0-1.77-3.372 3.873 3.873 0 0 0 .992-2.591z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M15.751 5h-5.502a.751.751 0 0 0-.749.75c0 .417.336.75.749.75H12l-2 11H8.249a.751.751 0 0 0-.749.75c0 .417.336.75.749.75h5.502a.751.751 0 0 0 .749-.75.748.748 0 0 0-.749-.75H12l2-11h1.751a.751.751 0 0 0 .749-.75.748.748 0 0 0-.749-.75', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M17.975 12.209c.504.454.822 1.05.952 1.792.061.35.055.715-.022 1.096-.075.379-.209.718-.4 1.018-.465.73-1.155 1.175-2.07 1.337-.874.153-1.684-.06-2.432-.638a3.6 3.6 0 0 1-.916-1.043 3.92 3.92 0 0 1-.506-1.336c-.172-.98-.03-2.026.425-3.142.455-1.116 1.155-2.118 2.1-3.007.8-.757 1.456-1.182 1.97-1.273a.72.72 0 0 1 .544.104.656.656 0 0 1 .286.452c.054.31-.095.601-.45.877-.856.67-1.455 1.27-1.796 1.798-.323.513-.467.873-.43 1.079.034.196.21.287.524.274l.191-.001.249-.029a2.436 2.436 0 0 1 1.781.642zm-7.51 0c.504.454.821 1.05.951 1.792.062.35.056.715-.02 1.096-.077.379-.21.718-.401 1.018-.465.73-1.155 1.175-2.07 1.337-.874.153-1.684-.06-2.432-.638a3.6 3.6 0 0 1-.916-1.043 3.92 3.92 0 0 1-.506-1.336c-.172-.98-.03-2.026.424-3.142.455-1.116 1.156-2.118 2.101-3.007.8-.757 1.456-1.182 1.97-1.273a.72.72 0 0 1 .544.104.656.656 0 0 1 .285.452c.055.31-.094.601-.45.877-.855.67-1.454 1.27-1.796 1.798-.322.513-.466.873-.43 1.079.034.196.21.287.525.274l.191-.001.248-.029a2.436 2.436 0 0 1 1.782.642z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M19.718 11.559a.961.961 0 0 1 .007 1.352l-2.201 2.033-1.319 1.219a.937.937 0 0 1-1.33-.005.961.961 0 0 1-.001-1.345l2.813-2.576-2.804-2.568a.96.96 0 0 1-.008-1.352.963.963 0 0 1 1.337 0l2.475 2.289 1.031.953zm-7.462-5.567a1.001 1.001 0 0 1 1.16-.818c.544.096.907.616.81 1.165l-2.082 11.804a1.001 1.001 0 0 1-1.16.818 1.003 1.003 0 0 1-.81-1.165l2.082-11.804zM9.123 8.316a.96.96 0 0 1 0 1.345l-2.812 2.575 2.806 2.569a.962.962 0 0 1 .006 1.35.935.935 0 0 1-1.337 0l-2.093-1.934-1.412-1.305a.961.961 0 0 1-.007-1.352l2.833-2.62.685-.634c.345-.35.976-.354 1.331.006z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M9 6.5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 6.5zM5.884 7.893v-2.09h-.643L5.402 5h1.285v2.893h-.803zm.898 3.83l-.393.395h.862v.733H5v-.482l1.057-.892c.371-.312.461-.434.463-.566.003-.202-.135-.368-.396-.368-.289 0-.418.206-.418.43H5c0-.642.482-1.073 1.125-1.073s1.125.457 1.125.945c0 .307-.106.516-.468.877zM9 11.5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01a.995.995 0 0 1-.995-1zm0 5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01a.995.995 0 0 1-.995-1zm-1.759.624c0 .14-.025.27-.076.388a.902.902 0 0 1-.217.309 1.017 1.017 0 0 1-.336.205c-.13.05-.275.074-.437.074-.166 0-.32-.027-.462-.08a1.166 1.166 0 0 1-.367-.217 1.062 1.062 0 0 1-.246-.318.914.914 0 0 1-.1-.38v-.055h.765v.054a.343.343 0 0 0 .367.352c.117 0 .207-.03.27-.09.062-.06.093-.152.093-.277 0-.117-.039-.206-.117-.268a.506.506 0 0 0-.32-.091h-.14v-.516h.144c.117 0 .205-.03.264-.09a.31.31 0 0 0 .087-.226.27.27 0 0 0-.087-.209.332.332 0 0 0-.233-.08c-.107 0-.185.027-.236.08a.275.275 0 0 0-.076.197v.055h-.695v-.055a.915.915 0 0 1 .295-.644c.178-.161.436-.242.775-.242.14 0 .27.021.39.064s.224.102.312.176a.802.802 0 0 1 .207.262c.05.1.075.206.075.318 0 .258-.116.46-.348.605v.008a.625.625 0 0 1 .193.119.777.777 0 0 1 .256.572z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M9 7c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 7zM6 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm3-6c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 12zm0 5c0-.552.456-1 .995-1h8.01c.55 0 .995.444.995 1 0 .552-.456 1-.995 1h-8.01A.995.995 0 0 1 9 17z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M6.77 17.23c-.905-.904-.94-2.333-.08-3.193l3.059-3.06-1.192-1.19-3.059 3.058c-1.489 1.489-1.427 3.954.138 5.519s4.03 1.627 5.519.138l3.059-3.059-1.192-1.192-3.059 3.06c-.86.86-2.289.824-3.193-.08zm3.016-8.673l1.192 1.192 3.059-3.06c.86-.86 2.289-.824 3.193.08.905.905.94 2.334.08 3.194l-3.059 3.06 1.192 1.19 3.059-3.058c1.489-1.489 1.427-3.954-.138-5.519s-4.03-1.627-5.519-.138L9.786 8.557zm-1.023 6.68c.33.33.863.343 1.177.029l5.34-5.34c.314-.314.3-.846-.03-1.176-.33-.33-.862-.344-1.176-.03l-5.34 5.34c-.314.314-.3.846.03 1.177z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M21 17.444C21 18.3 20.1 19 19 19H5c-1.1 0-2-.7-2-1.556V6.556C3 5.7 3.9 5 5 5h14c1.1 0 2 .7 2 1.556v10.888zm-9.437-3.919a.5.5 0 0 1-.862.013l-1.26-2.065a.5.5 0 0 0-.861.012l-2.153 3.767a.5.5 0 0 0 .435.748h10.292a.5.5 0 0 0 .438-.741L14.573 9.78a.5.5 0 0 0-.872-.006l-2.138 3.75z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M10.546 15c-.466.273-.86.053-.86-.5V9.505c0-.565.385-.778.86-.501l4.278 2.497c.466.272.475.726 0 1.003L10.546 15zM5 5S3 5 3 7v10s0 2 2.002 2H19c2 0 2-2 2-2V7c0-2-2-2-2-2H5z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M9.033 16.182l3.083-4.133a.885.885 0 0 0 .003-1.12L9.033 6.817h7.985c.606-.03.982-.362.982-.92C18 5.34 17.611 5 17.018 5H6.922a.93.93 0 0 0-.83.509.882.882 0 0 0 .109.946L10 11.5l-3.782 5.037c-.29.289-.246.743-.122.974.172.316.455.489.799.489v-.211l.029.21h10.094c.501 0 .982-.32.982-.909 0-.59-.483-.857-.982-.908H9.033z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M4 7c0-.552.445-1 1-1h14c.552 0 1 .444 1 1 0 .552-.445 1-1 1H5c-.552 0-1-.444-1-1zm0 5a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2H5.01C4.451 13 4 12.556 4 12zm6 0a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2h-1.98c-.558 0-1.01-.444-1.01-1zm6 0a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2h-1.98c-.558 0-1.01-.444-1.01-1zM4 17c0-.552.445-1 1-1h14c.552 0 1 .444 1 1 0 .552-.445 1-1 1H5c-.552 0-1-.444-1-1z', fillRule: 'evenodd' })
-								)
-							),
-							_react2.default.createElement(
-								'span',
-								{ className: 'editor-btn' },
-								_react2.default.createElement(
-									'svg',
-									{ className: 'edit-svg', fill: 'currentColor', viewBox: '0 0 26 26', width: '24', height: '24' },
-									_react2.default.createElement('path', { d: 'M9.864 12.83l1.641 1.642-1.171 2.874a1.693 1.693 0 0 1-1.585 1.055.782.782 0 0 1-.716-1.077l1.83-4.494zM11.5 8.811L12.24 7H9.69l-2-2h10.672a1 1 0 1 1 0 2h-3.813l-1.406 3.452L11.5 8.811zM5.293 6.845a1 1 0 0 1 1.414 0l10.046 10.046a1 1 0 0 1-1.414 1.414L5.293 8.26a1 1 0 0 1 0-1.415z', fillRule: 'evenodd' })
-								)
-							)
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'editor' },
-						_react2.default.createElement('div', { className: 'editor-text', contentEditable: 'true' })
-					)
-				)
-			);
-		}
-	}]);
-
-	return Editor;
-}(_react.Component);
+exports.default = EditorInit;
 
 /***/ }),
 /* 710 */

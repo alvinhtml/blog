@@ -13,7 +13,7 @@ class Iselect extends Component {
 		this.state = {
 			opened: false,
 			value: '',
-			text: '标题'
+			text: '正文'
 		}
 
 		this.timeout;
@@ -52,11 +52,21 @@ class Iselect extends Component {
 	}
 
 	selectEvent(event) {
-		this.setState({
-			opened: false,
-			value: event.target.getAttribute('data-val'),
-			text: event.target.textContent
-		})
+
+		let target = event.target
+
+		if (target.tagName === "LI") {
+
+			let value = target.getAttribute('data-val')
+
+			this.setState({
+				opened: false,
+				value,
+				text: event.target.textContent
+			})
+
+			this.props.onChange(value)
+		}
 	}
 
 	render() {
@@ -74,6 +84,53 @@ class Iselect extends Component {
 
 }
 
+
+class ContentEditable extends Component {
+
+	constructor(props) {
+		super(props)
+
+		//ES6 类中函数必须手动绑定
+		this.emitChange = this.emitChange.bind(this)
+	}
+
+	shouldComponentUpdate(nextProps) {
+	    return nextProps.html !== this.refs.contenteditable.innerHTML
+	}
+
+	componentDidUpdate() {
+	    if ( this.props.html !== this.refs.contenteditable.innerHTML ) {
+	       this.refs.contenteditable.innerHTML = this.props.html
+	    }
+	}
+
+	emitChange() {
+	    var html = this.refs.contenteditable.innerHTML;
+	    if (this.props.onChange && html !== this.lastHtml) {
+	        this.props.onChange({
+	            target: {
+	                value: html
+	            }
+	        });
+	    }
+	    this.lastHtml = html
+	}
+
+	render() {
+	    return (
+			<div id="contenteditable"
+				ref = "contenteditable"
+				className = {this.props.className}
+		        onInput = {this.emitChange}
+		        onBlur = {this.emitChange}
+		        contentEditable = {true}
+		        dangerouslySetInnerHTML={{__html: this.props.html}}>
+			</div>
+		)
+	}
+}
+
+
 export class Editor extends Component {
 
 	constructor(props) {
@@ -85,30 +142,69 @@ export class Editor extends Component {
 		}
 
 		//ES6 类中函数必须手动绑定
-		this.handleClick = this.handleClick.bind(this)
+		this.handleChange = this.handleChange.bind(this)
 
 	}
 
 	componentWillMount() {
-
+		this.setState({
+			content: this.props.value
+		})
 
     }
 
+	componentDidMount() {
+		document.getElementById('cccc').innerHTML = '<button type="butt" id="bbb">B</button><div className="editor-text" contenteditable><h2>这是标题</h2><p>梦想天空博客关注前端开发技术，分享各种增强网站用户体验的 jQuery 插件，展示前沿的 HTML5 和 CSS3 技术应用，推荐优秀的网页设计案例，共享精美的设计素材和优秀的 Web 开发工具，希望这些精心--</p></div>';
+		//console.log("aa", document.getElementById('bolde'), this.refs.bolderef);
+		document.getElementById('bbb').addEventListener('click', function(){
+			let aa = document.execCommand('bold', false, null);
+			console.log(aa);
+		});
+	}
+
 	componentWillUnmount() {
+
 	}
 
-	componentWillReceiveProps(nextProps) {
+	handleChange(event) {
+		this.setState({
+			content: event.target.value
+		})
 	}
 
-	handleClick(event) {
+	boldExecCommand() {
+		let aa = document.execCommand('bold', false, null);
+		console.log(aa);
+	}
+
+	selectChange(value) {
+		document.execCommand('heading', false, 'H2');
+		console.log(value);
+		// switch (value) {
+		// 	case "h2":
+		// 		document.execCommand('heading', false, 'H2')
+		// 		console.log(value);
+		// 		break;
+		// 	case "h3":
+		// 		document.execCommand('heading', false, 'H3')
+		// 		break;
+		// 	case "h4":
+		// 		document.execCommand('heading', false, 'H4')
+		// 		break;
+		// 	case "div":
+		// 		document.execCommand('heading', false, null)
+		// 		break;
+		// 	default:
+		// }
 	}
 
 
 	render() {
-		const {value} = this.props
+		const {name, value} = this.props
 
         return (
 			<div className="editor-box">
+				<input type="hidden" name={name} value={this.state.content} />
 				<div className="editor-box-head">
 					<span className="active">文本</span>
 					<span>Markdown</span>
@@ -116,14 +212,12 @@ export class Editor extends Component {
 				<div className="editor-main">
 					<div className="editor-head">
 						<div className="editor-addons row">
-							<Iselect name="ou_id" value={1} className="iselect-little editor-title-select">
-								<li data-val="1">标题 H1</li>
-								<li data-val="1">标题 H2</li>
-								<li data-val="1">标题 H3</li>
-								<li data-val="1">标题 H4</li>
-								<li data-val="1">标题 H5</li>
-								<li data-val="1">标题 H6</li>
-							</Iselect><span className="editor-btn"><svg className="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9 17.025V13h4.418c1.19 0 2.415.562 2.415 2.012s-1.608 2.013-2.9 2.013H9zM9 7h4.336c1 0 1.814.888 1.814 2 0 .89-.814 2-1.814 2H9V7zm8.192 1.899a3.893 3.893 0 0 0-3.888-3.889S9.334 5 8.167 5C7 5 7 6.167 7 6.167v11.666C7 19 8.167 19 8.167 19l5.572.01c2.333 0 4.231-1.86 4.231-4.148a4.122 4.122 0 0 0-1.77-3.372 3.873 3.873 0 0 0 .992-2.591z" fillRule="evenodd"></path></svg></span>
+							<Iselect name="ou_id" value={1} onChange={this.selectChange} className="iselect-little editor-style-select">
+								<li className="editor-style-h2" data-val="h2">大标题</li>
+								<li className="editor-style-h3" data-val="h3">小标题</li>
+								<li className="editor-style-h4" data-val="h4">小标题 2</li>
+								<li className="editor-style-p" data-val="div">正文</li>
+							</Iselect><span className="editor-btn" ref="bolderef" id="bolde"><svg className="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9 17.025V13h4.418c1.19 0 2.415.562 2.415 2.012s-1.608 2.013-2.9 2.013H9zM9 7h4.336c1 0 1.814.888 1.814 2 0 .89-.814 2-1.814 2H9V7zm8.192 1.899a3.893 3.893 0 0 0-3.888-3.889S9.334 5 8.167 5C7 5 7 6.167 7 6.167v11.666C7 19 8.167 19 8.167 19l5.572.01c2.333 0 4.231-1.86 4.231-4.148a4.122 4.122 0 0 0-1.77-3.372 3.873 3.873 0 0 0 .992-2.591z" fillRule="evenodd"></path></svg></span>
 							<span className="editor-btn"><svg className="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M15.751 5h-5.502a.751.751 0 0 0-.749.75c0 .417.336.75.749.75H12l-2 11H8.249a.751.751 0 0 0-.749.75c0 .417.336.75.749.75h5.502a.751.751 0 0 0 .749-.75.748.748 0 0 0-.749-.75H12l2-11h1.751a.751.751 0 0 0 .749-.75.748.748 0 0 0-.749-.75" fillRule="evenodd"></path></svg></span>
 							<span className="editor-btn"><svg className="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M17.975 12.209c.504.454.822 1.05.952 1.792.061.35.055.715-.022 1.096-.075.379-.209.718-.4 1.018-.465.73-1.155 1.175-2.07 1.337-.874.153-1.684-.06-2.432-.638a3.6 3.6 0 0 1-.916-1.043 3.92 3.92 0 0 1-.506-1.336c-.172-.98-.03-2.026.425-3.142.455-1.116 1.155-2.118 2.1-3.007.8-.757 1.456-1.182 1.97-1.273a.72.72 0 0 1 .544.104.656.656 0 0 1 .286.452c.054.31-.095.601-.45.877-.856.67-1.455 1.27-1.796 1.798-.323.513-.467.873-.43 1.079.034.196.21.287.524.274l.191-.001.249-.029a2.436 2.436 0 0 1 1.781.642zm-7.51 0c.504.454.821 1.05.951 1.792.062.35.056.715-.02 1.096-.077.379-.21.718-.401 1.018-.465.73-1.155 1.175-2.07 1.337-.874.153-1.684-.06-2.432-.638a3.6 3.6 0 0 1-.916-1.043 3.92 3.92 0 0 1-.506-1.336c-.172-.98-.03-2.026.424-3.142.455-1.116 1.156-2.118 2.101-3.007.8-.757 1.456-1.182 1.97-1.273a.72.72 0 0 1 .544.104.656.656 0 0 1 .285.452c.055.31-.094.601-.45.877-.855.67-1.454 1.27-1.796 1.798-.322.513-.466.873-.43 1.079.034.196.21.287.525.274l.191-.001.248-.029a2.436 2.436 0 0 1 1.782.642z" fillRule="evenodd"></path></svg></span>
 							<span className="editor-btn"><svg className="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M19.718 11.559a.961.961 0 0 1 .007 1.352l-2.201 2.033-1.319 1.219a.937.937 0 0 1-1.33-.005.961.961 0 0 1-.001-1.345l2.813-2.576-2.804-2.568a.96.96 0 0 1-.008-1.352.963.963 0 0 1 1.337 0l2.475 2.289 1.031.953zm-7.462-5.567a1.001 1.001 0 0 1 1.16-.818c.544.096.907.616.81 1.165l-2.082 11.804a1.001 1.001 0 0 1-1.16.818 1.003 1.003 0 0 1-.81-1.165l2.082-11.804zM9.123 8.316a.96.96 0 0 1 0 1.345l-2.812 2.575 2.806 2.569a.962.962 0 0 1 .006 1.35.935.935 0 0 1-1.337 0l-2.093-1.934-1.412-1.305a.961.961 0 0 1-.007-1.352l2.833-2.62.685-.634c.345-.35.976-.354 1.331.006z" fillRule="evenodd"></path></svg></span>
@@ -137,8 +231,8 @@ export class Editor extends Component {
 							<span className="editor-btn"><svg className="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9.864 12.83l1.641 1.642-1.171 2.874a1.693 1.693 0 0 1-1.585 1.055.782.782 0 0 1-.716-1.077l1.83-4.494zM11.5 8.811L12.24 7H9.69l-2-2h10.672a1 1 0 1 1 0 2h-3.813l-1.406 3.452L11.5 8.811zM5.293 6.845a1 1 0 0 1 1.414 0l10.046 10.046a1 1 0 0 1-1.414 1.414L5.293 8.26a1 1 0 0 1 0-1.415z" fillRule="evenodd"></path></svg></span>
 						</div>
 					</div>
-					<div className="editor">
-						<div className="editor-text" contentEditable="true"></div>
+					<div className="editor" id="cccc">
+
 					</div>
 				</div>
 			</div>

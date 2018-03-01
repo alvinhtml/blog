@@ -506,10 +506,16 @@ table.moving th.row-last {
 .editor { min-height: 480px; border: 10px solid #f4f6f9; padding: 10px; border-top: 0; }
 .editor-text { min-height: 480px; width: 100%; outline: none; }
 .editor-addons {}
-.editor-title-select { width: 80px; margin-right: 6px; }
-.editor-btn { display: inline-block; width: 22px; height: 22px; margin-right: 2px; background-color: #fff; color: #838fa1; vertical-align: middle; border: 1px solid #eee; line-height: 22px; text-align: center; cursor: pointer; }
+.editor-style-select { width: 120px; margin-right: 6px; }
+.iselect-little.iselect.editor-style-select ul li { padding: 6px 14px; }
+.editor-style-h2 { font-size: 2.1428em; }
+.editor-style-h3 { font-size: 1.7142em; }
+.editor-style-h4 { font-size: 1.2857em;  }
+.editor-style-p {}
+.editor-btn { display: inline-block; width: 24px; height: 24px; padding: 0; margin-right: 2px; background-color: #fff; color: #838fa1; vertical-align: middle; border: 1px solid #eee; line-height: 24px; text-align: center; cursor: pointer; outline: none; }
 .editor-btn:hover { border-color: #9ca8b0;}
 .edit-svg { fill: #838fa1;  }
+.editor-btn.active .edit-svg { fill: #0084ff; }
 
 
 

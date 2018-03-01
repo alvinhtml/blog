@@ -3,6 +3,7 @@ import {Redirect, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
 import Query from '../../tools/query.js'
+import Editor from '../../tools/editor.js'
 import Validator from '../../tools/validator.js'
 
 //引入下拉菜单组件
@@ -12,7 +13,7 @@ import {Dropmenu, Droptool} from '../../components/dropdown'
 import {Popup} from '../../components/popup'
 
 //引入文本编辑器组件
-import {Editor} from '../../components/editor'
+//import {Editor} from '../../components/editor'
 
 import {ArticleSelect} from '../../components/select'
 import {Alert, Confirm} from '../../components/modal'
@@ -182,7 +183,7 @@ class ArticleFormUI extends Component {
 			author: '',
 			media: '',
 			abstract: '',
-			content: '',
+			content: '这是正文',
 			markdown: '',
 			state: ''
 		}
@@ -195,6 +196,10 @@ class ArticleFormUI extends Component {
 	componentWillMount() {
         this.props.getInfo(this.props.match.params.id)
     }
+
+	componentDidMount() {
+		Editor('editorInitBox')
+	}
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.info) {
@@ -215,20 +220,19 @@ class ArticleFormUI extends Component {
 	}
 
 	submitEvent(e) {
-		const forms = document.forms.adminform
-		const ou_id = Query(forms.ou_id).val()
+		const forms = document.forms.articleform
+		const id = Query(forms.id).val()
 
 		const formdata = {
 			id: forms.id.value,
-			name: Validator(forms.name),
-			ou_id: ou_id,
-			desp: Validator(forms.desp),
+			title: Validator(forms.title),
+			content: Validator(forms.content),
 		}
 
 		console.log(formdata)
-		this.props.submit(formdata, (data) => {
-			this.props.history.push('/ou/list')
-		})
+		// this.props.submit(formdata, (data) => {
+		// 	this.props.history.push('/ou/list')
+		// })
 	}
 
 	render() {
@@ -249,9 +253,7 @@ class ArticleFormUI extends Component {
 								<div className="row article-title-size">
 									<label className="input-prepend labled inline-span12"><input type="text" name="title" value={this.state.title} onChange={this.handleChange} placeholder="请输入文章标题" /><span className="add-on"><i className="icon-notebook"></i></span></label>
 								</div>
-								<div className="row">
-									<Editor value={this.state.content}></Editor>
-								</div>
+								<div className="row" id="editorInitBox"></div>
 							</div>
 							<div className="col-span3 article-sidebar">
 								<section className="section">
@@ -265,8 +267,8 @@ class ArticleFormUI extends Component {
 										<div className="controls"><b>Alvin</b></div>
 									</div>
 									<div className="control">
-										<span className="button blue">发布</span>
-										<span className="button teal">存草稿</span>
+										<span className="button blue" data-val="0" onClick={this.submitEvent}>发布</span>
+										<span className="button teal" data-val="1" onClick={this.submitEvent}>存草稿</span>
 									</div>
 								</section>
 								<section className="section">
