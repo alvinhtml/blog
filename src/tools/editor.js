@@ -1,17 +1,19 @@
 export class Editor {
-    constructor(element) {
+    constructor(element, params) {
 
         //编辑器最外层容器
         this.editorbox = document.getElementById(element)
+
+        //编辑模式
+        this.mode = params.mode
 
         //编辑器dom
         this.editorbox.innerHTML = ['<div class="editor-box">',
             '    <input type="hidden" name={name} value={this.state.content} />',
             '    <div class="editor-box-head" id="editorMenu">',
-            '        <span data-val="1">预览</span>',
-            '        <span data-val="2" class="active">文本</span>',
-            '        <span data-val="3" class="active">源码</span>',
-            '        <span data-val="4">Markdown</span>',
+            '        <span data-val="1" class="active" id="editorMenuText">文本</span>',
+            '        <span data-val="2" id="editorMenuCode">源码</span>',
+            '        <label class="start-markdown" id="startMarkdown"><input id="ivalMarkdown" type="checkbox" />启用 Markdown</label>',
             '    </div>',
             '    <div class="editor-main">',
             '        <div class="editor-head" id="editorHead">',
@@ -38,8 +40,11 @@ export class Editor {
                 '<button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M10.546 15c-.466.273-.86.053-.86-.5V9.505c0-.565.385-.778.86-.501l4.278 2.497c.466.272.475.726 0 1.003L10.546 15zM5 5S3 5 3 7v10s0 2 2.002 2H19c2 0 2-2 2-2V7c0-2-2-2-2-2H5z" fill-rule="evenodd"></path></svg></button>',
                 '<button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9.033 16.182l3.083-4.133a.885.885 0 0 0 .003-1.12L9.033 6.817h7.985c.606-.03.982-.362.982-.92C18 5.34 17.611 5 17.018 5H6.922a.93.93 0 0 0-.83.509.882.882 0 0 0 .109.946L10 11.5l-3.782 5.037c-.29.289-.246.743-.122.974.172.316.455.489.799.489v-.211l.029.21h10.094c.501 0 .982-.32.982-.909 0-.59-.483-.857-.982-.908H9.033z" fill-rule="evenodd"></path></svg></button>',
                 '<button type="button" class="editor-btn"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M4 7c0-.552.445-1 1-1h14c.552 0 1 .444 1 1 0 .552-.445 1-1 1H5c-.552 0-1-.444-1-1zm0 5a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2H5.01C4.451 13 4 12.556 4 12zm6 0a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2h-1.98c-.558 0-1.01-.444-1.01-1zm6 0a1 1 0 0 1 1.01-1h1.98a1 1 0 1 1 0 2h-1.98c-.558 0-1.01-.444-1.01-1zM4 17c0-.552.445-1 1-1h14c.552 0 1 .444 1 1 0 .552-.445 1-1 1H5c-.552 0-1-.444-1-1z" fill-rule="evenodd"></path></svg></button>',
-                '<button type="button" class="editor-btn" id="execCommandRemoveFormat"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9.864 12.83l1.641 1.642-1.171 2.874a1.693 1.693 0 0 1-1.585 1.055.782.782 0 0 1-.716-1.077l1.83-4.494zM11.5 8.811L12.24 7H9.69l-2-2h10.672a1 1 0 1 1 0 2h-3.813l-1.406 3.452L11.5 8.811zM5.293 6.845a1 1 0 0 1 1.414 0l10.046 10.046a1 1 0 0 1-1.414 1.414L5.293 8.26a1 1 0 0 1 0-1.415z" fill-rule="evenodd"></path></svg></button>',
-            ]
+                '<button type="button" class="editor-btn" id="execCommandRemoveFormat"><svg class="edit-svg" fill="currentColor" viewBox="0 0 26 26" width="24" height="24"><path d="M9.864 12.83l1.641 1.642-1.171 2.874a1.693 1.693 0 0 1-1.585 1.055.782.782 0 0 1-.716-1.077l1.83-4.494zM11.5 8.811L12.24 7H9.69l-2-2h10.672a1 1 0 1 1 0 2h-3.813l-1.406 3.452L11.5 8.811zM5.293 6.845a1 1 0 0 1 1.414 0l10.046 10.046a1 1 0 0 1-1.414 1.414L5.293 8.26a1 1 0 0 1 0-1.415z" fill-rule="evenodd"></path></svg></button>'
+            ].join('')
+
+            //内容
+            this.value = ''
 
             //按钮容器
             this.addonsbox = document.getElementById('editorAddons')
@@ -51,37 +56,50 @@ export class Editor {
 
             this.mode = 'html'  //html, code, markdown
 
+            //markdown 功能启停事件
+            document.getElementById('ivalMarkdown').onchange = (e) => {
+                console.log(e.target.checked)
+            }
+            
+            let editorMenuText = document.getElementById('editorMenuText'),
+                editorMenuCode = document.getElementById('editorMenuCode')
+
+            //切换到文本
+            editorMenuText.onclick = (e) => {
+                editorMenuCode.classList.remove('active')
+                editorMenuText.classList.add('active')
+            }
+
+            //切换到源码
+            editorMenuCode.onclick = (e) => {
+                editorMenuText.classList.remove('active')
+                editorMenuCode.classList.add('active')
+            }
+
             editorMenu.onclick = (e) => {
                 if (e.target.tagName === 'SPAN') {
                     let targetElement = e.target
                     let value = targetElement.getAttribute('data-val')
 
-                    switch (value) {
-                        case '1':
-                        
-                            break;
-                        case '2':
-
-                            break;
-                        case '3':
-
-                            break;
-                        case '4':
-
-                            break;
-                        default:
+                    if (value = 1) {
 
                     }
 
                 }
             }
 
+            //第一次初始化
+            this.init(this.mode, editor)
+
     }
 }
 
 Object.assign(Editor.prototype, {
-    init(mode) {
+
+    init(mode, editor) {
+
         if (mode === 'html') {
+
             this.setHtmlEditor(editor)
         }
         if (mode === 'markdown') {
@@ -89,10 +107,12 @@ Object.assign(Editor.prototype, {
         }
 
     },
-    setHtmlEditor() {
-
+    setMarkdownEditor(editor) {
+        this.addonsbox.innerHTML = this.addons
     },
-    setMarkdownEditor() {
+    setHtmlEditor(editor) {
+        this.addonsbox.innerHTML = this.addons
+
         //定义最后光标对象
         let lastEditRange;
 

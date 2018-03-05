@@ -198,7 +198,9 @@ class ArticleFormUI extends Component {
     }
 
 	componentDidMount() {
-		Editor('editorInitBox')
+		Editor('editorInitBox', {
+			mode: 'html'
+		})
 	}
 
 	componentWillReceiveProps(nextProps) {

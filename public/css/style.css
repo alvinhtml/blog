@@ -500,7 +500,7 @@ table.moving th.row-last {
  =================================*/
 .editor-box { margin-top: 20px;}
 .editor-box-head { height: 36px; text-align: right; }
-.editor-box-head span { line-height: 36px; padding: 0 10px; display: inline-block;}
+.editor-box-head span, .editor-box-head label { line-height: 36px; padding: 0 20px; display: inline-block; cursor: default;}
 .editor-box-head span.active { background-color: #f4f6f9; }
 .editor-head { background-color: #f4f6f9; padding: 10px;}
 .editor { min-height: 480px; border: 10px solid #f4f6f9; padding: 10px; border-top: 0; }
