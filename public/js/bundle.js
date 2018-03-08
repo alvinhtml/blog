@@ -27641,6 +27641,8 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Editor = exports.Editor = function Editor(element, params) {
+    var _this = this;
+
     _classCallCheck(this, Editor);
 
     //编辑器最外层容器
@@ -27670,31 +27672,53 @@ var Editor = exports.Editor = function Editor(element, params) {
 
     //markdown 功能启停事件
     document.getElementById('ivalMarkdown').onchange = function (e) {
-        console.log(e.target.checked);
+        var checked = e.target.checked;
+        if (checked) {
+            _this.setMarkdownEditor(editor);
+        } else {
+            _this.setHtmlEditor(editor);
+        }
     };
 
     var editorMenuText = document.getElementById('editorMenuText'),
         editorMenuCode = document.getElementById('editorMenuCode');
 
+    var HTMLEncode = function HTMLEncode(html) {
+        var temp = document.createElement("div");
+        temp.textContent != null ? temp.textContent = html : temp.innerText = html;
+        var output = temp.innerHTML;
+        console.log(html, temp.innerText);
+        temp = null;
+        return output;
+    };
+
+    var HTMLDecode = function HTMLDecode(text) {
+        var temp = document.createElement("div");
+        temp.innerHTML = text;
+        var output = temp.innerText || temp.textContent;
+        console.log(text, temp.innerHTML);
+        temp = null;
+        return output;
+    };
+
     //切换到文本
     editorMenuText.onclick = function (e) {
         editorMenuCode.classList.remove('active');
         editorMenuText.classList.add('active');
+        _this.value = editor.innerText;
+        console.log(editor.innerText, _this.value);
+        editor.innerHTML = _this.value;
+        editor.contentEditable = 'true';
     };
 
     //切换到源码
     editorMenuCode.onclick = function (e) {
         editorMenuText.classList.remove('active');
         editorMenuCode.classList.add('active');
-    };
-
-    editorMenu.onclick = function (e) {
-        if (e.target.tagName === 'SPAN') {
-            var targetElement = e.target;
-            var value = targetElement.getAttribute('data-val');
-
-            if (value = 1) {}
-        }
+        _this.value = editor.innerHTML;
+        console.log(editor.innerHTML, _this.value);
+        editor.innerText = _this.value;
+        editor.contentEditable = 'plaintext-only';
     };
 
     //第一次初始化
@@ -27713,9 +27737,6 @@ Object.assign(Editor.prototype, {
         }
     },
     setMarkdownEditor: function setMarkdownEditor(editor) {
-        this.addonsbox.innerHTML = this.addons;
-    },
-    setHtmlEditor: function setHtmlEditor(editor) {
         this.addonsbox.innerHTML = this.addons;
 
         //定义最后光标对象
@@ -27739,6 +27760,181 @@ Object.assign(Editor.prototype, {
             //设置最后光标对象
             lastEditRange = selection.getRangeAt(0);
             console.log(223);
+        };
+        //
+        console.log("lastEditRange", lastEditRange);
+
+        editor.onkeypress = function (e) {
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+        };
+
+        //粗体
+        var execCommandBolde = document.getElementById('execCommandBolde');
+        execCommandBolde.addEventListener('click', function () {
+            if (lastEditRange) {
+                if (lastEditRange.collapsed) {
+                    console.log('lastEditRange.text', getSelection().text);
+                    document.execCommand('insertText', false, '****');
+                } else {
+                    console.log('lastEditRange.text', lastEditRange.toString());
+                    document.execCommand('insertText', false, '**' + lastEditRange.toString() + '**');
+                }
+            }
+            editor.focus();
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+            lastEditRange.setEnd(lastEditRange.commonAncestorContainer, lastEditRange.endOffset - 2);
+        });
+
+        //斜体
+        var execCommandItalic = document.getElementById('execCommandItalic');
+        execCommandItalic.addEventListener('click', function () {
+            if (lastEditRange) {
+                if (lastEditRange.collapsed) {
+                    document.execCommand('insertText', false, '**');
+                } else {
+                    document.execCommand('insertText', false, '*' + lastEditRange.toString() + '*');
+                }
+            }
+            editor.focus();
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+            lastEditRange.setEnd(lastEditRange.commonAncestorContainer, lastEditRange.endOffset - 1);
+        });
+
+        //标题
+        var execCommandHeader = document.getElementById('execCommandHeader');
+        execCommandHeader.addEventListener('click', function () {
+            if (lastEditRange) {
+                if (lastEditRange.commonAncestorContainer.nodeName === '#text') {
+                    var data = lastEditRange.commonAncestorContainer.data;
+                    if (/^#{1,6}\s/.test(data)) {
+                        var newData = data.replace(/^#{1,6}\s/, '');
+                        lastEditRange.commonAncestorContainer.nodeValue = newData;
+                    } else {
+                        lastEditRange.commonAncestorContainer.nodeValue = '# ' + data;
+                    }
+                } else {
+                    document.execCommand('insertText', false, '# ');
+                }
+            }
+            editor.focus();
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+            lastEditRange.setStart(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+            lastEditRange.setEnd(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+        });
+
+        //引用
+        var execCommandBlockquote = document.getElementById('execCommandBlockquote');
+        execCommandBlockquote.addEventListener('click', function () {
+            if (lastEditRange) {
+                if (lastEditRange.commonAncestorContainer.nodeName === '#text') {
+                    var data = lastEditRange.commonAncestorContainer.data;
+                    if (/^\>{1,6}\s/.test(data)) {
+                        var newData = data.replace(/^\>{1,6}\s/, '');
+                        lastEditRange.commonAncestorContainer.nodeValue = newData;
+                    } else {
+                        lastEditRange.commonAncestorContainer.nodeValue = '> ' + data;
+                    }
+                } else {
+                    document.execCommand('insertText', false, '> ');
+                }
+            }
+            editor.focus();
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+            lastEditRange.setStart(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+            lastEditRange.setEnd(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+        });
+
+        //有序
+        var execCommandOrderedList = document.getElementById('execCommandOrderedList');
+        execCommandOrderedList.addEventListener('click', function () {
+            if (lastEditRange) {
+                if (lastEditRange.commonAncestorContainer.nodeName === '#text') {
+                    var data = lastEditRange.commonAncestorContainer.data;
+                    if (/^[1-9\*]\d*\.?\s/.test(data)) {
+                        var newData = data.replace(/^[1-9\*]\d*\.?\s/, '');
+                        lastEditRange.commonAncestorContainer.nodeValue = newData;
+                    } else {
+                        lastEditRange.commonAncestorContainer.nodeValue = '1. ' + data;
+                    }
+                } else {
+                    document.execCommand('insertText', false, '1. ');
+                }
+            }
+            editor.focus();
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+            lastEditRange.setStart(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+            lastEditRange.setEnd(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+        });
+
+        //无序
+        var execCommandUnorderedList = document.getElementById('execCommandUnorderedList');
+        execCommandUnorderedList.addEventListener('click', function () {
+            if (lastEditRange) {
+                if (lastEditRange.commonAncestorContainer.nodeName === '#text') {
+                    var data = lastEditRange.commonAncestorContainer.data;
+                    if (/^[1-9\*]\d*\.?\s/.test(data)) {
+                        var newData = data.replace(/^[1-9\*]\d*\.?\s/, '');
+                        lastEditRange.commonAncestorContainer.nodeValue = newData;
+                    } else {
+                        lastEditRange.commonAncestorContainer.nodeValue = '* ' + data;
+                    }
+                } else {
+                    document.execCommand('insertText', false, '* ');
+                }
+            }
+            editor.focus();
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+            lastEditRange.setStart(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+            lastEditRange.setEnd(lastEditRange.commonAncestorContainer, lastEditRange.commonAncestorContainer.length);
+        });
+
+        //去除格式
+        var execCommandRemoveFormat = document.getElementById('execCommandRemoveFormat');
+        execCommandRemoveFormat.addEventListener('click', function () {});
+    },
+    setHtmlEditor: function setHtmlEditor(editor) {
+        this.addonsbox.innerHTML = this.addons;
+
+        //定义最后光标对象
+        var lastEditRange = void 0;
+
+        //编辑框点击事件
+        editor.onclick = function () {
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
+            console.log("selection", selection);
+            console.log("lastEditRange", lastEditRange);
+        };
+
+        //编辑框按键弹起事件
+        editor.onkeyup = function () {
+            //获取选定对象
+            var selection = getSelection();
+            //设置最后光标对象
+            lastEditRange = selection.getRangeAt(0);
         };
         //
         console.log("lastEditRange", lastEditRange);
