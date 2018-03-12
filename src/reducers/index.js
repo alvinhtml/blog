@@ -9,6 +9,7 @@ import {common} from './common'
 import {header} from './header'
 import {user} from './user'
 import {article} from './article'
+import {classify} from './classify'
 // import {media} from './media'
 // import {view} from './view'
 
@@ -21,6 +22,7 @@ export default combineReducers({
 	header, //头部相关
 	user, //用户列表
 	article, //文章列表
+	clissify, //文章分类列表
 	//media, //部门列表
 	//view, //视图
 

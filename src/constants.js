@@ -13,7 +13,7 @@ export const SUCCESS = 'SUCCESS'
 
 //common
 export const GET_AUTH_INFO = 'GET_AUTH_INFO'
-export const GET_OU_IN_COMPONENT = 'GET_OU_IN_COMPONENT'
+export const GET_CLASSIFY_IN_COMPONENT = 'GET_CLASSIFY_IN_COMPONENT'
 
 //login
 export const LOGIN = 'LOGIN'

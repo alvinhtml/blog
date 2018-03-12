@@ -43,6 +43,12 @@ $router->get('/admin/article/list', 'HomeController@index');
 $router->get('/admin/article/form/{id}', 'HomeController@index');
 $router->get('/admin/article/form', 'HomeController@index');
 
+$router->get('/admin/classify', 'HomeController@index');
+$router->get('/admin/classify/list', 'HomeController@index');
+$router->get('/admin/classify/form/{id}', 'HomeController@index');
+$router->get('/admin/classify/form', 'HomeController@index');
+
+
 /*
 |--------------------------------------------------------------------------
 | API
@@ -70,6 +76,7 @@ $router->get('/api/article/info/{id}', ['middleware' => 'auth', 'uses' => 'Artic
 $router->get('/api/classify/list', ['middleware' => 'auth', 'uses' => 'ClassifyController@list']);
 $router->get('/api/classify/update', ['middleware' => 'auth', 'uses' => 'ClassifyController@update']);
 $router->get('/api/classify/info', ['middleware' => 'auth', 'uses' => 'ClassifyController@info']);
+$router->get('/api/classify/component', ['middleware' => 'auth', 'uses' => 'ClassifyController@component']);
 
 //media
 $router->get('/api/media/list', ['middleware' => 'auth', 'uses' => 'MediaController@list']);

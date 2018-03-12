@@ -53,6 +53,7 @@ export class Editor {
 
             //编辑框
             let editor = document.getElementById('contentEditable')
+            this.editor = editor
 
             this.mode = 'html'  //html, code, markdown
 
@@ -60,8 +61,10 @@ export class Editor {
             document.getElementById('ivalMarkdown').onchange = (e) => {
                 let checked = e.target.checked
                 if (checked) {
+                    this.mode = 'morkdown'
                     this.setMarkdownEditor(editor)
                 } else {
+                    this.mode = 'html'
                     this.setHtmlEditor(editor)
                 }
             }
@@ -441,10 +444,15 @@ Object.assign(Editor.prototype, {
         });
     },
     setContent(content) {
-
+        this.value = content
+        this.init(this.mode, editor)
     },
-    getContent(content) {
-
+    getContent() {
+        this.value = this.editor.innerHTML
+        return this.value
+    },
+    getMode() {
+        return this.mode
     }
 })
 
