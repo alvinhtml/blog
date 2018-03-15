@@ -202,7 +202,9 @@ class UserFormUI extends Component {
 	}
 
 	componentWillMount() {
-        this.props.getUserInfo(this.props.match.params.id)
+		if(this.props.match.params.id) {
+			this.props.getInfo(this.props.match.params.id)
+		}
     }
 
 	componentWillReceiveProps(nextProps) {

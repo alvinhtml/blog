@@ -11,7 +11,7 @@ import {
 
 
 //初始化状态
-const mediaInitialState = {
+const classifyInitialState = {
     isFetching: 0,
     error: 0,
     message: '',
@@ -26,7 +26,7 @@ const mediaInitialState = {
     count: 0, //列表总条数
     //列表配置
     configs:{
-        listPath: 'media',
+        listPath: 'classify',
         page: 1, //当前页
         limit: 20, //单页显示条数
         searchMode: 0, //搜索模式
@@ -45,23 +45,30 @@ const mediaInitialState = {
             key: 'name',
             title: '名称',
             order: true,
-            visibility: false,
-            width: 120,
+            visibility: true,
+            width: 200,
+            resize: 1
+        },{
+            key: 'slug',
+            title: '别名',
+            order: true,
+            visibility: true,
+            width: 200,
             resize: 1
         },{
             key: 'type',
             title: '类型',
             order: true,
             visibility: true,
-            width: 200,
+            width: 120,
             resize: 1
         }]
     }
 }
 
-export function media(state = mediaInitialState, action) {
+export function classify(state = classifyInitialState, action) {
 
-    if (action.path !== "media") {
+    if (action.path !== "classify") {
         return state
     }
 

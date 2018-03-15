@@ -17,7 +17,7 @@ import {ActionCreator, ActionGet, ActionPost, FetchPost} from '../actions/action
 
 
 
-class OuSelectUI extends Component {
+class ClassifySelectUI extends Component {
 
 	constructor(props) {
 		super(props)
@@ -118,6 +118,7 @@ class OuSelectUI extends Component {
 				search: value
 			})
 		}, 800)
+		
 	}
 
 	render() {
@@ -142,15 +143,15 @@ class OuSelectUI extends Component {
 
 }
 
-export const OuSelect = connect(
+export const ClassifySelect = connect(
 	(state) => {
 		return {ouObjectList: state.common.ouObjectList}
 	},
 	(dispatch, ownProps) => {
 		return {
 			getList: (params) => {
-				dispatch(ActionGet(GET_OU_IN_COMPONENT, '/api/ou/component', params, 'common'))
+				dispatch(ActionGet(GET_CLASSIFY_IN_COMPONENT, '/api/classify/component', params, 'common'))
 			}
 		};
 	}
-)(OuSelectUI)
+)(ClassifySelectUI)

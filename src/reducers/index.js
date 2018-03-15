@@ -22,7 +22,7 @@ export default combineReducers({
 	header, //头部相关
 	user, //用户列表
 	article, //文章列表
-	clissify, //文章分类列表
+	classify, //文章分类列表
 	//media, //部门列表
 	//view, //视图
 
