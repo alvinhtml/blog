@@ -26,13 +26,10 @@ pre,code { font-family: "Monaco","Menlo","Ubuntu Mono","Consolas","source-code-p
 a {color: @blue-sharp; }
 a:hover,
 a:active {
-  color: @blue-steel;
+
 }
 
 /* background color */
-.bg-lightgray { background-color: @lightgray; }
-.bg-gray { background-color: @gray; }
-.bg-dark { background-color: @dark; }
 .bg-red { background-color: @red; }
 .bg-orange { background-color: @orange; }
 .bg-yellow { background-color: @yellow; }
@@ -44,12 +41,19 @@ a:active {
 .bg-purple { background-color: @purple; }
 .bg-pink { background-color: @pink; }
 .bg-brown { background-color: @brown; }
+.bg-white { background-color: @white; }
+.bg-dark { background-color: @dark; }
+.bg-gray { background-color: @gray; }
+.bg-lightgray { background-color: @lightgray; }
+.bg-blue-sharp { background-color: @blue-sharp; }
+.bg-blue-steel { background-color: @blue-steel; }
+.bg-code-color { background-color: @code-color; }
+
+
+
 
 
 /* font color */
-.color-lightgray { color: @lightgray; }
-.color-gray { color: @gray; }
-.color-dark { color: @dark; }
 .color-red { color: @red; }
 .color-orange { color: @orange; }
 .color-yellow { color: @yellow; }
@@ -61,6 +65,13 @@ a:active {
 .color-purple { color: @purple; }
 .color-pink { color: @pink; }
 .color-brown { color: @brown; }
+.color-white { color: @white; }
+.color-dark { color: @dark; }
+.color-gray { color: @gray; }
+.color-lightgray { color: @lightgray; }
+.color-blue-sharp { color: @blue-sharp; }
+.color-blue-steel { color: @blue-steel; }
+.color-code-color { color: @code-color; }
 
 /* text align */
 .align-left,
@@ -85,10 +96,13 @@ p { margin: 1em 0; text-indent: 2em; }
 ul, ol, dl { list-style: none; margin: 0; }
 ul.mui,
 ol.mui,
-dl.mui { margin: 1em 0; margin-left: 2em; list-style: outside;}
-ul.mui ul.mui { list-style: outside circle; }
-ol.mui { list-style: outside decimal; }
-dl.mui { display:list-item; list-style: outside disc; }
+dl.mui,
+.mui ul,
+.mui ol,
+.mui dl, { margin: 1em 0; margin-left: 2em; list-style: outside;}
+ul.mui ul.mui, .mui ul ul  { list-style: outside circle; }
+ol.mui, .mui ol { list-style: outside decimal; }
+dl.mui, .mui dl { display:list-item; list-style: outside disc; }
 
 
 
@@ -96,7 +110,7 @@ dl.mui { display:list-item; list-style: outside disc; }
             Table
 *******************************/
 table { width:100%; box-sizing:border-box; border-collapse:collapse; line-height:1.2857em; border:1px solid #f4f6f9; background-color:@white; }
-table th {padding:0.6em 1em;background:#f4f6f9; text-align:left; font-weight:normal; }
+table th {padding:0.6em 1em; background-color:#f4f6f9; text-align:left; font-weight:normal; }
 thead,tbody { border-radius:5px; }
 table td { padding:0.5em 1em; }
 table tr:nth-child(2n){ background-color:#fafafb; }
@@ -131,7 +145,7 @@ q, code {
 code.cmd, blockquote.cmd { color: @green; }
 pre code {
   margin:0;
-  padding:0; 
+  padding:0;
   box-shadow: none;
   color: @code-color;
 }

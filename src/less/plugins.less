@@ -1,4 +1,534 @@
 /*******************************
+             Modal
+*******************************/
+.modal {
+  min-width:560px;
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  top: 50%;
+  left: 50%;
+  text-align: left;
+  background-color: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 5px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+/*******************************
+            Content
+*******************************/
+/*--------------
+     Close
+---------------*/
+.modal > .modal-close {
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+  opacity: 0.8;
+  font-size: 1.25em;
+  top: -1.4285em;
+  right: -1.4285em;
+  color: #FFFFFF;
+  font-family: inherit;
+}
+.modal > i.close:hover {
+  opacity: 1;
+}
+/*--------------
+     Header
+---------------*/
+.modal > .modal-header {
+  box-sizing: border-box;
+  margin: 0em;
+  width: 100%;
+  padding: 1em 2rem;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-radius: 0.325em 0.325em 0px 0px;
+}
+/*--------------
+     Content
+---------------*/
+.modal > .content {
+  display: table;
+  width: 100%;
+  position: relative;
+  padding: 2em;
+  background-color: #F4F4F4;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+.modal.visible {
+  display:table;
+  visibility:visible;
+}
+
+/*--------------
+     Actions
+---------------*/
+.modal .actions {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1rem 2rem;
+  text-align: right;
+}
+.modal .actions > .button {
+  margin-left: 0.75em;
+}
+.dimmer {
+  display: block;
+    height: 100%;
+    opacity: 1;
+    width: 100%;
+  position:fixed;
+  left:0; top:0; bottom:0; right:0;
+  z-index:1000;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+/*--------------
+     Infohint
+---------------*/
+
+.Infohint { border:0; box-shadow: 0 0 20px rgba(0,0,0,0.2); padding: 0.5em 2em; width: auto; min-width: 100px; }
+.Infohint i { font-size: 1.6em; margin-right: 6px; vertical-align: middle;}
+.Infohint.success {color:#5BBD72;}
+.Infohint.warning {color:#b58105;}
+.Infohint.error {color:#D95C5C;}
+
+/*******************************
+            animate
+*******************************/
+
+.animate {
+	  -webkit-animation-iteration-count: 1;
+     -moz-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+  -webkit-animation-duration: 1s;
+     -moz-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-timing-function: ease;
+     -moz-animation-timing-function: ease;
+          animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+     -moz-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+
+.modal.animate.visible {
+  visibility: visible;
+  -webkit-transform:scale(1);
+  -moz-transform:scale(1);
+  transform:scale(1);
+  opacity:1;
+  -webkit-transition:opacity ease-in-out .3s,-webkit-transform ease-in-out .3s;
+  transition:opacity ease-in-out .3s,transform ease-in-out .3s;
+}
+.modal.animate {
+  visibility:visible;
+  opacity:0;
+  -webkit-transform:scale(0.7);
+  -moz-transform:scale(0.7);
+  transform:scale(0.7);
+  -webkit-transition:opacity ease-in-out .3s,-webkit-transform ease-in-out .3s;
+  transition:opacity ease-in-out .3s,transform ease-in-out .3s;
+}
+.dimmer.animate.visible{
+   visibility: visible;
+   opacity:1;
+   -webkit-transition:opacity ease-in-out .3s;
+   transition:opacity ease-in-out .3s;
+}
+.dimmer.animate {
+  visibility:visible;
+  opacity:0;
+  -webkit-transition:opacity ease-in-out .3s;
+  transition:opacity ease-in-out .3s;
+}
+
+
+
+/*******************************
+            datepicker
+*******************************/
+
+.date-picker-box
+{
+	font-size: 12px;
+	display: block;
+	text-align: center;
+	padding: 4px;
+	float: left;
+	width: 210px;
+	position: absolute;
+	z-index: 999;
+	min-width: 210px;
+	line-height: 1.8em;
+	background-color: #fdfdfd;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 0.3125em;
+	box-sizing: border-box;
+}
+
+.date-picker-top
+{
+	display: table;
+	width: 100%;
+}
+
+.date-picker-list
+{
+	float: left;
+	width: 100%;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.date-picker-list li
+{
+	margin: 0;
+	width: 14.2857%;
+	float: left;
+	box-sizing: border-box;
+	color: #555;
+	text-align: center;
+}
+
+.date-picker-years,
+.date-picker-hour,
+.date-picker-minute,
+.date-picker-second
+{
+	height: 10.8em;
+	overflow-y: auto;
+	display: none;
+}
+
+.date-picker-years li,
+.date-picker-hour li
+{
+	width: 25%;
+}
+
+.date-picker-minute li,
+.date-picker-second li
+{
+	width: 16.66%;
+}
+
+
+.date-picker-list li:hover, .date-head-year:hover
+{
+	cursor: pointer;
+	background-color: #eee;
+}
+
+.date-picker-list li.old-days, .date-picker-list li.new-days
+{
+	color: #999;
+}
+
+.date-picker-list li.today
+{
+	background-color: #e6f4f9;
+}
+
+.date-button-prev, .date-button-next
+{
+	width: 2em;
+	cursor: pointer;
+	display: table-cell;
+}
+
+.date-picker-head
+{
+	display: table-cell;
+}
+
+.date-picker-today
+{
+	clear: left;
+	text-align: center;
+}
+
+.date-picker-today
+{
+	cursor: pointer;
+	margin: 0 auto;
+	width: 60px;
+	clear: both;
+	text-align: center;
+}
+
+.date-picker-today:hover
+{
+	background-color: #eee;
+}
+
+.date-picker-box.dropmenu-style.right
+{
+	margin: auto;
+	left: 20px;
+	top: 20px;
+	bottom: auto;
+	right: auto;
+}
+
+.dicon-prev, .dicon-next
+{
+	display: inline-block;
+	height: 0px;
+	width: 0;
+	border-left: 5px solid #666;
+	border-top: 5px solid #fff;
+	border-bottom: 5px solid #fff;
+}
+
+.dicon-prev
+{
+	border-right: 5px solid #666;
+	border-left: 0;
+}
+
+.date-picker-box::before {
+    background-color: #fdfdfd;
+	border-left: 1px solid rgba(0, 0, 0, 0.15);
+	border-top: 1px solid rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+    content: "";
+    height: 0.5em;
+    position: absolute;
+    top: -0.2142em;
+    right: 1em;
+    transform: rotate(45deg);
+    width: 0.5em;
+    z-index: 2;
+}
+
+/*******************************
+            animate
+*******************************/
+
+.animate {
+	  -webkit-animation-iteration-count: 1;
+     -moz-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+  -webkit-animation-duration: 1s;
+     -moz-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-timing-function: ease;
+     -moz-animation-timing-function: ease;
+          animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+     -moz-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+
+.dropmain.animate.visible {
+	visibility: visible;
+	transform-origin:left top;
+	-webkit-transform-origin:left top;
+  -webkit-transform:scale(1);
+	-moz-transform:scale(1);
+		transform:scale(1);
+		opacity:1;
+		-webkit-transition:opacity ease-in-out .3s,-webkit-transform ease-in-out .3s;
+		transition:opacity ease-in-out .3s,transform ease-in-out .3s;
+}
+.dropmain.animate {
+	visibility:visible;
+
+	transform-origin:left top;
+	-webkit-transform-origin:left top;
+	opacity:0;
+	-webkit-transform:scale(0.7);
+	-moz-transform:scale(0.7);
+	transform:scale(0.7);
+	-webkit-transition:opacity ease-in-out .3s,-webkit-transform ease-in-out .3s;
+	transition:opacity ease-in-out .3s,transform ease-in-out .3s;
+}
+
+
+/*******************************
+            Popup
+*******************************/
+.popup {
+  visibility:hidden;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 9999;
+  max-width: 250px;
+  background-color:rgba(0,0,0,1);
+  padding: 0.5em 1em;
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  color:#fff;
+  line-height: 1.4em;
+  border-radius: 4px;
+  border-width:1px;
+  border-style:solid;
+  border-color: rgba(0,0,0,1);
+  -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+}
+.popup .header {
+  padding: 0em 0em 0.5em;
+  font-size: 1.125em;
+  line-height: 1.2;
+  font-weight: bold;
+}
+.popup:before {
+  position: absolute;
+  content: "";
+  width: 7px;
+  height: 7px;
+  overflow: hidden;
+  display: block;
+  background-image: none;
+  background-color: rgba(0,0,0,1);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+  z-index: 2;
+  border-style:solid;
+  border-width: 1px;
+  border-color: rgba(0,0,0,1);
+}
+.popup .button {
+  width: 100%;
+}
+/*******************************
+            position
+*******************************/
+.bottom.center.popup::before {
+  margin-left: -3px;
+  top: -4px;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  border-right-width: 0;
+  border-bottom-width: 0;
+}
+
+/*--- Top Center ---*/
+.top.center.popup:before {
+  top: auto;
+  right: auto;
+  bottom: -4px;
+  left: 50%;
+  margin-left: -3px;
+  border-top-width: 0;
+  border-left-width: 0;
+}
+/*--- Left Center ---*/
+.left.center.popup:before {
+  top: 50%;
+  right: -4px;
+  bottom: auto;
+  left: auto;
+  margin-top: -3px;
+  border-bottom-width: 0;
+  border-left-width: 0;
+}
+/*--- Right Center  ---*/
+.right.center.popup:before {
+  top: 50%;
+  left: -4px;
+  bottom: auto;
+  right: auto;
+  margin-top: -3px;
+  border-top-width: 0;
+  border-right-width: 0;
+}
+
+/*--------------
+     Colors
+---------------*/
+.popup-white.popup {
+  background-color: #fff;
+  color: #666;
+  border-color:rgba(39, 41, 43, 0.15);
+}
+.popup-white.popup::before {
+  background-color: #fff;
+  border-color: rgba(39, 41, 43, 0.15);
+}
+
+.popup-yellow.popup {
+  background-color: #fff8db;
+  color: #b58105;
+  border-color:rgba(39, 41, 43, 0.15);
+}
+.popup-yellow.popup::before {
+  background-color: #fff8db;
+  border-color: rgba(39, 41, 43, 0.15);
+}
+
+.popup-red.popup {
+  background-color: #ffe8e6;
+  color: #d95c5c;
+  border-color:rgba(39, 41, 43, 0.15);
+}
+.popup-red.popup::before {
+  background-color: #ffe8e6;
+  border-color: rgba(39, 41, 43, 0.15);
+}
+
+
+
+
+
+
+
+/*******************************
+            animate
+*******************************/
+
+.animate {
+	  -webkit-animation-iteration-count: 1;
+     -moz-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+  -webkit-animation-duration: 1s;
+     -moz-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-timing-function: ease;
+     -moz-animation-timing-function: ease;
+          animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+     -moz-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+.popup.animate.visible {
+  visibility: visible;
+  -webkit-transform:scale(1);
+	-moz-transform:scale(1);
+		transform:scale(1);
+		opacity:1;
+		-webkit-transition:opacity ease-in-out .3s,-webkit-transform ease-in-out .3s;
+		transition:opacity ease-in-out .3s,transform ease-in-out .3s;
+}
+.popup.animate {
+	visibility:visible;
+	opacity:0;
+	-webkit-transform:scale(0.7);
+	-moz-transform:scale(0.7);
+	transform:scale(0.7);
+	-webkit-transition:opacity ease-in-out .3s,-webkit-transform ease-in-out .3s;
+	transition:opacity ease-in-out .3s,transform ease-in-out .3s;
+}
+
+
+/*******************************
             Message
 *******************************/
 .message {

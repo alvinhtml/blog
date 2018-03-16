@@ -4,8 +4,16 @@ import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 
 //引入样式文件
-// import './less/miniui.less'
-// import './css/style.css'
+import '../../mui/src/less/miniui.less'
+import '../public/css/style.css'
+
+
+var head = document.getElementsByTagName('head')[0];
+var link = document.createElement('link');
+link.type='text/css';
+link.rel = 'stylesheet';
+link.href = '/public/css/style.min.css';
+head.appendChild(link);
 
 
 //引入Action创建函数

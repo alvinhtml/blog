@@ -1,0 +1,53 @@
+
+
+
+
+
+@red: #fa5a64;
+@orange: #f48804;
+@yellow: #f1c40f;
+@olive: #c3d72d;
+@green: #1bbc9b;
+@teal: #32c5d2;
+@blue: #50d2fa;
+@violet: #6e37e6;
+@purple: #8c50c8;
+@pink: #eb41a0;
+@brown: #c87846;
+@white: #ffffff;
+@dark: #2f353b;
+@gray: #aeaeae;
+@lightgray: #d5d5d5;
+
+
+
+.button-style(@name;@color){
+	.@{name}.button {
+		background-color: @color;
+		color: #fff;
+		border: 1px solid @color; 
+	}
+	.@{name}.button:hover {
+		background-color: lighten(@color,5%);
+		border: 1px solid lighten(@color,5%);
+	}
+	.@{name}.button:active {
+		background-color: darken(@color,10%);
+		border: 1px solid darken(@color,10%);
+	}
+}
+
+.button-style( lightgray; @lightgray );
+.button-style( gray; @gray );
+.button-style( dark; @dark );
+.button-style( red; @red );
+.button-style( orange; @orange );
+.button-style( yellow; @yellow );
+.button-style( olive; @olive );
+.button-style( green; @green );
+.button-style( teal; @teal );
+.button-style( blue; @blue );
+.button-style( violet; @violet );
+.button-style( purple; @purple );
+.button-style( pink; @pink );
+.button-style( brown; @brown );

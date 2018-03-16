@@ -5,10 +5,29 @@
 .layout.center {width:100%; max-width: 1278px; margin: 0 auto;}
 
 .layout-box { width:100%; margin: 1em 0;}
-.layout-box::before,.layout-box::after { display: table; line-height: 0; content: "";}
-.layout-box::after { clear: both; }
-[class*="col-span"] { float:left; margin-left:2.5641%;}
-[class*="inline-span"] { margin-left:2.5641%;}
+.layout-box::before,
+.layout-box::after,
+.row::before,
+.row::after,
+.controls::after
+{
+	display: table;
+	line-height: 0;
+	content: "";
+}
+.layout-box::after,
+.row::after,
+.controls::after
+ {
+	 clear: both;
+ }
+.row.margin [class*="col-span"],
+.row.margin [class*="inline-span"]{
+	margin-bottom:2.5641%;
+}
+[class*="col-span"] { margin-left:2.5641%;}
+[class*="inline-span"] {  margin-left:2.5641%; display: inline-block; }
+.row [class*="col-span"], .row [class*="inline-span"] { float: left;}
 .col-span12,.inline-span12 { width: 100%; }
 .col-span11,.inline-span11 { width: 91.453%; }
 .col-span10,.inline-span10 { width: 82.906%; }
@@ -50,6 +69,12 @@
 
 [class*="col-grid"] { float:left; margin-left:0.8%; }
 [class*="inline-grid"] { margin-left:0.8%; }
+
+.row.margin [class*="col-grid"],
+.row.margin [class*="inline-grid"]{
+	margin-bottom:0.8%;
+}
+
 .col-grid1, .inline-grid1 { width:3.4000%; }
 .col-grid2, .inline-grid2 { width:7.6000%; }
 .col-grid3, .inline-grid3 { width:11.8000%; }
@@ -132,7 +157,7 @@ section,header,footer {
 
 .control { line-height:36px; clear:both; margin:1em 0;}
 .control:last-child { margin-bottom: 0px;}
-.control-label { display:block; width: 14.5299%; opacity: 0.9; font-size:0.8571em; float:left; text-align:right; line-height:36px;}
+.control-label { display:block; width: 14.5299%; opacity: 0.9; font-size:0.8571em; float:left; text-align:right;}
 .controls { margin-left:17.094%; padding-bottom:10px;}
 
 .text-left { text-align:left;}
@@ -144,10 +169,14 @@ section,header,footer {
 .clear:after { clear: both; }
 
 
+/*******************************
+            flux
+*******************************/
+
 @media screen and (max-width:999px) {
 	.layout.center { max-width: 999px; }
 }
 @media screen and (max-width:768px) {
 	.control-label {  float: none; display: block; text-align: left; }
 	.controls { margin-left:none; }
-} 
+}

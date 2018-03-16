@@ -2,6 +2,9 @@
 const webpack = require("webpack")
 const path = require('path')
 
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+
+
 module.exports = {
     entry: {
         init: ['react', 'react-dom', 'react-router', 'redux', 'react-redux', 'react-router-redux', 'redux-thunk', 'isomorphic-fetch'],
@@ -14,11 +17,23 @@ module.exports = {
     module: {
         loaders: [{
             test: /\.css$/,
-			loader: 'style!css!autoprefixer'
-        }, {
+            use: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: [{
+                    loader: "css-loader"
+                }]
+            })
+        },{
             test: /\.less$/,
-			loader: 'style!css?importLoaders=2!autoprefixer!less'
-        }, {
+            use: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: [{
+                    loader: "css-loader"
+                },{
+                    loader: "less-loader"
+                }]
+            })
+        },{
             test: /\.js[x]?$/,
             exclude: /node_modules/,
             loader: 'babel-loader'
@@ -34,6 +49,9 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'init',
             filename: 'init.min.js',
+        }),
+        new ExtractTextPlugin({
+            filename: '../css/style.min.css'
         })
     ]
 }

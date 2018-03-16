@@ -19,10 +19,9 @@
 
     <!-- External CSS -->
     <!-- External CSS -->
-    <link type="text/css" rel="stylesheet" href="http://mui.xuehtml.com/src/css/miniui.min.css">
+    <!--<link type="text/css" rel="stylesheet" href="http://mui.xuehtml.com/src/css/miniui.min.css">-->
     <link type="text/css" rel="stylesheet" href="http://mui.xuehtml.com/src/css/font-awesome.min.css">
     <link type="text/css" rel="stylesheet" href="http://mui.xuehtml.com/src/css/simple-line-icons.css">
-    <link type="text/css" rel="stylesheet" href="http://lumen.xuehtml.com/public/css/style.css">
     <title>{{ $title }}</title>
 
     <!-- Scripts -->

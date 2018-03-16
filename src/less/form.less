@@ -21,29 +21,27 @@ input[type="tel"] {
 	border: 1px solid #eee;
 	outline: none;
 	color: #838fa1;
-	border-radius: 0.1428em;
+	border-radius: 0.1428571em;
 	font-family: 'Microsoft YaHei', Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
 	transition: background-color 0.3s ease-out, box-shadow 0.2s ease, border-color 0.2s ease;
 	-webkit-box-shadow: 0em 0em 0em 0em rgba(0, 0, 0, 0.3) inset;
 	box-shadow: 0em 0em 0em 0em rgba(0, 0, 0, 0.3) inset;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 	box-sizing: border-box;
-	line-height: 1.4285em;
-	
+	height: 2.57142857em;
+	line-height: 1.42857142em;
+
 	&:hover {
 		border-color: #9ca8b0;
-		-webkit-appearance: none;
 	}
 	&:focus {
 		background-color: #eff3f8;
 		color: #838fa1;
 		border-color: #9ca8b0;
-		-webkit-appearance: none;
 	}
 	&.error {
 		border-color: @red;
 		color: @red;
-		-webkit-appearance: none;
 		-webkit-box-shadow: 0.3em 0em 0em 0em @red inset;
 		box-shadow: 0.3em 0em 0em 0em #FF5050 inset;
 	}
@@ -58,9 +56,9 @@ input:-webkit-autofill {
 	color: #000;
 }
 
-.form select {
-	line-height: 18px;
-	padding: 0.5357em 1em;
+select {
+	height: 2.57142857em;
+	border-radius: 0.1428em;
 }
 
 .textarea,
@@ -73,7 +71,7 @@ input:-webkit-autofill {
 }
 
 .form textarea,
-.form input[type="checkbox"] { vertical-align: top; }
+.form input[type="checkbox"], .form input[type="radio"] { vertical-align: middle; margin-right: 0.5em;}
 
 /*--------------------
         color
@@ -82,7 +80,7 @@ input:-webkit-autofill {
 .input-color(@name;@color){
 	input.@{name} {
 		color: @color;
-		border: 1px solid lighten(@color,20%); 
+		border: 1px solid lighten(@color,20%);
 	}
 	input.@{name}:hover, input.@{name}:focus {
 		color: @color;
@@ -109,8 +107,12 @@ input:-webkit-autofill {
 
 
 /*--------------------
-        size
+    checkbox & radio
 ---------------------*/
+.radio { display: inline-block; position: relative;}
+
+
+
 
 
 /*--------------------
@@ -122,13 +124,17 @@ input:-webkit-autofill {
 	font-size: 1em;
 	white-space: nowrap;
 	position: relative;
-	height: 2.5714em;
+	height: 2.57142857em;
 	display: inline-block;
 	vertical-align: middle;
 }
 
 .input-append input {
+	z-index: 1;
 	padding-right: 3em;
+	position: absolute;
+	left: 0;
+	top: 0;
 	width: 100%;
 	display: block;
 }
@@ -136,29 +142,32 @@ input:-webkit-autofill {
 .input-append .add-on {
 	right: 0;
 	left: auto;
-	z-index: 1;
 }
 
 .input-prepend input {
+	z-index: 1;
+	position: absolute;
+	left: 0;
+	top: 0;
 	padding-left: 3em;
 	width: 100%;
+	display: block;
 }
 
 .input-prepend .add-on {
 	left: 0;
 	right: auto;
-	z-index: 1;
 }
 
 span.add-on {
-	width: 40px;
+	z-index: 2;
 	text-align: center;
 	box-sizing: border-box;
 	display: table-cell;
 	position: absolute;
 	width: 3em;
 	text-align: center;
-	line-height: 2.5714em;
-	top: 0;
+	line-height: 2.57142857em;
+	top: 1px;
 	color: rgba(0,0,0,0.4);
 }
