@@ -28,6 +28,63 @@ export const ActionCreator = (type, body, path) => {
     }
 }
 
+
+
+// GET请求
+export const FetchGet = (url, body, callback) => {
+
+    if (typeof body === 'object') {
+        url = url + '?' + formatParams(body)
+    }
+
+    if (typeof body === 'string') {
+        url = url + '?' + body
+    }
+
+    if (typeof body === 'function') {
+        let callback = body
+    }
+
+    //发起fetch请求
+    return fetch(url, {
+        method: "GET",
+        //请求带上cookie
+        credentials: 'include',
+        headers: {
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': window.csrf_token
+        }
+    })
+
+    //判断HTTP请求结果，200-299 表示请求成功
+    .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+            return response
+        } else {
+            var error = new Error(response.statusText)
+            error.response = response
+            throw error
+        }
+    })
+
+    //生成JSON.parse(responseText)的结果
+    .then(response => response.json())
+
+    //获取并处理请求结果
+    .then(json => {
+        if (typeof callback === "function") {
+            callback(json)
+        }
+    })
+
+    //处理请求错误
+    .catch(error => {
+        //
+    })
+}
+
+
 //POST请求
 export const FetchPost = (url, body, callback) => {
 

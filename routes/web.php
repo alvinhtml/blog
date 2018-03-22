@@ -74,6 +74,7 @@ $router->get('/api/article/info/{id}', ['middleware' => 'auth', 'uses' => 'Artic
 
 //classify
 $router->get('/api/classify/list', ['middleware' => 'auth', 'uses' => 'ClassifyController@list']);
+$router->get('/api/classify/select_list', ['middleware' => 'auth', 'uses' => 'ClassifyController@select_list']);
 $router->post('/api/classify/form/{id}', ['middleware' => 'auth', 'uses' => 'ClassifyController@form']);
 $router->post('/api/classify/form', ['middleware' => 'auth', 'uses' => 'ClassifyController@form']);
 $router->get('/api/classify/del/{id}', ['middleware' => 'auth', 'uses' => 'ClassifyController@del']);
