@@ -15,7 +15,7 @@ import {Popup} from '../../components/popup'
 //引入文本编辑器组件
 //import {Editor} from '../../components/editor'
 
-import {ArticleSelect} from '../../components/select'
+import {Iselect} from '../../components/select'
 import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 
@@ -243,6 +243,20 @@ class ArticleFormUI extends Component {
 
 		const {isFetching} = this.props
 
+		const tagDataList = [{
+			id: 0,
+			name: '标签一'
+		},{
+			id: 1,
+			name: '标签二'
+		},{
+			id: 2,
+			name: '标签三'
+		},{
+			id: 3,
+			name: '标签四'
+		}]
+
 		return (
 			<div className="main-box">
 				<div className="page-bar clear">
@@ -278,21 +292,13 @@ class ArticleFormUI extends Component {
 								<section className="section">
 									<h3 className="section-head">分类</h3>
 									<div className="row">
-										<select name="" id="">
-											<option value="1">文章分类1</option>
-											<option value="2">文章分类2</option>
-											<option value="3">文章分类3</option>
-										</select>
+										<Iselect className="col-span10" url="/api/classify/select_list" name="classify_id" value={this.state.classify_id}></Iselect>
 									</div>
 								</section>
 								<section className="section">
 									<h3 className="section-head">标签</h3>
 									<div className="row">
-										<select name="" id="">
-											<option value="1">文章分类1</option>
-											<option value="2">文章分类2</option>
-											<option value="3">文章分类3</option>
-										</select>
+										<Iselect className="col-span10" datalist={tagDataList} name="classify_id" value={this.state.classify_id}></Iselect>
 									</div>
 								</section>
 								<section className="section">

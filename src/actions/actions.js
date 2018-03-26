@@ -41,10 +41,6 @@ export const FetchGet = (url, body, callback) => {
         url = url + '?' + body
     }
 
-    if (typeof body === 'function') {
-        let callback = body
-    }
-
     //发起fetch请求
     return fetch(url, {
         method: "GET",
@@ -73,7 +69,9 @@ export const FetchGet = (url, body, callback) => {
 
     //获取并处理请求结果
     .then(json => {
-        if (typeof callback === "function") {
+        if (typeof body === "function") {
+            body(json)
+        } else if (typeof callback === "function") {
             callback(json)
         }
     })

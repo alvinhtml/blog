@@ -11,13 +11,13 @@ import {
 
 
 //引入Action创建函数
-import {ActionCreator, ActionGet, ActionPost, FetchPost} from '../actions/actions'
+import {FetchGet} from '../actions/actions'
 
 
 
 
 
-class ClassifySelectUI extends Component {
+export class Iselect extends Component {
 
 	constructor(props) {
 		super(props)
@@ -25,8 +25,9 @@ class ClassifySelectUI extends Component {
 		this.state = {
 			opened: false,
 			search: '',
-			value: '',
-			text: '请选择'
+			value: this.props.value ? this.props.value : '',
+			text: '请选择',
+			data: this.props.datalist ? this.props.datalist : []
 		}
 
 		this.timeout;
@@ -44,37 +45,26 @@ class ClassifySelectUI extends Component {
 
 		document.addEventListener('mouseup', this.mouseupCallback)
 
-        this.props.getList({
-			ou_id: this.props.parent
-		})
-
-		let ouObjectList = this.props.ouObjectList
-		for (let v of ouObjectList) {
-			if (this.props.value == v.id) {
+		if (this.props.url) {
+			FetchGet(this.props.url, {value: this.state.value}, (data) => {
 				this.setState({
-					value: v.id,
-					text: v.name
+					data: data.list
 				})
-				break;
-			}
+				let list = data.list
+				for (let v of list) {
+					if (this.props.value == v.id) {
+						this.setState({
+							text: v.name
+						})
+						break;
+					}
+				}
+			})
 		}
     }
 
 	componentWillUnmount() {
 		document.removeEventListener('mouseup', this.mouseupCallback)
-	}
-
-	componentWillReceiveProps(nextProps) {
-		let ouObjectList = nextProps.ouObjectList
-		for (let v of ouObjectList) {
-			if (this.props.value == v.id) {
-				this.setState({
-					value: v.id,
-					text: v.name
-				})
-				break;
-			}
-		}
 	}
 
 	handleClick(event) {
@@ -113,45 +103,39 @@ class ClassifySelectUI extends Component {
 		clearTimeout(this.timeout)
 
 		this.timeout = setTimeout(() => {
-			this.props.getList({
-				ou_id: this.props.parent,
-				search: value
+			FetchGet(this.props.url, {
+				search: this.state.search
+			}, (data) => {
+				this.setState({
+					data: data.list
+				})
 			})
 		}, 800)
-		
+
 	}
 
 	render() {
-		const {name, ouObjectList, className, value} = this.props
+		const {name, className, value} = this.props
+		const list = this.state.data
 
-		let options = ouObjectList.map((v, i) => {
+		console.log('render_data', this.state.data);
+
+		let options = list.map((v, i) => {
 			return <li key={i} data-val={v.id} onClick={this.selectEvent}>{v.name}</li>
 		})
 
+		let searchDom = this.props.url ? (<div className="iselect-search">
+			<label className="input-append"><input name={"iselect" + name} onChange={this.searchEvent} type="text" value={this.state.search} /><span className="add-on"><i className="icon-magnifier"></i></span></label>
+		</div>) : ''
+
         return (
-			<div className={ 'iselect ' + className + (this.state.opened ? ' open' : '')} onMouseUp={this.mouseupEvent}>
+			<div className={ 'iselect ' + className + (this.props.url ? ' select-search' : '') + (this.state.opened ? ' open' : '')} onMouseUp={this.mouseupEvent}>
 				<input name={name} type="hidden" value={this.state.value} ref='inputSelect' />
 				<div className="iselect-handle" onClick={this.handleClick}></div>
 				<div className="iselect-value" onClick={this.handleClick}>{this.state.text}</div>
-				<div className="iselect-search">
-					<label className="input-append"><input name={"iselect" + name} onChange={this.searchEvent} type="text" value={this.state.search} /><span className="add-on"><i className="icon-magnifier"></i></span></label>
-				</div>
+				{searchDom}
 				<ul>{options}</ul>
 			</div>
         );
     }
-
 }
-
-export const ClassifySelect = connect(
-	(state) => {
-		return {ouObjectList: state.common.ouObjectList}
-	},
-	(dispatch, ownProps) => {
-		return {
-			getList: (params) => {
-				dispatch(ActionGet(GET_CLASSIFY_IN_COMPONENT, '/api/classify/component', params, 'common'))
-			}
-		};
-	}
-)(ClassifySelectUI)
