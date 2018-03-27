@@ -6,6 +6,8 @@ import Query from '../tools/query.js'
 
 import {resize, remove} from '../index.jsx'
 
+//引入Action创建函数
+import {FetchGet, FetchPost} from '../actions/actions'
 
 /**
  * 内面顶部标题栏
@@ -772,6 +774,107 @@ export class FetchButton extends Component {
 
 		return (
 			<span className={className} onClick={this.submitHandleEvent}>{this.props.children}</span>
+        )
+	}
+}
+
+/**
+ * add addons
+ */
+export class Additems extends Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			text: '',
+			isFetching: 0,
+			data: this.props.datalist ? this.props.datalist : [],
+			searchData: [],
+		}
+
+		this.timeout;
+
+		//ES6 类中函数必须手动绑定
+		this.handleChange = this.handleChange.bind(this)
+		this.addItemChange = this.addItemChange.bind(this)
+		this.removeHandle = this.removeHandle.bind(this)
+	}
+
+	handleChange(event) {
+
+		const value = event.target.value;
+
+		this.setState({
+			text: value
+		})
+
+		if (this.state.text === '') {
+			this.setState({
+				searchData: []
+			})
+		} else {
+			clearTimeout(this.timeout)
+			this.timeout = setTimeout(() => {
+				FetchGet('/api/classify/additems_list', {
+					search: this.state.text
+				}, (data) => {
+					this.setState({
+						searchData: data.list
+					})
+				})
+			}, 800)
+		}
+	}
+	addItemChange(e) {
+		if (!this.state.isFetching) {
+			this.setState({
+				isFetching: 1
+			})
+			FetchPost('/api/classify/addtag', {name: this.state.text}, (data) => {
+				let newlist =  this.state.data
+				newlist.push({
+					id: data.info.id,
+					name: data.info.name
+				})
+				this.setState({
+					data: newlists,
+					isFetching: 0
+				})
+			})
+		}
+	}
+	removeHandle(e) {
+
+	}
+
+	render() {
+
+		const list = this.state.data
+		const searchlist = this.state.searchData
+
+		console.log('render_data',this.state.searchData, this.state.data);
+
+		let searchOptions = searchlist.map((v, i) => {
+			return <li key={i}>{v.name}</li>
+		})
+
+		let options = list.map((v, i) => {
+			return <li key={i}><span className="remove" onClick={this.removeHandle}>×</span>{v.name}<input type="hidden" value={v.id} /></li>
+		})
+
+		return (
+			<div className="additems">
+				<div className="additems-head">
+					<input type="text" name="media" value={this.state.text} onChange={this.handleChange} />&nbsp;
+					<span onClick={this.addItemChange} className={"button blue " + (this.state.isFetching ? 'loading' : '')}>添加</span>
+					<ul className={this.state.searchData.length > 0 ? 'show-ul' : 'hide-ul'}>
+						{searchOptions}
+					</ul>
+			    </div>
+				<ul className="row additems">
+					{options}
+				</ul>
+			</div>
         )
 	}
 }

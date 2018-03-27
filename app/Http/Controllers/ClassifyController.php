@@ -28,12 +28,10 @@ class ClassifyController extends Controller
 
         //搜索
         if (empty($search)) {
-            $classify = new Classify;
             $classify = Classify::where('type', 0);
         } else {
             $classify = Classify::where('type', 0)
-                ->orWhere('name', 'like', '%'.$search.'%')
-                ->orWhere('slug', 'like', '%'.$search.'%');
+                ->where('name', 'like', '%'.$search.'%');
         }
 
         //取出总条数
@@ -59,12 +57,8 @@ class ClassifyController extends Controller
 
         $list = $datalist->select('id', 'name', 'slug', 'type', 'created_at')->get();
 
-        //echo '<pre>';
-        // var_dump($list);
-        // die;
-
         //开始返回数据
-        $result = ['error' => 0, 'message' => '获取用户列表信息成功!'];
+        $result = ['error' => 0, 'message' => '获取分类列表信息成功!'];
         $configs = [];
         $configs['page'] = $page;
         $configs['limit'] = $limit;
@@ -76,6 +70,96 @@ class ClassifyController extends Controller
 
         return response()->json($results);
     }
+
+
+    public function select_list(Request $request) {
+
+        $order_srt = $request->input('order');
+        $search = $request->input('search');
+        $limit = $request->input('limit', 10);
+        $value = $request->input('value', null);
+        $page = 1;
+
+        $order = isset($order_srt) ? explode(',', $order_srt) : [];
+
+        //搜索
+        if (empty($search)) {
+            $classify = Classify::where('type', 0);
+        } else {
+            $classify = Classify::where('type', 0)
+                ->where('name', 'like', '%'.$search.'%');
+        }
+
+
+        //排序
+        if (empty($order)) {
+            $datalist = $classify
+                ->limit($limit);
+        } else {
+            $datalist = $classify
+                ->limit($limit)
+                ->orderBy($order[0], $order[1]);
+        }
+
+        //如果有指定值 $value
+        if ($value) {
+            $datalist = $datalist->union(Classify::where('id', $value)->orWhere('type', 0)->select('id', 'name'));
+        }
+
+        $list = $datalist->select('id', 'name')->get();
+
+        //开始返回数据
+        $results = ['error' => 0, 'message' => '获取分类列表信息成功!'.$search];
+        $results['list'] = $list;
+
+        return response()->json($results);
+    }
+
+
+    public function additems_list(Request $request) {
+
+        $order_srt = $request->input('order');
+        $search = $request->input('search');
+        $limit = $request->input('limit', 10);
+        $value = $request->input('value', null);
+        $page = 1;
+
+        $order = isset($order_srt) ? explode(',', $order_srt) : [];
+
+        //搜索
+        if (empty($search)) {
+            $classify = Classify::where('type', 1);
+        } else {
+            $classify = Classify::where('type', 1)
+                ->where('name', 'like', '%'.$search.'%');
+        }
+
+
+        //排序
+        if (empty($order)) {
+            $datalist = $classify
+                ->limit($limit);
+        } else {
+            $datalist = $classify
+                ->limit($limit)
+                ->orderBy($order[0], $order[1]);
+        }
+
+        //如果有指定值 $value
+        if ($value) {
+            $datalist = $datalist->union(Classify::where('id', $value)->orWhere('type', 0)->select('id', 'name'));
+        }
+
+        $list = $datalist->select('id', 'name')->get();
+
+        //开始返回数据
+        $results = ['error' => 0, 'message' => '获取分类列表信息成功!'.$search];
+        $results['list'] = $list;
+
+        return response()->json($results);
+    }
+
+
     public function form(Request $request, $id = null) {
         if (isset($id)) {
             $data = Classify::find($id);
@@ -95,6 +179,25 @@ class ClassifyController extends Controller
 
         return response()->json($results);
     }
+
+
+    public function addtag(Request $request) {
+        $data = new Classify;
+        $results = ['error' => 0, 'message' => '创建成功!'];
+
+        $data->name = $request->input('name');
+        $data->slug = '';
+        $data->type = 1;
+        $data->save();
+
+        $results['info'] = $data->toArray();
+        sleep(2);
+        return response()->json($results);
+    }
+
+
+
+
     public function del(Request $request, $id) {
         $idArray = explode(',', $id);
         Classify::destroy($idArray);
@@ -110,7 +213,7 @@ class ClassifyController extends Controller
         $datalist = Classify::where('id', $id)
             ->get();
 
-        $results = ['error' => 0, 'message' => '获取用户信息成功!'];
+        $results = ['error' => 0, 'message' => '获取分类信息成功!'];
 
         $results['info'] = $datalist->first();
 

@@ -20,7 +20,7 @@ import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 
 //引入组件
-import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton} from '../../components/common'
+import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, Additems} from '../../components/common'
 
 //引入action类型常量名
 import {
@@ -298,7 +298,7 @@ class ArticleFormUI extends Component {
 								<section className="section">
 									<h3 className="section-head">标签</h3>
 									<div className="row">
-										<Iselect className="col-span10" datalist={tagDataList} name="classify_id" value={this.state.classify_id}></Iselect>
+										<Additems />
 									</div>
 								</section>
 								<section className="section">

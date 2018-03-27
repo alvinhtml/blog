@@ -117,9 +117,6 @@ export class Iselect extends Component {
 	render() {
 		const {name, className, value} = this.props
 		const list = this.state.data
-
-		console.log('render_data', this.state.data);
-
 		let options = list.map((v, i) => {
 			return <li key={i} data-val={v.id} onClick={this.selectEvent}>{v.name}</li>
 		})
@@ -129,7 +126,7 @@ export class Iselect extends Component {
 		</div>) : ''
 
         return (
-			<div className={ 'iselect ' + className + (this.props.url ? ' select-search' : '') + (this.state.opened ? ' open' : '')} onMouseUp={this.mouseupEvent}>
+			<div className={ 'iselect ' + className + (this.props.url ? '' : ' iselect-nosearch') + (this.state.opened ? ' open' : '')} onMouseUp={this.mouseupEvent}>
 				<input name={name} type="hidden" value={this.state.value} ref='inputSelect' />
 				<div className="iselect-handle" onClick={this.handleClick}></div>
 				<div className="iselect-value" onClick={this.handleClick}>{this.state.text}</div>
