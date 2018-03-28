@@ -5403,7 +5403,8 @@ var Additems = exports.Additems = function (_Component11) {
 
 		//ES6 类中函数必须手动绑定
 		_this15.handleChange = _this15.handleChange.bind(_this15);
-		_this15.addItemChange = _this15.addItemChange.bind(_this15);
+		_this15.addItemEvent = _this15.addItemEvent.bind(_this15);
+		_this15.addItemToList = _this15.addItemToList.bind(_this15);
 		_this15.removeHandle = _this15.removeHandle.bind(_this15);
 		return _this15;
 	}
@@ -5437,8 +5438,8 @@ var Additems = exports.Additems = function (_Component11) {
 			}
 		}
 	}, {
-		key: 'addItemChange',
-		value: function addItemChange(e) {
+		key: 'addItemEvent',
+		value: function addItemEvent(e) {
 			var _this17 = this;
 
 			if (!this.state.isFetching) {
@@ -5459,8 +5460,24 @@ var Additems = exports.Additems = function (_Component11) {
 			}
 		}
 	}, {
+		key: 'addItemToList',
+		value: function addItemToList(e) {
+			var target = e.target;
+			var newlist = this.state.data;
+			newlist.push({
+				id: target.getAttribute('data-val'),
+				name: target.getAttribute('data-name')
+			});
+			this.setState({
+				data: newlist,
+				searchData: []
+			});
+		}
+	}, {
 		key: 'removeHandle',
-		value: function removeHandle(e) {}
+		value: function removeHandle(e) {
+			var id = e.target.getAttribute('data-val');
+		}
 	}, {
 		key: 'render',
 		value: function render() {
@@ -5474,7 +5491,7 @@ var Additems = exports.Additems = function (_Component11) {
 			var searchOptions = searchlist.map(function (v, i) {
 				return _react2.default.createElement(
 					'li',
-					{ key: i },
+					{ onClick: _this18.addItemToList, key: i, 'data-val': v.id, 'data-name': v.name },
 					v.name
 				);
 			});
@@ -5485,7 +5502,7 @@ var Additems = exports.Additems = function (_Component11) {
 					{ key: i },
 					_react2.default.createElement(
 						'span',
-						{ className: 'remove', onClick: _this18.removeHandle },
+						{ className: 'remove', 'data-val': v.id, onClick: _this18.removeHandle },
 						'\xD7'
 					),
 					v.name,
@@ -5495,20 +5512,20 @@ var Additems = exports.Additems = function (_Component11) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'additems' },
+				{ className: 'additem' },
 				_react2.default.createElement(
 					'div',
-					{ className: 'additems-head' },
+					{ className: 'additem-head' },
 					_react2.default.createElement('input', { type: 'text', name: 'media', value: this.state.text, onChange: this.handleChange }),
 					'\xA0',
 					_react2.default.createElement(
 						'span',
-						{ onClick: this.addItemChange, className: "button blue " + (this.state.isFetching ? 'loading' : '') },
+						{ onClick: this.addItemEvent, className: "button blue " + (this.state.isFetching ? 'loading' : '') },
 						'\u6DFB\u52A0'
 					),
 					_react2.default.createElement(
 						'ul',
-						{ className: this.state.searchData.length > 0 ? 'show-ul' : 'hide-ul' },
+						{ className: this.state.searchData.length > 0 ? 'additem-search-list' : 'hide' },
 						searchOptions
 					)
 				),

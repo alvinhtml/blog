@@ -796,7 +796,8 @@ export class Additems extends Component {
 
 		//ES6 类中函数必须手动绑定
 		this.handleChange = this.handleChange.bind(this)
-		this.addItemChange = this.addItemChange.bind(this)
+		this.addItemEvent = this.addItemEvent.bind(this)
+		this.addItemToList = this.addItemToList.bind(this)
 		this.removeHandle = this.removeHandle.bind(this)
 	}
 
@@ -825,7 +826,7 @@ export class Additems extends Component {
 			}, 800)
 		}
 	}
-	addItemChange(e) {
+	addItemEvent(e) {
 		if (!this.state.isFetching) {
 			this.setState({
 				isFetching: 1
@@ -843,8 +844,20 @@ export class Additems extends Component {
 			})
 		}
 	}
+	addItemToList(e) {
+		let target = e.target
+		let newlist =  this.state.data
+		newlist.push({
+			id: target.getAttribute('data-val'),
+			name: target.getAttribute('data-name')
+		})
+		this.setState({
+			data: newlist,
+			searchData: []
+		})
+	}
 	removeHandle(e) {
-
+		let id = e.target.getAttribute('data-val')
 	}
 
 	render() {
@@ -855,19 +868,19 @@ export class Additems extends Component {
 		console.log('render_data',this.state.searchData, this.state.data);
 
 		let searchOptions = searchlist.map((v, i) => {
-			return <li key={i}>{v.name}</li>
+			return <li onClick={this.addItemToList} key={i} data-val={v.id} data-name={v.name}>{v.name}</li>
 		})
 
 		let options = list.map((v, i) => {
-			return <li key={i}><span className="remove" onClick={this.removeHandle}>×</span>{v.name}<input type="hidden" value={v.id} /></li>
+			return <li key={i}><span className="remove" data-val={v.id} onClick={this.removeHandle}>×</span>{v.name}<input type="hidden" value={v.id} /></li>
 		})
 
 		return (
-			<div className="additems">
-				<div className="additems-head">
+			<div className="additem">
+				<div className="additem-head">
 					<input type="text" name="media" value={this.state.text} onChange={this.handleChange} />&nbsp;
-					<span onClick={this.addItemChange} className={"button blue " + (this.state.isFetching ? 'loading' : '')}>添加</span>
-					<ul className={this.state.searchData.length > 0 ? 'show-ul' : 'hide-ul'}>
+					<span onClick={this.addItemEvent} className={"button blue " + (this.state.isFetching ? 'loading' : '')}>添加</span>
+					<ul className={this.state.searchData.length > 0 ? 'additem-search-list' : 'hide'}>
 						{searchOptions}
 					</ul>
 			    </div>

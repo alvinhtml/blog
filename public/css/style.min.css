@@ -2846,6 +2846,21 @@ a:hover { color: #50d2fa; }
 .iselect-little .iselect-handle::after { top: 0.92857143em;}
 
 
+/*---------------------
+    additems
+---------------------*/
+.additem {}
+.additem-head { width: 100%; height: 36px; position: relative; }
+.additem-head input, .additem-search-list { width: 142px; }
+.additem-search-list { position: absolute; top: 36px; left: 0; box-sizing: border-box; padding: 0.5em; border: 1px solid #838fa1; background-color: #fff; }
+.additem-search-list li { box-sizing: border-box; padding: 0 1em; cursor: default; }
+.additem-search-list li:hover { background-color: rgba(0,0,0,.05); transition: all 0.3s ease-out;}
+.additem-head ul.hide { display: none; }
+.additems li { display: inline-block; margin: 10px; line-height: 18px; }
+.additems li { font-size: 12px; cursor: default; margin: 6px; background-color: #f1c40f; box-sizing: border-box; border:1px solid #f1c40f; border-radius: 2px; padding: 0 18px 0 6px;}
+.additems li:hover { border:1px solid #f1c40f; }
+
+
 
 /*==================================
               Login
