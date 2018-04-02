@@ -16,6 +16,7 @@ import {Popup} from '../../components/popup'
 //import {Editor} from '../../components/editor'
 
 import {Iselect} from '../../components/select'
+import {Upload} from '../../components/upload'
 import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 
@@ -304,7 +305,7 @@ class ArticleFormUI extends Component {
 								<section className="section">
 									<h3 className="section-head">媒体</h3>
 									<div className="row">
-										<input type="text" name="media" value={this.state.media} onChange={this.handleChange} /> <button type="button" className="button">上传</button>
+										<Upload />
 									</div>
 								</section>
 							</div>

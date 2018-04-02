@@ -809,15 +809,17 @@ export class Additems extends Component {
 			text: value
 		})
 
-		if (this.state.text === '') {
-			this.setState({
-				searchData: []
-			})
+		if (value == '') {
+			this.timeout = setTimeout(() => {
+				this.setState({
+					searchData: []
+				})
+			}, 800)
 		} else {
 			clearTimeout(this.timeout)
 			this.timeout = setTimeout(() => {
 				FetchGet('/api/classify/additems_list', {
-					search: this.state.text
+					search: value
 				}, (data) => {
 					this.setState({
 						searchData: data.list
@@ -826,6 +828,7 @@ export class Additems extends Component {
 			}, 800)
 		}
 	}
+
 	addItemEvent(e) {
 		if (!this.state.isFetching) {
 			this.setState({
@@ -838,12 +841,13 @@ export class Additems extends Component {
 					name: data.info.name
 				})
 				this.setState({
-					data: newlists,
+					data: newlist,
 					isFetching: 0
 				})
 			})
 		}
 	}
+
 	addItemToList(e) {
 		let target = e.target
 		let newlist =  this.state.data
@@ -856,8 +860,19 @@ export class Additems extends Component {
 			searchData: []
 		})
 	}
+
 	removeHandle(e) {
 		let id = e.target.getAttribute('data-val')
+		let list =  this.state.data
+		for (let k in list) {
+			if (list[k].id == id) {
+				list.splice(k,1)
+				break
+			}
+		}
+		this.setState({
+			data: list
+		})
 	}
 
 	render() {
@@ -872,7 +887,7 @@ export class Additems extends Component {
 		})
 
 		let options = list.map((v, i) => {
-			return <li key={i}><span className="remove" data-val={v.id} onClick={this.removeHandle}>×</span>{v.name}<input type="hidden" value={v.id} /></li>
+			return <li key={i}><span className="remove" data-val={v.id} onClick={this.removeHandle}>×</span>{v.name}<input name={this.props.name} type="hidden" value={v.id} /></li>
 		})
 
 		return (

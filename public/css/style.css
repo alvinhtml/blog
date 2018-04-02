@@ -140,10 +140,20 @@ a:hover { color: #50d2fa; }
 .additem-search-list li { box-sizing: border-box; padding: 0 1em; cursor: default; }
 .additem-search-list li:hover { background-color: rgba(0,0,0,.05); transition: all 0.3s ease-out;}
 .additem-head ul.hide { display: none; }
-.additems li { display: inline-block; margin: 10px; line-height: 18px; }
-.additems li { font-size: 12px; cursor: default; margin: 6px; background-color: #f1c40f; box-sizing: border-box; border:1px solid #f1c40f; border-radius: 2px; padding: 0 18px 0 6px;}
-.additems li:hover { border:1px solid #f1c40f; }
+.additems { margin-top: 20px;}
+.additems li { display: inline-block; margin: 10px 10px 10px 0px; line-height: 18px; }
+.additems li span.remove { display: inline-block; background-color: #fcdddf; border: 1px solid #fcdddf; cursor: pointer; width: 16px; height: 16px; line-height: 14px; text-align: center; border-radius: 50%; vertical-align: middle; margin-right: 3px;}
+.additems li span.remove:hover {border: 1px solid #fa5a64; color: #fa5a64; }
 
+/*---------------------
+    upload files
+---------------------*/
+.upload { width: 100%; }
+.upload-add-file { margin:10px 0; width: 100%; box-sizing: border-box; border: 2px dashed #d1dae6; border-radius: 10px; line-height: 28px; color: #d1dae6; text-align: center; padding: 30px 0; font-size: 14px;}
+.upload-add-file i { font-size: 28px;}
+.upload-add-file:hover {  border: 2px dashed #9ca8b0; color: #9ca8b0; cursor: pointer;}
+.file-type-img { text-align: center; }
+.file-type-img img { max-width: 100%; max-height: 100%;}
 
 
 /*==================================
@@ -152,12 +162,13 @@ a:hover { color: #50d2fa; }
 
 .error-message { color: #fa5a64; font-size: 14px; }
 
-@keyframes move {  0% {
- background-position: 0 0px, 0px center;
-}
- 100% {
- background-position: 0 826px, 800px center;
-}
+@keyframes move {
+	0% {
+	 	background-position: 0 0px, 0px center;
+	}
+	100% {
+		background-position: 0 826px, 800px center;
+	}
 }
 
 
