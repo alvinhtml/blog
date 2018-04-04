@@ -14,6 +14,50 @@ import {
 import {FetchGet} from '../actions/actions'
 
 
+const UploadFile = (params) => {
+
+	let {inputFile, progress, complete, error, abort} = params
+
+	let data = new FormData()
+
+	data.append('file', inputFile)
+
+	let xhr = new XMLHttpRequest()
+	xhr.upload.addEventListener("progress", uploadProgress, false)
+	xhr.addEventListener("load", uploadComplete, false)
+	xhr.addEventListener("error", uploadFailed, false)
+	xhr.addEventListener("abort", uploadCanceled, false)
+
+	xhr.open("POST", "")
+	xhr.send(data)
+
+	const uploadProgress = (event) => {
+		if (event.lengthComputable) {
+			if (progress) {
+				progress({
+					loaded: event.loaded,
+					total: event.total,
+					percent: Math.round(event.loaded * 100 / event.total)
+				})
+			}
+		}
+	}
+
+	const uploadComplete = (event) => {
+		alert(event.target.responseText);
+		if (complete) complete()
+	}
+
+	const uploadFailed = (event) => {
+
+	}
+
+	const uploadCanceled = (event) => {
+
+	}
+
+}
+
 
 
 
@@ -24,7 +68,8 @@ export class Upload extends Component {
 
 		this.state = {
 			filePath:[],
-			fileData:[]
+			fileData:[],
+			isLoading: false
 		}
 
 		this.timeout;
@@ -51,45 +96,57 @@ export class Upload extends Component {
 	onChangeEvent(e) {
 		console.log('upload-change');
 
-		let newFileData = this.state.fileData
+
+		let fileList = []
 
 		let files = e.target.files
 
+		//遍历多选
 		for (let i = 0; i < files.length; i++) {
+
+			this.setState({
+				isLoading: true
+			})
+
 			let file = files[i]
 			let reader = new FileReader()
 
-
-
 			//如果是图片类型
 			if (/image\/\w+/.test(file.type)) {
-
 				reader.readAsDataURL(file)
-
 				reader.onload =  (e) => {
-                    var data = e.target.result;
-                    newFileData.push({
+                    fileList[i] = {
 						name: file.name,
 						type: file.type,
 						size: file.size,
-						data: data,
-					})
-					this.setState({
-						fileData: newFileData
-					})
-                };
-
+						data: e.target.result
+					}
+                }
 			} else {
-				newFileData.push({
+				fileList[i] = {
 					name: file.name,
 					type: file.type,
 					size: file.size
-				})
-				this.setState({
-					fileData: newFileData
-				})
+				}
 			}
+
+			UploadFile({
+				inputFile: file,
+				progress: (prams) => {
+
+				},
+				complete: (prams) => {
+
+				}
+			})
+
+
+
+
 		}
+
+
+
 
 	}
 
@@ -104,13 +161,11 @@ export class Upload extends Component {
 		})
 
 
+
         return (
 			<div className="upload">
 				<div className={this.state.filePath.length > 0 ? 'upload-view show' : 'hide'}>
 					{fileDataDom}
-					<div className="upload-item file-type-img">
-
-					</div>
 				</div>
 				<div className="upload-add-file" onClick={this.chooseFileEvent}>
 					<input type="file" multiple="multiple" style={{'display':'none'}} onChange={this.onChangeEvent} ref='inputFile' name="files" />
