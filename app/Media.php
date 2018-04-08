@@ -8,12 +8,14 @@ class Media extends Model
 {
     //use Authenticatable, Authorizable;
 
+    public $table = 'medias';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name', 'originalname', 'type', 'path', 'preview', 'desp', 'info'
     ];
 }

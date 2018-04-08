@@ -28926,6 +28926,49 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //引入Action创建函数
 
 
+var UploadFile = function UploadFile(params) {
+	var inputFile = params.inputFile,
+	    progress = params.progress,
+	    complete = params.complete,
+	    error = params.error,
+	    abort = params.abort;
+
+
+	var data = new FormData();
+
+	data.append('file', inputFile);
+
+	var xhr = new XMLHttpRequest();
+	xhr.upload.addEventListener("progress", uploadProgress, false);
+	xhr.addEventListener("load", uploadComplete, false);
+	xhr.addEventListener("error", uploadFailed, false);
+	xhr.addEventListener("abort", uploadCanceled, false);
+
+	xhr.open("POST", "/api/media/upload");
+	xhr.send(data);
+
+	var uploadProgress = function uploadProgress(event) {
+		if (event.lengthComputable) {
+			if (progress) {
+				progress({
+					loaded: event.loaded,
+					total: event.total,
+					percent: Math.round(event.loaded * 100 / event.total)
+				});
+			}
+		}
+	};
+
+	var uploadComplete = function uploadComplete(event) {
+		alert(event.target.responseText);
+		if (complete) complete();
+	};
+
+	var uploadFailed = function uploadFailed(event) {};
+
+	var uploadCanceled = function uploadCanceled(event) {};
+};
+
 var Upload = exports.Upload = function (_Component) {
 	_inherits(Upload, _Component);
 
@@ -28936,7 +28979,8 @@ var Upload = exports.Upload = function (_Component) {
 
 		_this.state = {
 			filePath: [],
-			fileData: []
+			fileData: [],
+			isLoading: false
 		};
 
 		_this.timeout;
@@ -28967,41 +29011,52 @@ var Upload = exports.Upload = function (_Component) {
 
 			console.log('upload-change');
 
-			var newFileData = this.state.fileData;
+			var fileList = [];
 
 			var files = e.target.files;
 
+			//遍历多选
+
 			var _loop = function _loop(i) {
+
+				_this2.setState({
+					isLoading: true
+				});
+
 				var file = files[i];
 				var reader = new FileReader();
 
 				//如果是图片类型
 				if (/image\/\w+/.test(file.type)) {
-
 					reader.readAsDataURL(file);
-
 					reader.onload = function (e) {
-						var data = e.target.result;
-						newFileData.push({
+						fileList[i] = {
 							name: file.name,
 							type: file.type,
 							size: file.size,
-							data: data
-						});
-						_this2.setState({
-							fileData: newFileData
-						});
+							data: e.target.result
+						};
 					};
 				} else {
-					newFileData.push({
+					fileList[i] = {
 						name: file.name,
 						type: file.type,
 						size: file.size
-					});
-					_this2.setState({
-						fileData: newFileData
-					});
+					};
 				}
+
+				UploadFile({
+					inputFile: file,
+					progress: function progress(prams) {},
+					complete: function complete(data) {
+						_this2.setState({
+							isLoading: false,
+							fileData: [{
+								data: data.info.path + '/' + data.info.name
+							}]
+						});
+					}
+				});
 			};
 
 			for (var i = 0; i < files.length; i++) {
@@ -29030,8 +29085,7 @@ var Upload = exports.Upload = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: this.state.filePath.length > 0 ? 'upload-view show' : 'hide' },
-					fileDataDom,
-					_react2.default.createElement('div', { className: 'upload-item file-type-img' })
+					fileDataDom
 				),
 				_react2.default.createElement(
 					'div',

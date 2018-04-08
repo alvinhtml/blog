@@ -28,7 +28,7 @@ const UploadFile = (params) => {
 	xhr.addEventListener("error", uploadFailed, false)
 	xhr.addEventListener("abort", uploadCanceled, false)
 
-	xhr.open("POST", "")
+	xhr.open("POST", "/api/media/upload")
 	xhr.send(data)
 
 	const uploadProgress = (event) => {
@@ -135,8 +135,13 @@ export class Upload extends Component {
 				progress: (prams) => {
 
 				},
-				complete: (prams) => {
-
+				complete: (data) => {
+					this.setState({
+						isLoading: false,
+						fileData: [{
+							data: data.info.path + '/' + data.info.name
+						}]
+					})
 				}
 			})
 

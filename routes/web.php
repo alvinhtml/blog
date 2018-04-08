@@ -82,6 +82,12 @@ $router->post('/api/classify/form', ['middleware' => 'auth', 'uses' => 'Classify
 $router->get('/api/classify/del/{id}', ['middleware' => 'auth', 'uses' => 'ClassifyController@del']);
 $router->get('/api/classify/info/{id}', ['middleware' => 'auth', 'uses' => 'ClassifyController@info']);
 
+//Media
+$router->get('/api/media/list', ['middleware' => 'auth', 'uses' => 'MediaController@list']);
+$router->post('/api/media/upload', ['middleware' => 'auth', 'uses' => 'MediaController@upload']);
+$router->get('/api/media/del/{id}', ['middleware' => 'auth', 'uses' => 'MediaController@del']);
+$router->get('/api/media/info/{id}', ['middleware' => 'auth', 'uses' => 'MediaController@info']);
+
 
 //media
 $router->get('/api/media/list', ['middleware' => 'auth', 'uses' => 'MediaController@list']);
