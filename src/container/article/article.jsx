@@ -16,7 +16,7 @@ import {Popup} from '../../components/popup'
 //import {Editor} from '../../components/editor'
 
 import {Iselect} from '../../components/select'
-import {Upload} from '../../components/upload'
+import {Addmedia} from '../../components/media'
 import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 
@@ -305,7 +305,7 @@ class ArticleFormUI extends Component {
 								<section className="section">
 									<h3 className="section-head">媒体</h3>
 									<div className="row">
-										<Upload />
+										<Addmedia name="media" />
 									</div>
 								</section>
 							</div>
