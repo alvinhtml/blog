@@ -48,6 +48,10 @@ $router->get('/admin/classify/list', 'HomeController@index');
 $router->get('/admin/classify/form/{id}', 'HomeController@index');
 $router->get('/admin/classify/form', 'HomeController@index');
 
+$router->get('/admin/media', 'HomeController@index');
+$router->get('/admin/media/list', 'HomeController@index');
+$router->get('/admin/media/upload', 'HomeController@index');
+
 
 /*
 |--------------------------------------------------------------------------

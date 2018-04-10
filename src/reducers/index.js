@@ -10,7 +10,7 @@ import {header} from './header'
 import {user} from './user'
 import {article} from './article'
 import {classify} from './classify'
-// import {media} from './media'
+import {media} from './media'
 // import {view} from './view'
 
 
@@ -23,7 +23,7 @@ export default combineReducers({
 	user, //用户列表
 	article, //文章列表
 	classify, //文章分类列表
-	//media, //部门列表
+	media, //媒体列表
 	//view, //视图
 
     routing: routerReducer

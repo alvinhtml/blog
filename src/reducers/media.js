@@ -44,14 +44,28 @@ const mediaInitialState = {
         },{
             key: 'preview',
             title: '预览图',
+            order: false,
+            visibility: true,
+            width: 144,
+            resize: 1
+        },{
+            key: 'name',
+            title: '名称',
             order: true,
-            visibility: false,
+            visibility: true,
+            width: 280,
+            resize: 1
+        },{
+            key: 'type',
+            title: '类型',
+            order: true,
+            visibility: true,
             width: 120,
             resize: 1
         },{
             key: 'desp',
             title: '描述',
-            order: true,
+            order: false,
             visibility: true,
             width: 200,
             resize: 1

@@ -615,7 +615,7 @@ export class Theader extends Component {
 				className="row-checkbox"
 				key="check-all"
 			><input checked={checked} type="checkbox" ref="checkbox_all" onChange={e=>{this.onCheckEvent(this.refs['checkbox_all'])}} /></th> : ''
-		let action = actions ? <th className="row-action" style={{width:'120px'}}><strong>操作</strong></th> : ''
+		let action = actions.length ? <th className="row-action" style={{width:'120px'}}><strong>操作</strong></th> : <th></th>
 		return (
 			<thead id="list_head">
 				<tr>

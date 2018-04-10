@@ -162,6 +162,14 @@ a:hover { color: #50d2fa; }
 
 
 
+
+/* tabs box */
+.tabs { margin-top: 10px;}
+.tabs-header {}
+.tabs-header li { float: left; min-width: 136px; border: 1px solid #eee; background-color: #f7f8fa; text-align: center; margin-left: -1px; line-height: 36px; box-sizing: border-box; cursor: pointer;}
+.tabs-header li.active { border-top: 2px solid #00a2ca; background-color: #fff; line-height: 35px;}
+
+
 /*==================================
               Login
  =================================*/
@@ -553,6 +561,8 @@ table.moving th.row-last {
 
 
 
+.media_list_img { width: 120px; height: 120px; text-align: center; line-height: 120px;}
+.media_list_img img { max-width: 120px; max-height: 120px; vertical-align: middle;}
 
 
 .user_photo_little { width: 60px; height: 60px;}

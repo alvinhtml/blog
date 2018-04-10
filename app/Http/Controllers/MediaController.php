@@ -55,7 +55,7 @@ class MediaController extends Controller
                 ->orderBy($order[0], $order[1]);
         }
 
-        $list = $datalist->select('id', 'name', 'slug', 'type', 'created_at')->get();
+        $list = $datalist->select('id', 'name', 'originalname', 'type', 'path', 'preview', 'desp', 'created_at')->get();
 
         //开始返回数据
         $result = ['error' => 0, 'message' => '获取媒体列表信息成功!'];

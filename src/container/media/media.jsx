@@ -3,7 +3,6 @@ import {Redirect, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
 import Query from '../../tools/query.js'
-import Editor from '../../tools/editor.js'
 import Validator from '../../tools/validator.js'
 
 //引入下拉菜单组件
@@ -15,34 +14,33 @@ import {Popup} from '../../components/popup'
 //引入文本编辑器组件
 //import {Editor} from '../../components/editor'
 
-import {Iselect} from '../../components/select'
-import {Addmedia} from '../../components/media'
+import {ClassifySelect} from '../../components/select'
 import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
-import {Tabs, Tab} from '../../components/tabs'
 
 //引入组件
-import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, Additems} from '../../components/common'
+import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton} from '../../components/common'
 
 //引入action类型常量名
 import {
-	GET_ARTICLE_LIST,
+	GET_MEDIA_LIST,
 	UPDATE_LIST_CONFIGS,
 	CHANGE_LIST_CHECKBOX,
-	GET_ARTICLE_INFO,
-	POST_ARTICLE_INFO,
-	DELETE_ARTICLE,
-	UPDATE_ARTICLE_STATE
+	GET_MEDIA_INFO,
+	POST_MEDIA_INFO,
+	DELETE_MEDIA,
+	UPDATE_MEDIA_STATE
 } from '../../constants'
 
 
 //引入Action创建函数
 import {ActionCreator, ActionGet, ActionPost, FetchPost} from '../../actions/actions'
 
-class ArticleListUI extends Component {
+class MediaListUI extends Component {
 
 	constructor(props) {
 		super(props)
+		this.actions = []
 
 		this.decorater = this.decorater.bind(this)
 	}
@@ -56,7 +54,15 @@ class ArticleListUI extends Component {
 
 	//值修饰器
 	decorater(key, value) {
+		let imgURL
 		switch(key) {
+			case 'preview':
+				if (value[key]) {
+					imgURL = '/' + value[key] + '/' + value['name']
+				} else {
+					imgURL = '/' + value['path'] + '/' + value['name']
+				}
+				return <div className="media_list_img"><img src={imgURL} alt={value['desp']} /></div>
 			default:
 				return value[key]
 		}
@@ -74,7 +80,7 @@ class ArticleListUI extends Component {
 			<div className="main-box">
 				<div className="page-bar clear">
 	                <div className="page-bar-left crumbs-box">
-						<div className="crumbs-first"><b>日志列表</b> / 首页</div>
+						<div className="crumbs-first"><b>媒体列表</b> / 首页</div>
 						<div className="crumbs-arrow bg-orange"><i className="fa fa-angle-right"></i></div>
 	                </div>
 	                <div className="page-bar-right"><i className="icon-calendar"></i> Wed Aug 10 2016 10:51:20 GMT+0800</div>
@@ -88,8 +94,8 @@ class ArticleListUI extends Component {
                             <Searcher getList={getList} updateConfigs={updateConfigs} configs={configs}></Searcher>
                         </div>
                         <div className="olist-header-r">
-                            <Link data-content="刷新" to="/ou/list"  className="tools bg-teal ititle"><i className="icon-refresh"></i></Link>
-                            <Link data-content="新建" to="/ou/form" className="tools bg-teal ititle"><i className="icon-plus"></i></Link>
+                            <Link data-content="刷新" to="/admin/media/list"  className="tools bg-teal ititle"><i className="icon-refresh"></i></Link>
+                            <Link data-content="新建" to="/admin/media/form" className="tools bg-teal ititle"><i className="icon-plus"></i></Link>
                         </div>
                     </div>
 					<div id="listTable" className="olist-main">
@@ -107,10 +113,10 @@ class ArticleListUI extends Component {
 
 
 
-export const ArticleList = connect(
+export const MediaList = connect(
 	(state) => {
 		return {
-			...state.article
+			...state.media
 		}
 	},
 	(dispatch, ownProps) => {
@@ -118,28 +124,21 @@ export const ArticleList = connect(
 		return {
 			getList: (where) => {
 				console.log("getlist:ou where", where)
-				dispatch(ActionGet(GET_ARTICLE_LIST, '/api/ou/list' ,where, 'article'))
+				dispatch(ActionGet(GET_MEDIA_LIST, '/api/media/list' ,where, 'media'))
 			},
 			//更新配置
 			updateConfigs: (configs, isPost) => {
-				if (isPost) {
-					//更新数据库配置
-					FetchPost('/api/setting/list_configs', {
-						listPath: configs.listPath,
-						configs: JSON.stringify(configs)
-					})
-				}
 				//更新store配置
-				dispatch(ActionCreator(UPDATE_LIST_CONFIGS, configs, 'article'))
+				dispatch(ActionCreator(UPDATE_LIST_CONFIGS, configs, 'media'))
 			},
 			//单选框
 			checkEvent: (list) => {
 				//更新store配置
-				dispatch(ActionCreator(CHANGE_LIST_CHECKBOX, list, 'article'))
+				dispatch(ActionCreator(CHANGE_LIST_CHECKBOX, list, 'media'))
 			},
 			deleteEvent: (id) => {
 				//删除一条
-				dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + id, 'article'))
+				dispatch(ActionGet(DELETE_MEDIA, '/api/media/del/' + id, 'media'))
 			},
 			toolsClickEvent: (value) => {
 				let idArray = []
@@ -155,13 +154,13 @@ export const ArticleList = connect(
 
 				switch (value) {
 					case '0':
-						dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + idArray.join(','), 'article'))
+						dispatch(ActionGet(DELETE_MEDIA, '/api/media/del/' + idArray.join(','), 'media'))
 						break;
 					case '1':
-						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 1}, 'article'))
+						dispatch(ActionGet(UPDATE_MEDIA_STATE, '/api/media/edit_state/' + idArray.join(','), {state: 1}, 'media'))
 						break;
 					case '2':
-						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 0}, 'article'))
+						dispatch(ActionGet(UPDATE_MEDIA_STATE, '/api/media/edit_state/' + idArray.join(','), {state: 0}, 'media'))
 						break;
 					default:
 				}
@@ -169,25 +168,20 @@ export const ArticleList = connect(
 			}
 		};
 	}
-)(ArticleListUI)
+)(MediaListUI)
 
 
 
-class ArticleFormUI extends Component {
+class MediaFormUI extends Component {
 
 	constructor(props) {
 		super(props)
 
 		this.state = {
 			id: '',
-			title: '',
-			classify_id: 1,
-			author: '',
-			media: '',
-			abstract: '',
-			content: '这是正文',
-			markdown: '',
-			state: ''
+			name: '',
+			slug: '',
+			type: 0,
 		}
 
 		//ES6 类中函数必须手动绑定
@@ -196,22 +190,18 @@ class ArticleFormUI extends Component {
 	}
 
 	componentWillMount() {
-        this.props.getInfo(this.props.match.params.id)
+        if(this.props.match.params.id) {
+			this.props.getInfo(this.props.match.params.id)
+		}
     }
-
-	componentDidMount() {
-		this.editor = Editor('editorInitBox', {
-			mode: 'html'
-		})
-	}
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.info) {
-			const {id, title, classify_id, author, media, abstract, content, markdown, state} = nextProps.info
+			const {id, name, slug, type} = nextProps.info
 			this.setState({
-		      id, title, classify_id, author, media, abstract, content, markdown, state
+		      id, name, slug, type
 		    })
-			this.editor.setContent(content)
+		//	this.editor.setContent(content)
 		}
 	}
 
@@ -225,39 +215,25 @@ class ArticleFormUI extends Component {
 	}
 
 	submitEvent(e) {
-		const forms = document.forms.articleform
+		const forms = document.forms.clissifyform
 		const id = Query(forms.id).val()
 
 		const formdata = {
 			id: forms.id.value,
-			title: Validator(forms.title),
-			content: this.editor.getContent(),
-			markdown: this.editor.getMode(),
+			name: Validator(forms.name),
+			slug: Validator(forms.slug),
+			type: 0,
 		}
 
 		console.log(formdata)
-		// this.props.submit(formdata, (data) => {
-			// this.props.history.push('/ou/list')
-		// })
+		this.props.submit(formdata, (data) => {
+			this.props.history.push('/admin/media/list')
+		})
 	}
 
 	render() {
 
 		const {isFetching} = this.props
-
-		const tagDataList = [{
-			id: 0,
-			name: '标签一'
-		},{
-			id: 1,
-			name: '标签二'
-		},{
-			id: 2,
-			name: '标签三'
-		},{
-			id: 3,
-			name: '标签四'
-		}]
 
 		return (
 			<div className="main-box">
@@ -266,57 +242,28 @@ class ArticleFormUI extends Component {
 	                <div className="page-bar-right"><i className="icon-calendar"></i> Wed Aug 10 2016 10:51:20 GMT+0800</div>
 	            </div>
 				<div className="form-box">
-					<form className="form articleform" name="articleform">
+					<form className="form clissifyform" name="clissifyform">
 						<input type="hidden" name="id" value={this.state.id} onChange={this.handleChange} />
-						<div className="row">
-							<div className="col-span9">
-								<div className="row article-title-size">
-									<label className="input-prepend labled inline-span12"><input type="text" name="title" value={this.state.title} onChange={this.handleChange} placeholder="请输入文章标题" /><span className="add-on"><i className="icon-notebook"></i></span></label>
+							<section className="section">
+								<h3 className="section-head">{(this.state.id ? '修改' : '新增') + '分类'}</h3>
+								<div className="control">
+									<span className="control-label">分类名：</span>
+									<div className="controls">
+										<label className="input-prepend labled inline-span6"><input type="text" name="name" value={this.state.name} onChange={this.handleChange} /><span className="add-on"><i className="icon-user"></i></span></label>
+									</div>
 								</div>
-								<div className="row" id="editorInitBox"></div>
-								<div className="row">
-									<Tabs className="tabs" defaultMain="1">
-										<Tab toggler="选择媒体">1</Tab>
-										<Tab toggler="添加媒体">2</Tab>
-									</Tabs>
+								<div className="control">
+									<span className="control-label">别名：</span>
+									<div className="controls">
+										<label className="input-prepend labled inline-span6"><input type="text" name="slug" value={this.state.slug} onChange={this.handleChange} /><span className="add-on"><i className="icon-user"></i></span></label>
+									</div>
 								</div>
-							</div>
-							<div className="col-span3 article-sidebar">
-								<section className="section">
-									<h3 className="section-head">发布</h3>
-									<div className="control">
-										<span className="control-label">状态：</span>
-										<div className="controls"><b>草稿</b></div>
+								<div className="control">
+									<div className="controls">
+										<FetchButton isFetching={isFetching} submitEvent={this.submitEvent} className="button green">提交</FetchButton>
 									</div>
-									<div className="control">
-										<span className="control-label">作者：</span>
-										<div className="controls"><b>Alvin</b></div>
-									</div>
-									<div className="control">
-										<span className="button blue" data-val="0" onClick={this.submitEvent}>发布</span>
-										<span className="button teal" data-val="1" onClick={this.submitEvent}>存草稿</span>
-									</div>
-								</section>
-								<section className="section">
-									<h3 className="section-head">分类</h3>
-									<div className="row">
-										<Iselect className="col-span10" url="/api/classify/select_list" name="classify_id" value={this.state.classify_id}></Iselect>
-									</div>
-								</section>
-								<section className="section">
-									<h3 className="section-head">标签</h3>
-									<div className="row">
-										<Additems />
-									</div>
-								</section>
-								<section className="section">
-									<h3 className="section-head">媒体</h3>
-									<div className="row">
-										<Addmedia name="media" />
-									</div>
-								</section>
-							</div>
-						</div>
+								</div>
+							</section>
 					</form>
 				</div>
             </div>
@@ -325,27 +272,27 @@ class ArticleFormUI extends Component {
 }
 
 
-export const ArticleForm = connect(
+export const MediaForm = connect(
 	(state) => {
 		return {
-			isFetching: state.article.isFetching,
-			info: state.article.info
+			isFetching: state.media.isFetching,
+			info: state.media.info
 		}
 	},
 	(dispatch, ownProps) => {
 		return {
 			getInfo: (id) => {
-				dispatch(ActionGet(GET_ARTICLE_INFO, '/api/article/info/' + id, 'article'))
+				dispatch(ActionGet(GET_MEDIA_INFO, '/api/media/info/' + id, 'media'))
 			},
 			submit: (formdata, callback) => {
-				let url = '/api/ou/edit'
+				let url = '/api/media/form'
 
 				if (formdata.id !== '') {
 					url += '/' + formdata.id
 				}
 
-				dispatch(ActionPost(POST_ARTICLE_INFO, url, formdata, 'article', callback))
+				dispatch(ActionPost(POST_MEDIA_INFO, url, formdata, 'media', callback))
 			}
 		};
 	}
-)(ArticleFormUI)
+)(MediaFormUI)

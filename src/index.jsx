@@ -186,10 +186,10 @@ document.addEventListener('mouseup', (e) => {
         })
 
         //更新数据库中的数据
-        FetchPost('/api/setting/list_configs', {
-            listPath: listPath,
-            configs: JSON.stringify(configs)
-        })
+        // FetchPost('/api/setting/list_configs', {
+        //     listPath: listPath,
+        //     configs: JSON.stringify(configs)
+        // })
 
         resize.resizeing = false
     }
@@ -214,13 +214,13 @@ document.addEventListener('mouseup', (e) => {
             Query("#olist_table").removeClass("moving")
 
             //更新数据库中的数据
-            FetchPost('/api/setting/list_configs', {
-                listPath: configs.listPath,
-                configs: JSON.stringify({
-                    ...configs,
-                    column: newColumn
-                })
-            })
+            // FetchPost('/api/setting/list_configs', {
+            //     listPath: configs.listPath,
+            //     configs: JSON.stringify({
+            //         ...configs,
+            //         column: newColumn
+            //     })
+            // })
 
             //更新store中的数据
             store.dispatch({

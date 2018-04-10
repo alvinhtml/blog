@@ -10,6 +10,10 @@ import {FetchGet} from '../actions/actions'
 
 //引入 Modal 弹出层
 import {Modal, Alert, Confirm} from './modal'
+import {Tabs, Tab} from './tabs'
+
+
+import {MediaSelect} from '../container/media/media'
 
 
 const UploadFile = (params) => {
@@ -61,7 +65,7 @@ const UploadFile = (params) => {
 
 
 
-export class Upload extends Component {
+export class Uploads extends Component {
 
 	constructor(props) {
 		super(props)
@@ -194,6 +198,112 @@ export class Upload extends Component {
     }
 }
 
+
+export class Upload extends Component {
+
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			path: [], // 已上传文件
+			list: [], //上传中的文件
+			isLoading: false
+		}
+
+		this.timeout;
+
+		//ES6 类中函数必须手动绑定
+		this.chooseFileEvent = this.chooseFileEvent.bind(this)
+		this.onChangeEvent = this.onChangeEvent.bind(this)
+
+	}
+
+	chooseFileEvent(e) {
+		this.refs.inputFile.click()
+		// console.log('upload-choose');
+	}
+
+	onChangeEvent(e) {
+		// console.log('upload-change');
+
+		let list  = []
+		let files  = e.target.files
+
+		//遍历多选
+		for (let i = 0; i < files.length; i++) {
+
+			let file = files[i]
+			let reader = new FileReader()
+
+			//如果是图片类型
+			if (/image\/\w+/.test(file.type)) {
+				reader.readAsDataURL(file)
+				reader.onload =  (e) => {
+					//向原有文件列表中添加新文件
+                    list[i] = {
+						name: file.name,
+						type: file.type,
+						size: file.size,
+						loaded: 0,
+						data: e.target.result
+					}
+					this.setState({
+						list: list
+					})
+                }
+			} else {
+				//向原有文件列表中添加新文件
+				list[i] = {
+					name: file.name,
+					type: file.type,
+					size: file.size,
+					loaded: 0,
+				}
+				this.setState({
+					list: list
+				})
+			}
+
+			UploadFile({
+				inputFile: file,
+				progress: (prams) => {
+					if(this.state.list[i]) {
+						this.state.list[i] = {
+							...prams,
+							...this.state.list[i]
+						}
+						this.setState()
+					}
+				},
+				complete: (data) => {
+					console.log("complete ", data);
+					let newPath = this.state.path
+					newPath.push({
+						id: data.info.id,
+						data: data.info.path + '/' + data.info.name
+					})
+					this.setState({
+						path: newPath
+					})
+				}
+			})
+		}
+	}
+
+	render() {
+        return (
+			<div className="upload">
+				<div className="upload-add-file" onClick={this.chooseFileEvent}>
+					<input type="file" multiple="multiple" style={{'display':'none'}} onChange={this.onChangeEvent} ref='inputFile' name="files" />
+					<i className="icon-cloud-upload"></i><br />选择要上传的文件
+				</div>
+			</div>
+        );
+    }
+}
+
+
+
 export class Addmedia extends Component {
 	constructor(props) {
 		super(props)
@@ -207,7 +317,6 @@ export class Addmedia extends Component {
 
 		//ES6 类中函数必须手动绑定
 		this.refCallback = this.refCallback.bind(this)
-		// this.onChangeEvent = this.onChangeEvent.bind(this)
 
 	}
 
@@ -219,6 +328,11 @@ export class Addmedia extends Component {
 		this.mediaListModal = instance
 	}
 
+	selectEvent(e){
+
+
+	}
+
 	render() {
 
 		let {path} = this.state
@@ -228,15 +342,18 @@ export class Addmedia extends Component {
 		})
 
         return (
-			<div className="add-media">
-				<ul>{lists}</ul>
+			<div>
+				<ul className="add-media">{lists}</ul>
 				<div><span className="button tiny label" onClick={()=>{this.mediaListModal.show()}}><i className="icon-plus"></i>选择媒体文件</span></div>
 				<Modal ref={this.refCallback} id="mediaListModal">
-					<div className="modal-header">添加媒体文件</div>
-					<div className="content">添加媒体文件!</div>
-					<div className="actions">
-						<span className="button" onClick={()=>{this.mediaListModal.hide()}}>取消</span>
-					</div>
+					<Tabs className="tabs add-media-tbs" defaultMain="1">
+						<Tab toggler="选择媒体">
+							<MediaSelect selectEvent={this.selectEvent} />
+						</Tab>
+						<Tab toggler="添加媒体">
+							<Upload />
+						</Tab>
+					</Tabs>
 				</Modal>
 			</div>
         );
