@@ -36,7 +36,7 @@ export class Modal extends Component {
 	}
 
 	hide() {
-		this.modalbox.className = "modal animate"
+		this.modalbox.className = this.props.className + " modal animate"
 		this.dimmer.className = "dimmer"
 		setTimeout(()=>{
 			document.body.removeChild(this.dimmer)
@@ -45,10 +45,10 @@ export class Modal extends Component {
 	}
 
 	render() {
-		let modalClass = this.state.visible ? "modal animate visible" : "modal animate"
+		let modalClass = this.state.visible ? " modal animate visible" : " modal animate"
 
 		return (
-			<div className={modalClass} id={this.props.id}>
+			<div className={this.props.className + modalClass} id={this.props.id}>
 				<span className="modal-close" onClick={this.hide}>×</span>
 				{this.props.children}
 			</div>

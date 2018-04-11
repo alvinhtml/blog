@@ -16,13 +16,12 @@ import {Popup} from '../../components/popup'
 //import {Editor} from '../../components/editor'
 
 import {Iselect} from '../../components/select'
-import {Addmedia} from '../../components/media'
 import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 import {Tabs, Tab} from '../../components/tabs'
 
 //引入组件
-import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, Additems} from '../../components/common'
+import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, Additems, Addmedia} from '../../components/common'
 
 //引入action类型常量名
 import {
@@ -184,6 +183,7 @@ class ArticleFormUI extends Component {
 			classify_id: 1,
 			author: '',
 			media: '',
+			tags: '',
 			abstract: '',
 			content: '这是正文',
 			markdown: '',
@@ -207,9 +207,9 @@ class ArticleFormUI extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.info) {
-			const {id, title, classify_id, author, media, abstract, content, markdown, state} = nextProps.info
+			const {id, title, classify_id, author, media, tags, abstract, content, markdown, state} = nextProps.info
 			this.setState({
-		      id, title, classify_id, author, media, abstract, content, markdown, state
+		      id, title, classify_id, author, media, tags, abstract, content, markdown, state
 		    })
 			this.editor.setContent(content)
 		}
@@ -232,6 +232,9 @@ class ArticleFormUI extends Component {
 			id: forms.id.value,
 			title: Validator(forms.title),
 			content: this.editor.getContent(),
+			classify_id: forms.classify_id.value,
+			tags: forms.tags.value,
+			media: forms.media.value,
 			markdown: this.editor.getMode(),
 		}
 
@@ -292,7 +295,7 @@ class ArticleFormUI extends Component {
 										<span className="control-label">作者：</span>
 										<div className="controls"><b>Alvin</b></div>
 									</div>
-									<div className="control">
+									<div className="control-actions align-center">
 										<span className="button blue" data-val="0" onClick={this.submitEvent}>发布</span>
 										<span className="button teal" data-val="1" onClick={this.submitEvent}>存草稿</span>
 									</div>
@@ -305,15 +308,13 @@ class ArticleFormUI extends Component {
 								</section>
 								<section className="section">
 									<h3 className="section-head">标签</h3>
-									<div className="row">
-										<Additems />
+									<div className="control">
+										<Additems name="tags" />
 									</div>
 								</section>
 								<section className="section">
 									<h3 className="section-head">媒体</h3>
-									<div className="row">
-										<Addmedia name="media" />
-									</div>
+									<Addmedia className="control" name="media" />
 								</section>
 							</div>
 						</div>

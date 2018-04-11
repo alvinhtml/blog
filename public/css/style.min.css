@@ -980,6 +980,9 @@ footer {
   margin-left: 17.094%;
   padding-bottom: 10px;
 }
+.control-actions .button {
+  margin-right: 0.75em;
+}
 .text-left {
   text-align: left;
 }
@@ -1904,7 +1907,6 @@ span.add-on {
   left: 50%;
   text-align: left;
   background-color: #FFFFFF;
-  border: 1px solid #DDDDDD;
   border-radius: 5px;
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -1921,15 +1923,21 @@ span.add-on {
   cursor: pointer;
   position: absolute;
   z-index: 1;
-  opacity: 0.8;
   font-size: 1.25em;
-  top: -1.4285em;
-  right: -1.4285em;
-  color: #FFFFFF;
+  top: 14px;
+  right: 14px;
   font-family: inherit;
+  display: block;
+  width: 28px;
+  height: 28px;
+  font-size: 24px;
+  line-height: 22px;
+  text-align: center;
+  color: #000;
+  opacity: 0.2;
 }
-.modal > i.close:hover {
-  opacity: 1;
+.modal > .modal-close:hover {
+  opacity: 0.6;
 }
 /*--------------
      Header
@@ -1938,8 +1946,9 @@ span.add-on {
   box-sizing: border-box;
   margin: 0em;
   width: 100%;
-  padding: 1em 2rem;
-  font-size: 1.2em;
+  padding: 1em 2em;
+  font-size: 1em;
+  line-height: 2em;
   font-weight: bold;
   border-radius: 0.325em 0.325em 0px 0px;
 }
@@ -1967,7 +1976,7 @@ span.add-on {
 .modal .actions {
   box-sizing: border-box;
   width: 100%;
-  padding: 1rem 2rem;
+  padding: 1em 2em;
   text-align: right;
 }
 .modal .actions > .button {
@@ -2741,7 +2750,8 @@ a:hover { color: #50d2fa; }
 /*---------------------
     button
 ---------------------*/
-.button { background-image: none !important; box-shadow: none !important; font-weight: 200; border-radius: 0; }
+.button { background-image: none !important; box-shadow: none !important; font-weight: 200;}
+.olist-search .button { border-radius: 0; }
 .spaced .button { margin-right: 8px; margin-bottom: 8px; }
 
 /*---------------------
@@ -2877,16 +2887,16 @@ a:hover { color: #50d2fa; }
 .upload-item img { max-width: 98%; max-height: 260px; opacity: 0.5; }
 
 /* add media */
-.add-media li { text-align: center; line-height: 240px; border: 1px solid #ccc; background: #ccc; margin-bottom: 6px;}
-.add-media img { max-width: 240px; max-height: 240px;}
+.add-media li { width: 240px; height: 240px; background-color: #f4f6f9; border: 1px solid #f4f6f9;  text-align: center; line-height: 240px; overflow: hidden; margin: 10px auto;}
+.add-media li img {max-width: 240px; max-height: 240px; vertical-align: middle; -webkit-transition: all 0.4s ease-in-out;}
 
 
 
 
 /* tabs box */
-.tabs { margin-top: 10px;}
-.tabs-header {}
-.tabs-header li { float: left; min-width: 136px; border: 1px solid #eee; background-color: #f7f8fa; text-align: center; margin-left: -1px; line-height: 36px; box-sizing: border-box; cursor: pointer;}
+.tabs { margin-top: 10px; }
+.tabs-header { width: 100%; }
+.tabs-header li { float: left; font-size: 12px; border: 1px solid #eee; background-color: #f7f8fa; text-align: center; margin-left: -1px; line-height: 36px; box-sizing: border-box; cursor: pointer; padding: 0 18px;}
 .tabs-header li.active { border-top: 2px solid #00a2ca; background-color: #fff; line-height: 35px;}
 
 
@@ -3155,7 +3165,7 @@ dl.search-where-line dd em { display: inline-block; vertical-align: middle; widt
 .list-column span.active::before { background: #36c6d3; }
 
 /* olist -> table */
-.olist-main { margin-top: 10px; border-right:1px solid #e7ecf1; overflow-x: auto; position: relative;}
+.olist-main { margin: 10px 0; border-right:1px solid #e7ecf1; overflow-x: auto; position: relative;}
 .olist-table { border:0; table-layout:fixed; width: 100%; }
 .olist-table tbody tr:hover { background-color: #eef1f5;}
 .olist-table th { white-space: nowrap; background: none; position: relative; box-sizing:border-box; height: 36px; padding:0; min-width: 48px; border-left:1px solid #e7ecf1; border-top:1px solid #e7ecf1; user-select:none; padding-left: 6px; -webkit-user-select:none; -moz-user-select:none;-o-user-select:none;user-select:none;}
@@ -3223,7 +3233,7 @@ table.moving th.row-last {
 
 
 /* olist -> pagelist */
-.pagelist { padding: 25px 0 10px 0; text-align: right;}
+.pagelist { padding: 10px 0; text-align: right;}
 .pagelist input { width: 40px; height: 28px; padding: 3px; text-align: center; border:1px solid #e7ecf1; border-radius: 0; }
 .pagelist input:focus { border:1px solid #36c6d3; border-radius: 0; }
 .pagelist a { height: 28px; min-width: 28px; color: #333; line-height: 26px; text-align: center; box-sizing:border-box; border:1px solid #e7ecf1; background-color: #f4f6f9; padding: 0; cursor: pointer; display: inline-block; margin-left: 5px; vertical-align: middle;}
@@ -3279,11 +3289,20 @@ table.moving th.row-last {
 .edit-svg { fill: #838fa1;  }
 .editor-btn.active .edit-svg { fill: #0084ff; }
 
-
+/*==================================
+            Media
+ =================================*/
+.add-media-tabs { margin: 20px 20px 10px 20px;}
+.media-select-list { }
+.add-media-modal { width: 702px;}
+.media-select-list li { width: 120px; height: 120px; background-color: #f4f6f9; border: 2px solid #f4f6f9; float: left; margin: 10px 10px 0 0; text-align: center; line-height: 120px; overflow: hidden;}
+.media-select-list li:nth-child(5n+5) { margin-right: 0px;}
+.media-select-list li:hover { border: 2px solid #36c6d3;}
+.media-select-list li img {max-width: 120px; max-height: 120px; vertical-align: middle; -webkit-transition: all 0.4s ease-in-out;}
+.media-select-list li:hover img { -webkit-transition: all 0.4s ease-in-out; transform-origin: center center; transform: scale(1.7);}
 
 .media_list_img { width: 120px; height: 120px; text-align: center; line-height: 120px;}
 .media_list_img img { max-width: 120px; max-height: 120px; vertical-align: middle;}
-
 
 .user_photo_little { width: 60px; height: 60px;}
 
@@ -3293,14 +3312,14 @@ table.moving th.row-last {
             Animate
  =================================*/
 .animate-in-out {
-    -webkit-transform: all 0.3 ease-in-out;
-    -ms-transform: all 0.3 ease-in-out;
-    transform: all 0.3 ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 .animate-in-out:hover {
-    -webkit-transform: all 0.3 ease-in-out;
-    -ms-transform: all 0.3 ease-in-out;
-    transform: all 0.3 ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .ilink, .ilinks a { position: relative; }

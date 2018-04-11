@@ -1501,7 +1501,7 @@ var Modal = exports.Modal = function (_Component) {
 		value: function hide() {
 			var _this2 = this;
 
-			this.modalbox.className = "modal animate";
+			this.modalbox.className = this.props.className + " modal animate";
 			this.dimmer.className = "dimmer";
 			setTimeout(function () {
 				document.body.removeChild(_this2.dimmer);
@@ -1511,11 +1511,11 @@ var Modal = exports.Modal = function (_Component) {
 	}, {
 		key: "render",
 		value: function render() {
-			var modalClass = this.state.visible ? "modal animate visible" : "modal animate";
+			var modalClass = this.state.visible ? " modal animate visible" : " modal animate";
 
 			return _react2.default.createElement(
 				"div",
-				{ className: modalClass, id: this.props.id },
+				{ className: this.props.className + modalClass, id: this.props.id },
 				_react2.default.createElement(
 					"span",
 					{ className: "modal-close", onClick: this.hide },
@@ -2553,7 +2553,7 @@ var Radios = exports.Radios = function (_Component2) {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.Additems = exports.FetchButton = exports.Arraylist = exports.Tbodyer = exports.Theader = exports.Configer = exports.TermSearcher = exports.Searcher = exports.ListActioner = exports.PageList = exports.Crumbs = undefined;
+exports.Addmedia = exports.MediaMain = exports.Additems = exports.FetchButton = exports.Arraylist = exports.Tbodyer = exports.Theader = exports.Configer = exports.TermSearcher = exports.Searcher = exports.ListActioner = exports.PageList = exports.Crumbs = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -2573,6 +2573,14 @@ var _index = __webpack_require__(225);
 
 var _actions = __webpack_require__(17);
 
+var _modal = __webpack_require__(68);
+
+var _tabs = __webpack_require__(287);
+
+var _upload = __webpack_require__(714);
+
+var _media = __webpack_require__(288);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -2586,6 +2594,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 //引入Action创建函数
+
+
+//引入 Modal 弹出层
 
 
 /**
@@ -3972,6 +3983,10 @@ var Additems = exports.Additems = function (_Component11) {
 			var _this17 = this;
 
 			if (!this.state.isFetching) {
+				if (this.state.text === '') {
+					(0, _modal.Alert)('标签名称不能为空！');
+					return false;
+				}
 				this.setState({
 					isFetching: 1
 				});
@@ -4025,7 +4040,7 @@ var Additems = exports.Additems = function (_Component11) {
 			var list = this.state.data;
 			var searchlist = this.state.searchData;
 
-			console.log('render_data', this.state.searchData, this.state.data);
+			var value = [];
 
 			var searchOptions = searchlist.map(function (v, i) {
 				return _react2.default.createElement(
@@ -4036,6 +4051,7 @@ var Additems = exports.Additems = function (_Component11) {
 			});
 
 			var options = list.map(function (v, i) {
+				value.push(v.id);
 				return _react2.default.createElement(
 					'li',
 					{ key: i },
@@ -4044,18 +4060,22 @@ var Additems = exports.Additems = function (_Component11) {
 						{ className: 'remove', 'data-val': v.id, onClick: _this18.removeHandle },
 						'\xD7'
 					),
-					v.name,
-					_react2.default.createElement('input', { name: _this18.props.name, type: 'hidden', value: v.id })
+					v.name
 				);
 			});
+
+			var valueStr = value.join(',');
+
+			console.log(valueStr);
 
 			return _react2.default.createElement(
 				'div',
 				{ className: 'additem' },
+				_react2.default.createElement('input', { name: this.props.name, type: 'hidden', value: valueStr }),
 				_react2.default.createElement(
 					'div',
 					{ className: 'additem-head' },
-					_react2.default.createElement('input', { type: 'text', name: 'media', value: this.state.text, onChange: this.handleChange }),
+					_react2.default.createElement('input', { type: 'text', value: this.state.text, onChange: this.handleChange }),
 					'\xA0',
 					_react2.default.createElement(
 						'span',
@@ -4078,6 +4098,190 @@ var Additems = exports.Additems = function (_Component11) {
 	}]);
 
 	return Additems;
+}(_react.Component);
+
+/**
+ * MediaMain
+ */
+
+
+var MediaMain = exports.MediaMain = function (_Component12) {
+	_inherits(MediaMain, _Component12);
+
+	function MediaMain() {
+		_classCallCheck(this, MediaMain);
+
+		return _possibleConstructorReturn(this, (MediaMain.__proto__ || Object.getPrototypeOf(MediaMain)).apply(this, arguments));
+	}
+
+	_createClass(MediaMain, [{
+		key: 'render',
+		value: function render() {
+			var _this20 = this;
+
+			var list = this.props.list;
+
+			var lists = list.map(function (v, i) {
+				var imgURL = '/' + v.path + '/' + v.name;
+				return _react2.default.createElement(
+					'li',
+					{ key: i, onClick: function onClick() {
+							_this20.props.selectEvent(v);
+						} },
+					_react2.default.createElement('img', { src: imgURL })
+				);
+			});
+			return _react2.default.createElement(
+				'ul',
+				{ className: 'media-select-list clear' },
+				lists
+			);
+		}
+	}]);
+
+	return MediaMain;
+}(_react.Component);
+
+/**
+ * Addmedia
+ */
+
+
+var Addmedia = exports.Addmedia = function (_Component13) {
+	_inherits(Addmedia, _Component13);
+
+	function Addmedia(props) {
+		_classCallCheck(this, Addmedia);
+
+		var _this21 = _possibleConstructorReturn(this, (Addmedia.__proto__ || Object.getPrototypeOf(Addmedia)).call(this, props));
+
+		_this21.state = {
+			path: [], // 已上传文件
+			isLoading: false
+		};
+
+		_this21.timeout;
+
+		//ES6 类中函数必须手动绑定
+		_this21.refCallback = _this21.refCallback.bind(_this21);
+		_this21.selectEvent = _this21.selectEvent.bind(_this21);
+		_this21.cancleEvent = _this21.cancleEvent.bind(_this21);
+
+		return _this21;
+	}
+
+	_createClass(Addmedia, [{
+		key: 'componentWillMount',
+		value: function componentWillMount() {}
+	}, {
+		key: 'refCallback',
+		value: function refCallback(instance) {
+			this.mediaListModal = instance;
+		}
+	}, {
+		key: 'selectEvent',
+		value: function selectEvent(data) {
+			console.log(data);
+			this.mediaListModal.hide();
+
+			var path = this.state.path;
+
+			path.push({
+				id: data.id,
+				path: '/' + data.path + '/' + data.name
+			});
+
+			this.setState({
+				path: path
+			});
+		}
+	}, {
+		key: 'cancleEvent',
+		value: function cancleEvent() {
+			this.setState({
+				path: []
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this22 = this;
+
+			var path = this.state.path;
+
+
+			var paths = '',
+			    adds = void 0,
+			    value = [];
+
+			if (path.length) {
+				paths = path.map(function (v, i) {
+					value.push(v.path);
+					return _react2.default.createElement(
+						'li',
+						{ key: i },
+						_react2.default.createElement('img', { src: v.path })
+					);
+				});
+				adds = _react2.default.createElement(
+					'div',
+					{ className: 'control-actions align-center' },
+					_react2.default.createElement(
+						'span',
+						{ className: 'button nini', onClick: this.cancleEvent },
+						'\u53D6\u6D88\u5A92\u4F53\u56FE\u7247'
+					)
+				);
+			} else {
+				adds = _react2.default.createElement(
+					'div',
+					{ className: 'control-actions align-center' },
+					_react2.default.createElement(
+						'span',
+						{ className: 'button label blue', onClick: function onClick() {
+								_this22.mediaListModal.show();
+							} },
+						_react2.default.createElement('i', { className: 'icon-plus' }),
+						'\u9009\u62E9\u5A92\u4F53\u6587\u4EF6'
+					)
+				);
+			}
+
+			var valueStr = value.join(',');
+
+			return _react2.default.createElement(
+				'div',
+				{ className: this.className },
+				_react2.default.createElement('input', { type: 'hidden', name: this.props.name, value: valueStr }),
+				_react2.default.createElement(
+					'ul',
+					{ className: 'add-media' },
+					paths
+				),
+				adds,
+				_react2.default.createElement(
+					_modal.Modal,
+					{ className: 'add-media-modal', ref: this.refCallback, id: 'addMediaModal' },
+					_react2.default.createElement(
+						_tabs.Tabs,
+						{ className: 'tabs add-media-tabs', defaultMain: '1' },
+						_react2.default.createElement(
+							_tabs.Tab,
+							{ toggler: '\u9009\u62E9\u5A92\u4F53' },
+							_react2.default.createElement(_media.MediaSelect, { selectEvent: this.selectEvent })
+						),
+						_react2.default.createElement(
+							_tabs.Tab,
+							{ toggler: '\u6DFB\u52A0\u5A92\u4F53' },
+							_react2.default.createElement(_upload.Upload, null)
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return Addmedia;
 }(_react.Component);
 
 /***/ }),
@@ -9468,7 +9672,7 @@ var Tab = exports.Tab = function (_Component3) {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.MediaForm = exports.MediaList = undefined;
+exports.MediaSelect = exports.MediaList = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -9507,8 +9711,6 @@ var _constants = __webpack_require__(12);
 var _actions = __webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9609,7 +9811,7 @@ var MediaListUI = function (_Component) {
 							_react2.default.createElement(
 								'b',
 								null,
-								'\u65E5\u5FD7\u5206\u7C7B'
+								'\u5A92\u4F53\u5217\u8868'
 							),
 							' / \u9996\u9875'
 						),
@@ -9727,202 +9929,60 @@ var MediaList = exports.MediaList = (0, _reactRedux.connect)(function (state) {
 	};
 })(MediaListUI);
 
-var MediaFormUI = function (_Component2) {
-	_inherits(MediaFormUI, _Component2);
+var MediaSelectUI = function (_Component2) {
+	_inherits(MediaSelectUI, _Component2);
 
-	function MediaFormUI(props) {
-		_classCallCheck(this, MediaFormUI);
+	function MediaSelectUI(props) {
+		_classCallCheck(this, MediaSelectUI);
 
-		var _this2 = _possibleConstructorReturn(this, (MediaFormUI.__proto__ || Object.getPrototypeOf(MediaFormUI)).call(this, props));
-
-		_this2.state = {
-			id: '',
-			name: '',
-			slug: '',
-			type: 0
-
-			//ES6 类中函数必须手动绑定
-		};_this2.handleChange = _this2.handleChange.bind(_this2);
-		_this2.submitEvent = _this2.submitEvent.bind(_this2);
-		return _this2;
+		return _possibleConstructorReturn(this, (MediaSelectUI.__proto__ || Object.getPrototypeOf(MediaSelectUI)).call(this, props));
 	}
 
-	_createClass(MediaFormUI, [{
+	_createClass(MediaSelectUI, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {
-			if (this.props.match.params.id) {
-				this.props.getInfo(this.props.match.params.id);
-			}
-		}
-	}, {
-		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(nextProps) {
-			if (nextProps.info) {
-				var _nextProps$info = nextProps.info,
-				    id = _nextProps$info.id,
-				    name = _nextProps$info.name,
-				    slug = _nextProps$info.slug,
-				    type = _nextProps$info.type;
-
-				this.setState({
-					id: id, name: name, slug: slug, type: type
-				});
-				//	this.editor.setContent(content)
-			}
-		}
-	}, {
-		key: 'handleChange',
-		value: function handleChange(e) {
-			var target = e.target;
-			var value = target.type === 'checkbox' ? target.checked : target.value;
-			var name = target.name;
-			this.setState(_defineProperty({}, name, value));
-		}
-	}, {
-		key: 'submitEvent',
-		value: function submitEvent(e) {
-			var _this3 = this;
-
-			var forms = document.forms.clissifyform;
-			var id = (0, _query2.default)(forms.id).val();
-
-			var formdata = {
-				id: forms.id.value,
-				name: (0, _validator2.default)(forms.name),
-				slug: (0, _validator2.default)(forms.slug),
-				type: 0
-			};
-
-			console.log(formdata);
-			this.props.submit(formdata, function (data) {
-				_this3.props.history.push('/admin/media/list');
+			this.props.getList({
+				page: 1
 			});
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			var isFetching = this.props.isFetching;
-
+			var _props3 = this.props,
+			    tools = _props3.tools,
+			    actions = _props3.actions,
+			    list = _props3.list,
+			    count = _props3.count,
+			    configs = _props3.configs,
+			    getList = _props3.getList;
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'main-box' },
+				{ className: 'list-box media-select-box' },
 				_react2.default.createElement(
 					'div',
-					{ className: 'page-bar clear' },
-					_react2.default.createElement('div', { className: 'page-bar-left' }),
-					_react2.default.createElement(
-						'div',
-						{ className: 'page-bar-right' },
-						_react2.default.createElement('i', { className: 'icon-calendar' }),
-						' Wed Aug 10 2016 10:51:20 GMT+0800'
-					)
+					{ className: 'media-select-main clear' },
+					_react2.default.createElement(_common.MediaMain, { list: list, selectEvent: this.props.selectEvent })
 				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-box' },
-					_react2.default.createElement(
-						'form',
-						{ className: 'form clissifyform', name: 'clissifyform' },
-						_react2.default.createElement('input', { type: 'hidden', name: 'id', value: this.state.id, onChange: this.handleChange }),
-						_react2.default.createElement(
-							'section',
-							{ className: 'section' },
-							_react2.default.createElement(
-								'h3',
-								{ className: 'section-head' },
-								(this.state.id ? '修改' : '新增') + '分类'
-							),
-							_react2.default.createElement(
-								'div',
-								{ className: 'control' },
-								_react2.default.createElement(
-									'span',
-									{ className: 'control-label' },
-									'\u5206\u7C7B\u540D\uFF1A'
-								),
-								_react2.default.createElement(
-									'div',
-									{ className: 'controls' },
-									_react2.default.createElement(
-										'label',
-										{ className: 'input-prepend labled inline-span6' },
-										_react2.default.createElement('input', { type: 'text', name: 'name', value: this.state.name, onChange: this.handleChange }),
-										_react2.default.createElement(
-											'span',
-											{ className: 'add-on' },
-											_react2.default.createElement('i', { className: 'icon-user' })
-										)
-									)
-								)
-							),
-							_react2.default.createElement(
-								'div',
-								{ className: 'control' },
-								_react2.default.createElement(
-									'span',
-									{ className: 'control-label' },
-									'\u522B\u540D\uFF1A'
-								),
-								_react2.default.createElement(
-									'div',
-									{ className: 'controls' },
-									_react2.default.createElement(
-										'label',
-										{ className: 'input-prepend labled inline-span6' },
-										_react2.default.createElement('input', { type: 'text', name: 'slug', value: this.state.slug, onChange: this.handleChange }),
-										_react2.default.createElement(
-											'span',
-											{ className: 'add-on' },
-											_react2.default.createElement('i', { className: 'icon-user' })
-										)
-									)
-								)
-							),
-							_react2.default.createElement(
-								'div',
-								{ className: 'control' },
-								_react2.default.createElement(
-									'div',
-									{ className: 'controls' },
-									_react2.default.createElement(
-										_common.FetchButton,
-										{ isFetching: isFetching, submitEvent: this.submitEvent, className: 'button green' },
-										'\u63D0\u4EA4'
-									)
-								)
-							)
-						)
-					)
-				)
+				_react2.default.createElement(_common.PageList, { getList: getList, count: parseInt(count), configs: configs })
 			);
 		}
 	}]);
 
-	return MediaFormUI;
+	return MediaSelectUI;
 }(_react.Component);
 
-var MediaForm = exports.MediaForm = (0, _reactRedux.connect)(function (state) {
-	return {
-		isFetching: state.media.isFetching,
-		info: state.media.info
-	};
+var MediaSelect = exports.MediaSelect = (0, _reactRedux.connect)(function (state) {
+	return _extends({}, state.media);
 }, function (dispatch, ownProps) {
+
 	return {
-		getInfo: function getInfo(id) {
-			dispatch((0, _actions.ActionGet)(_constants.GET_MEDIA_INFO, '/api/media/info/' + id, 'media'));
-		},
-		submit: function submit(formdata, callback) {
-			var url = '/api/media/form';
-
-			if (formdata.id !== '') {
-				url += '/' + formdata.id;
-			}
-
-			dispatch((0, _actions.ActionPost)(_constants.POST_MEDIA_INFO, url, formdata, 'media', callback));
+		getList: function getList(where) {
+			console.log("getlist:ou where", where);
+			dispatch((0, _actions.ActionGet)(_constants.GET_MEDIA_LIST, '/api/media/list', where, 'media'));
 		}
 	};
-})(MediaFormUI);
+})(MediaSelectUI);
 
 /***/ }),
 /* 289 */
@@ -22151,9 +22211,9 @@ var _home = __webpack_require__(712);
 
 var _user = __webpack_require__(713);
 
-var _classify = __webpack_require__(714);
+var _classify = __webpack_require__(715);
 
-var _article = __webpack_require__(715);
+var _article = __webpack_require__(716);
 
 var _media = __webpack_require__(288);
 
@@ -28223,6 +28283,387 @@ var UserForm = exports.UserForm = (0, _reactRedux.connect)(function (state) {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.Upload = exports.Uploads = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(11);
+
+var _actions = __webpack_require__(17);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+//引入Action创建函数
+
+
+var UploadFile = function UploadFile(params) {
+	var inputFile = params.inputFile,
+	    progress = params.progress,
+	    complete = params.complete,
+	    error = params.error,
+	    abort = params.abort;
+
+
+	var uploadProgress = function uploadProgress(event) {
+		if (event.lengthComputable) {
+			if (progress) {
+				progress({
+					loaded: event.loaded,
+					total: event.total,
+					percent: Math.round(event.loaded * 100 / event.total)
+				});
+			}
+		}
+	};
+
+	var uploadComplete = function uploadComplete(event) {
+		if (complete) complete(JSON.parse(event.target.responseText));
+	};
+
+	var uploadFailed = function uploadFailed(event) {};
+
+	var uploadCanceled = function uploadCanceled(event) {};
+
+	var data = new FormData();
+
+	data.append('file', inputFile);
+
+	var xhr = new XMLHttpRequest();
+	xhr.upload.addEventListener("progress", uploadProgress, false);
+	xhr.addEventListener("load", uploadComplete, false);
+	xhr.addEventListener("error", uploadFailed, false);
+	xhr.addEventListener("abort", uploadCanceled, false);
+
+	xhr.open("POST", "/api/media/upload");
+	xhr.send(data);
+};
+
+var Uploads = exports.Uploads = function (_Component) {
+	_inherits(Uploads, _Component);
+
+	function Uploads(props) {
+		_classCallCheck(this, Uploads);
+
+		var _this = _possibleConstructorReturn(this, (Uploads.__proto__ || Object.getPrototypeOf(Uploads)).call(this, props));
+
+		_this.state = {
+			path: [], // 已上传文件
+			list: [], //上传中的文件
+			isLoading: false
+		};
+
+		_this.timeout;
+
+		//ES6 类中函数必须手动绑定
+		_this.chooseFileEvent = _this.chooseFileEvent.bind(_this);
+		_this.onChangeEvent = _this.onChangeEvent.bind(_this);
+
+		return _this;
+	}
+
+	_createClass(Uploads, [{
+		key: 'componentWillMount',
+		value: function componentWillMount() {}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {}
+	}, {
+		key: 'chooseFileEvent',
+		value: function chooseFileEvent(e) {
+			this.refs.inputFile.click();
+			// console.log('upload-choose');
+		}
+	}, {
+		key: 'onChangeEvent',
+		value: function onChangeEvent(e) {
+			var _this2 = this;
+
+			// console.log('upload-change');
+
+			var list = [];
+			var files = e.target.files;
+
+			//遍历多选
+
+			var _loop = function _loop(i) {
+
+				var file = files[i];
+				var reader = new FileReader();
+
+				//如果是图片类型
+				if (/image\/\w+/.test(file.type)) {
+					reader.readAsDataURL(file);
+					reader.onload = function (e) {
+						//向原有文件列表中添加新文件
+						list[i] = {
+							name: file.name,
+							type: file.type,
+							size: file.size,
+							loaded: 0,
+							data: e.target.result
+						};
+						_this2.setState({
+							list: list
+						});
+					};
+				} else {
+					//向原有文件列表中添加新文件
+					list[i] = {
+						name: file.name,
+						type: file.type,
+						size: file.size,
+						loaded: 0
+					};
+					_this2.setState({
+						list: list
+					});
+				}
+
+				UploadFile({
+					inputFile: file,
+					progress: function progress(prams) {
+						if (_this2.state.list[i]) {
+							_this2.state.list[i] = _extends({}, prams, _this2.state.list[i]);
+							_this2.setState();
+						}
+					},
+					complete: function complete(data) {
+						console.log("complete ", data);
+						var newPath = _this2.state.path;
+						newPath.push({
+							id: data.info.id,
+							data: data.info.path + '/' + data.info.name
+						});
+						_this2.setState({
+							path: newPath
+						});
+					}
+				});
+			};
+
+			for (var i = 0; i < files.length; i++) {
+				_loop(i);
+			}
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _state = this.state,
+			    path = _state.path,
+			    list = _state.list;
+
+
+			console.log(path, list);
+
+			var paths = path.map(function (v, i) {
+				var content = /image\/\w+/.test(v.type) ? _react2.default.createElement('img', { src: v.data }) : _react2.default.createElement(
+					'p',
+					null,
+					_react2.default.createElement('i', { className: 'icon-doc' }),
+					_react2.default.createElement(
+						'span',
+						null,
+						v.name
+					)
+				);
+				return _react2.default.createElement(
+					'div',
+					{ key: i, className: 'upload-item' },
+					content
+				);
+			});
+
+			var lists = list.map(function (v, i) {
+				var content = /image\/\w+/.test(v.type) ? _react2.default.createElement('img', { src: v.data }) : _react2.default.createElement(
+					'p',
+					null,
+					_react2.default.createElement('i', { className: 'icon-doc' }),
+					_react2.default.createElement(
+						'span',
+						null,
+						v.name
+					)
+				);
+				return _react2.default.createElement(
+					'div',
+					{ key: i, className: 'upload-item' },
+					content,
+					_react2.default.createElement(
+						'span',
+						{ className: 'loading' },
+						v.loaded + '/' + v.size
+					)
+				);
+			});
+
+			return _react2.default.createElement(
+				'div',
+				{ className: 'upload' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'upload-view show' },
+					paths,
+					lists
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'upload-add-file', onClick: this.chooseFileEvent },
+					_react2.default.createElement('input', { type: 'file', multiple: 'multiple', style: { 'display': 'none' }, onChange: this.onChangeEvent, ref: 'inputFile', name: 'files' }),
+					_react2.default.createElement('i', { className: 'icon-cloud-upload' }),
+					_react2.default.createElement('br', null),
+					'\u9009\u62E9\u8981\u4E0A\u4F20\u7684\u6587\u4EF6'
+				)
+			);
+		}
+	}]);
+
+	return Uploads;
+}(_react.Component);
+
+var Upload = exports.Upload = function (_Component2) {
+	_inherits(Upload, _Component2);
+
+	function Upload(props) {
+		_classCallCheck(this, Upload);
+
+		var _this3 = _possibleConstructorReturn(this, (Upload.__proto__ || Object.getPrototypeOf(Upload)).call(this, props));
+
+		_this3.state = {
+			path: [], // 已上传文件
+			list: [], //上传中的文件
+			isLoading: false
+		};
+
+		_this3.timeout;
+
+		//ES6 类中函数必须手动绑定
+		_this3.chooseFileEvent = _this3.chooseFileEvent.bind(_this3);
+		_this3.onChangeEvent = _this3.onChangeEvent.bind(_this3);
+
+		return _this3;
+	}
+
+	_createClass(Upload, [{
+		key: 'chooseFileEvent',
+		value: function chooseFileEvent(e) {
+			this.refs.inputFile.click();
+			// console.log('upload-choose');
+		}
+	}, {
+		key: 'onChangeEvent',
+		value: function onChangeEvent(e) {
+			var _this4 = this;
+
+			// console.log('upload-change');
+
+			var list = [];
+			var files = e.target.files;
+
+			//遍历多选
+
+			var _loop2 = function _loop2(i) {
+
+				var file = files[i];
+				var reader = new FileReader();
+
+				//如果是图片类型
+				if (/image\/\w+/.test(file.type)) {
+					reader.readAsDataURL(file);
+					reader.onload = function (e) {
+						//向原有文件列表中添加新文件
+						list[i] = {
+							name: file.name,
+							type: file.type,
+							size: file.size,
+							loaded: 0,
+							data: e.target.result
+						};
+						_this4.setState({
+							list: list
+						});
+					};
+				} else {
+					//向原有文件列表中添加新文件
+					list[i] = {
+						name: file.name,
+						type: file.type,
+						size: file.size,
+						loaded: 0
+					};
+					_this4.setState({
+						list: list
+					});
+				}
+
+				UploadFile({
+					inputFile: file,
+					progress: function progress(prams) {
+						if (_this4.state.list[i]) {
+							_this4.state.list[i] = _extends({}, prams, _this4.state.list[i]);
+							_this4.setState();
+						}
+					},
+					complete: function complete(data) {
+						console.log("complete ", data);
+						var newPath = _this4.state.path;
+						newPath.push({
+							id: data.info.id,
+							data: data.info.path + '/' + data.info.name
+						});
+						_this4.setState({
+							path: newPath
+						});
+					}
+				});
+			};
+
+			for (var i = 0; i < files.length; i++) {
+				_loop2(i);
+			}
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'upload' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'upload-add-file', onClick: this.chooseFileEvent },
+					_react2.default.createElement('input', { type: 'file', multiple: 'multiple', style: { 'display': 'none' }, onChange: this.onChangeEvent, ref: 'inputFile', name: 'files' }),
+					_react2.default.createElement('i', { className: 'icon-cloud-upload' }),
+					_react2.default.createElement('br', null),
+					'\u9009\u62E9\u8981\u4E0A\u4F20\u7684\u6587\u4EF6'
+				)
+			);
+		}
+	}]);
+
+	return Upload;
+}(_react.Component);
+
+/***/ }),
+/* 715 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.ClassifyForm = exports.ClassifyList = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -28682,7 +29123,7 @@ var ClassifyForm = exports.ClassifyForm = (0, _reactRedux.connect)(function (sta
 })(ClassifyFormUI);
 
 /***/ }),
-/* 715 */
+/* 716 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28709,7 +29150,7 @@ var _query = __webpack_require__(54);
 
 var _query2 = _interopRequireDefault(_query);
 
-var _editor = __webpack_require__(716);
+var _editor = __webpack_require__(717);
 
 var _editor2 = _interopRequireDefault(_editor);
 
@@ -28722,8 +29163,6 @@ var _dropdown = __webpack_require__(67);
 var _popup = __webpack_require__(92);
 
 var _select = __webpack_require__(93);
-
-var _media = __webpack_require__(717);
 
 var _modal = __webpack_require__(68);
 
@@ -28965,6 +29404,7 @@ var ArticleFormUI = function (_Component2) {
 			classify_id: 1,
 			author: '',
 			media: '',
+			tags: '',
 			abstract: '',
 			content: '这是正文',
 			markdown: '',
@@ -28998,13 +29438,14 @@ var ArticleFormUI = function (_Component2) {
 				    classify_id = _nextProps$info.classify_id,
 				    author = _nextProps$info.author,
 				    media = _nextProps$info.media,
+				    tags = _nextProps$info.tags,
 				    abstract = _nextProps$info.abstract,
 				    content = _nextProps$info.content,
 				    markdown = _nextProps$info.markdown,
 				    state = _nextProps$info.state;
 
 				this.setState({
-					id: id, title: title, classify_id: classify_id, author: author, media: media, abstract: abstract, content: content, markdown: markdown, state: state
+					id: id, title: title, classify_id: classify_id, author: author, media: media, tags: tags, abstract: abstract, content: content, markdown: markdown, state: state
 				});
 				this.editor.setContent(content);
 			}
@@ -29027,6 +29468,8 @@ var ArticleFormUI = function (_Component2) {
 				id: forms.id.value,
 				title: (0, _validator2.default)(forms.title),
 				content: this.editor.getContent(),
+				media: forms.media.value,
+				tags: forms.tags.value,
 				markdown: this.editor.getMode()
 			};
 
@@ -29165,7 +29608,7 @@ var ArticleFormUI = function (_Component2) {
 									),
 									_react2.default.createElement(
 										'div',
-										{ className: 'control' },
+										{ className: 'control-actions align-center' },
 										_react2.default.createElement(
 											'span',
 											{ className: 'button blue', 'data-val': '0', onClick: this.submitEvent },
@@ -29202,8 +29645,8 @@ var ArticleFormUI = function (_Component2) {
 									),
 									_react2.default.createElement(
 										'div',
-										{ className: 'row' },
-										_react2.default.createElement(_common.Additems, null)
+										{ className: 'control' },
+										_react2.default.createElement(_common.Additems, { name: 'tags' })
 									)
 								),
 								_react2.default.createElement(
@@ -29214,11 +29657,7 @@ var ArticleFormUI = function (_Component2) {
 										{ className: 'section-head' },
 										'\u5A92\u4F53'
 									),
-									_react2.default.createElement(
-										'div',
-										{ className: 'row' },
-										_react2.default.createElement(_media.Addmedia, { name: 'media' })
-									)
+									_react2.default.createElement(_common.Addmedia, { className: 'control', name: 'media' })
 								)
 							)
 						)
@@ -29254,7 +29693,7 @@ var ArticleForm = exports.ArticleForm = (0, _reactRedux.connect)(function (state
 })(ArticleFormUI);
 
 /***/ }),
-/* 716 */
+/* 717 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29686,489 +30125,6 @@ var EditorInit = function EditorInit(element, params) {
 };
 
 exports.default = EditorInit;
-
-/***/ }),
-/* 717 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.Addmedia = exports.Upload = exports.Uploads = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(1);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(11);
-
-var _actions = __webpack_require__(17);
-
-var _modal = __webpack_require__(68);
-
-var _tabs = __webpack_require__(287);
-
-var _media = __webpack_require__(288);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-//引入Action创建函数
-
-
-//引入 Modal 弹出层
-
-
-var UploadFile = function UploadFile(params) {
-	var inputFile = params.inputFile,
-	    progress = params.progress,
-	    complete = params.complete,
-	    error = params.error,
-	    abort = params.abort;
-
-
-	var uploadProgress = function uploadProgress(event) {
-		if (event.lengthComputable) {
-			if (progress) {
-				progress({
-					loaded: event.loaded,
-					total: event.total,
-					percent: Math.round(event.loaded * 100 / event.total)
-				});
-			}
-		}
-	};
-
-	var uploadComplete = function uploadComplete(event) {
-		if (complete) complete(JSON.parse(event.target.responseText));
-	};
-
-	var uploadFailed = function uploadFailed(event) {};
-
-	var uploadCanceled = function uploadCanceled(event) {};
-
-	var data = new FormData();
-
-	data.append('file', inputFile);
-
-	var xhr = new XMLHttpRequest();
-	xhr.upload.addEventListener("progress", uploadProgress, false);
-	xhr.addEventListener("load", uploadComplete, false);
-	xhr.addEventListener("error", uploadFailed, false);
-	xhr.addEventListener("abort", uploadCanceled, false);
-
-	xhr.open("POST", "/api/media/upload");
-	xhr.send(data);
-};
-
-var Uploads = exports.Uploads = function (_Component) {
-	_inherits(Uploads, _Component);
-
-	function Uploads(props) {
-		_classCallCheck(this, Uploads);
-
-		var _this = _possibleConstructorReturn(this, (Uploads.__proto__ || Object.getPrototypeOf(Uploads)).call(this, props));
-
-		_this.state = {
-			path: [], // 已上传文件
-			list: [], //上传中的文件
-			isLoading: false
-		};
-
-		_this.timeout;
-
-		//ES6 类中函数必须手动绑定
-		_this.chooseFileEvent = _this.chooseFileEvent.bind(_this);
-		_this.onChangeEvent = _this.onChangeEvent.bind(_this);
-
-		return _this;
-	}
-
-	_createClass(Uploads, [{
-		key: 'componentWillMount',
-		value: function componentWillMount() {}
-	}, {
-		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {}
-	}, {
-		key: 'chooseFileEvent',
-		value: function chooseFileEvent(e) {
-			this.refs.inputFile.click();
-			// console.log('upload-choose');
-		}
-	}, {
-		key: 'onChangeEvent',
-		value: function onChangeEvent(e) {
-			var _this2 = this;
-
-			// console.log('upload-change');
-
-			var list = [];
-			var files = e.target.files;
-
-			//遍历多选
-
-			var _loop = function _loop(i) {
-
-				var file = files[i];
-				var reader = new FileReader();
-
-				//如果是图片类型
-				if (/image\/\w+/.test(file.type)) {
-					reader.readAsDataURL(file);
-					reader.onload = function (e) {
-						//向原有文件列表中添加新文件
-						list[i] = {
-							name: file.name,
-							type: file.type,
-							size: file.size,
-							loaded: 0,
-							data: e.target.result
-						};
-						_this2.setState({
-							list: list
-						});
-					};
-				} else {
-					//向原有文件列表中添加新文件
-					list[i] = {
-						name: file.name,
-						type: file.type,
-						size: file.size,
-						loaded: 0
-					};
-					_this2.setState({
-						list: list
-					});
-				}
-
-				UploadFile({
-					inputFile: file,
-					progress: function progress(prams) {
-						if (_this2.state.list[i]) {
-							_this2.state.list[i] = _extends({}, prams, _this2.state.list[i]);
-							_this2.setState();
-						}
-					},
-					complete: function complete(data) {
-						console.log("complete ", data);
-						var newPath = _this2.state.path;
-						newPath.push({
-							id: data.info.id,
-							data: data.info.path + '/' + data.info.name
-						});
-						_this2.setState({
-							path: newPath
-						});
-					}
-				});
-			};
-
-			for (var i = 0; i < files.length; i++) {
-				_loop(i);
-			}
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _state = this.state,
-			    path = _state.path,
-			    list = _state.list;
-
-
-			console.log(path, list);
-
-			var paths = path.map(function (v, i) {
-				var content = /image\/\w+/.test(v.type) ? _react2.default.createElement('img', { src: v.data }) : _react2.default.createElement(
-					'p',
-					null,
-					_react2.default.createElement('i', { className: 'icon-doc' }),
-					_react2.default.createElement(
-						'span',
-						null,
-						v.name
-					)
-				);
-				return _react2.default.createElement(
-					'div',
-					{ key: i, className: 'upload-item' },
-					content
-				);
-			});
-
-			var lists = list.map(function (v, i) {
-				var content = /image\/\w+/.test(v.type) ? _react2.default.createElement('img', { src: v.data }) : _react2.default.createElement(
-					'p',
-					null,
-					_react2.default.createElement('i', { className: 'icon-doc' }),
-					_react2.default.createElement(
-						'span',
-						null,
-						v.name
-					)
-				);
-				return _react2.default.createElement(
-					'div',
-					{ key: i, className: 'upload-item' },
-					content,
-					_react2.default.createElement(
-						'span',
-						{ className: 'loading' },
-						v.loaded + '/' + v.size
-					)
-				);
-			});
-
-			return _react2.default.createElement(
-				'div',
-				{ className: 'upload' },
-				_react2.default.createElement(
-					'div',
-					{ className: 'upload-view show' },
-					paths,
-					lists
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'upload-add-file', onClick: this.chooseFileEvent },
-					_react2.default.createElement('input', { type: 'file', multiple: 'multiple', style: { 'display': 'none' }, onChange: this.onChangeEvent, ref: 'inputFile', name: 'files' }),
-					_react2.default.createElement('i', { className: 'icon-cloud-upload' }),
-					_react2.default.createElement('br', null),
-					'\u9009\u62E9\u8981\u4E0A\u4F20\u7684\u6587\u4EF6'
-				)
-			);
-		}
-	}]);
-
-	return Uploads;
-}(_react.Component);
-
-var Upload = exports.Upload = function (_Component2) {
-	_inherits(Upload, _Component2);
-
-	function Upload(props) {
-		_classCallCheck(this, Upload);
-
-		var _this3 = _possibleConstructorReturn(this, (Upload.__proto__ || Object.getPrototypeOf(Upload)).call(this, props));
-
-		_this3.state = {
-			path: [], // 已上传文件
-			list: [], //上传中的文件
-			isLoading: false
-		};
-
-		_this3.timeout;
-
-		//ES6 类中函数必须手动绑定
-		_this3.chooseFileEvent = _this3.chooseFileEvent.bind(_this3);
-		_this3.onChangeEvent = _this3.onChangeEvent.bind(_this3);
-
-		return _this3;
-	}
-
-	_createClass(Upload, [{
-		key: 'chooseFileEvent',
-		value: function chooseFileEvent(e) {
-			this.refs.inputFile.click();
-			// console.log('upload-choose');
-		}
-	}, {
-		key: 'onChangeEvent',
-		value: function onChangeEvent(e) {
-			var _this4 = this;
-
-			// console.log('upload-change');
-
-			var list = [];
-			var files = e.target.files;
-
-			//遍历多选
-
-			var _loop2 = function _loop2(i) {
-
-				var file = files[i];
-				var reader = new FileReader();
-
-				//如果是图片类型
-				if (/image\/\w+/.test(file.type)) {
-					reader.readAsDataURL(file);
-					reader.onload = function (e) {
-						//向原有文件列表中添加新文件
-						list[i] = {
-							name: file.name,
-							type: file.type,
-							size: file.size,
-							loaded: 0,
-							data: e.target.result
-						};
-						_this4.setState({
-							list: list
-						});
-					};
-				} else {
-					//向原有文件列表中添加新文件
-					list[i] = {
-						name: file.name,
-						type: file.type,
-						size: file.size,
-						loaded: 0
-					};
-					_this4.setState({
-						list: list
-					});
-				}
-
-				UploadFile({
-					inputFile: file,
-					progress: function progress(prams) {
-						if (_this4.state.list[i]) {
-							_this4.state.list[i] = _extends({}, prams, _this4.state.list[i]);
-							_this4.setState();
-						}
-					},
-					complete: function complete(data) {
-						console.log("complete ", data);
-						var newPath = _this4.state.path;
-						newPath.push({
-							id: data.info.id,
-							data: data.info.path + '/' + data.info.name
-						});
-						_this4.setState({
-							path: newPath
-						});
-					}
-				});
-			};
-
-			for (var i = 0; i < files.length; i++) {
-				_loop2(i);
-			}
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'div',
-				{ className: 'upload' },
-				_react2.default.createElement(
-					'div',
-					{ className: 'upload-add-file', onClick: this.chooseFileEvent },
-					_react2.default.createElement('input', { type: 'file', multiple: 'multiple', style: { 'display': 'none' }, onChange: this.onChangeEvent, ref: 'inputFile', name: 'files' }),
-					_react2.default.createElement('i', { className: 'icon-cloud-upload' }),
-					_react2.default.createElement('br', null),
-					'\u9009\u62E9\u8981\u4E0A\u4F20\u7684\u6587\u4EF6'
-				)
-			);
-		}
-	}]);
-
-	return Upload;
-}(_react.Component);
-
-var Addmedia = exports.Addmedia = function (_Component3) {
-	_inherits(Addmedia, _Component3);
-
-	function Addmedia(props) {
-		_classCallCheck(this, Addmedia);
-
-		var _this5 = _possibleConstructorReturn(this, (Addmedia.__proto__ || Object.getPrototypeOf(Addmedia)).call(this, props));
-
-		_this5.state = {
-			path: [], // 已上传文件
-			isLoading: false
-		};
-
-		_this5.timeout;
-
-		//ES6 类中函数必须手动绑定
-		_this5.refCallback = _this5.refCallback.bind(_this5);
-
-		return _this5;
-	}
-
-	_createClass(Addmedia, [{
-		key: 'componentWillMount',
-		value: function componentWillMount() {}
-	}, {
-		key: 'refCallback',
-		value: function refCallback(instance) {
-			this.mediaListModal = instance;
-		}
-	}, {
-		key: 'selectEvent',
-		value: function selectEvent(e) {}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _this6 = this;
-
-			var path = this.state.path;
-
-
-			var lists = path.map(function (v, i) {
-				return _react2.default.createElement(
-					'li',
-					{ key: i },
-					_react2.default.createElement('img', { src: v.path })
-				);
-			});
-
-			return _react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					'ul',
-					{ className: 'add-media' },
-					lists
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'span',
-						{ className: 'button tiny label', onClick: function onClick() {
-								_this6.mediaListModal.show();
-							} },
-						_react2.default.createElement('i', { className: 'icon-plus' }),
-						'\u9009\u62E9\u5A92\u4F53\u6587\u4EF6'
-					)
-				),
-				_react2.default.createElement(
-					_modal.Modal,
-					{ ref: this.refCallback, id: 'mediaListModal' },
-					_react2.default.createElement(
-						_tabs.Tabs,
-						{ className: 'tabs add-media-tbs', defaultMain: '1' },
-						_react2.default.createElement(
-							_tabs.Tab,
-							{ toggler: '\u9009\u62E9\u5A92\u4F53' },
-							_react2.default.createElement(_media.MediaSelect, { selectEvent: this.selectEvent })
-						),
-						_react2.default.createElement(
-							_tabs.Tab,
-							{ toggler: '\u6DFB\u52A0\u5A92\u4F53' },
-							_react2.default.createElement(Upload, null)
-						)
-					)
-				)
-			);
-		}
-	}]);
-
-	return Addmedia;
-}(_react.Component);
 
 /***/ }),
 /* 718 */

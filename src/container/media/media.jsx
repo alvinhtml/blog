@@ -19,7 +19,7 @@ import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 
 //引入组件
-import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton} from '../../components/common'
+import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, MediaMain} from '../../components/common'
 
 //引入action类型常量名
 import {
@@ -170,129 +170,44 @@ export const MediaList = connect(
 	}
 )(MediaListUI)
 
-
-
-class MediaFormUI extends Component {
+class MediaSelectUI extends Component {
 
 	constructor(props) {
 		super(props)
-
-		this.state = {
-			id: '',
-			name: '',
-			slug: '',
-			type: 0,
-		}
-
-		//ES6 类中函数必须手动绑定
-		this.handleChange = this.handleChange.bind(this)
-		this.submitEvent = this.submitEvent.bind(this)
 	}
 
 	componentWillMount() {
-        if(this.props.match.params.id) {
-			this.props.getInfo(this.props.match.params.id)
-		}
+        this.props.getList({
+			page: 1
+		})
     }
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.info) {
-			const {id, name, slug, type} = nextProps.info
-			this.setState({
-		      id, name, slug, type
-		    })
-		//	this.editor.setContent(content)
-		}
-	}
-
-	handleChange(e) {
-	    const target = e.target
-	    const value = target.type === 'checkbox' ? target.checked : target.value
-	    const name = target.name
-	    this.setState({
-	      [name]: value
-	    })
-	}
-
-	submitEvent(e) {
-		const forms = document.forms.clissifyform
-		const id = Query(forms.id).val()
-
-		const formdata = {
-			id: forms.id.value,
-			name: Validator(forms.name),
-			slug: Validator(forms.slug),
-			type: 0,
-		}
-
-		console.log(formdata)
-		this.props.submit(formdata, (data) => {
-			this.props.history.push('/admin/media/list')
-		})
-	}
-
 	render() {
-
-		const {isFetching} = this.props
-
+		const {tools, actions, list, count, configs, getList} = this.props
 		return (
-			<div className="main-box">
-				<div className="page-bar clear">
-	                <div className="page-bar-left"></div>
-	                <div className="page-bar-right"><i className="icon-calendar"></i> Wed Aug 10 2016 10:51:20 GMT+0800</div>
-	            </div>
-				<div className="form-box">
-					<form className="form clissifyform" name="clissifyform">
-						<input type="hidden" name="id" value={this.state.id} onChange={this.handleChange} />
-							<section className="section">
-								<h3 className="section-head">{(this.state.id ? '修改' : '新增') + '分类'}</h3>
-								<div className="control">
-									<span className="control-label">分类名：</span>
-									<div className="controls">
-										<label className="input-prepend labled inline-span6"><input type="text" name="name" value={this.state.name} onChange={this.handleChange} /><span className="add-on"><i className="icon-user"></i></span></label>
-									</div>
-								</div>
-								<div className="control">
-									<span className="control-label">别名：</span>
-									<div className="controls">
-										<label className="input-prepend labled inline-span6"><input type="text" name="slug" value={this.state.slug} onChange={this.handleChange} /><span className="add-on"><i className="icon-user"></i></span></label>
-									</div>
-								</div>
-								<div className="control">
-									<div className="controls">
-										<FetchButton isFetching={isFetching} submitEvent={this.submitEvent} className="button green">提交</FetchButton>
-									</div>
-								</div>
-							</section>
-					</form>
+			<div className="list-box media-select-box">
+				<div className="media-select-main clear">
+					<MediaMain list={list} selectEvent={this.props.selectEvent} />
 				</div>
-            </div>
+				<PageList getList={getList} count={parseInt(count)} configs={configs} />
+			</div>
 		)
 	}
 }
 
-
-export const MediaForm = connect(
+export const MediaSelect = connect(
 	(state) => {
 		return {
-			isFetching: state.media.isFetching,
-			info: state.media.info
+			...state.media
 		}
 	},
 	(dispatch, ownProps) => {
+
 		return {
-			getInfo: (id) => {
-				dispatch(ActionGet(GET_MEDIA_INFO, '/api/media/info/' + id, 'media'))
-			},
-			submit: (formdata, callback) => {
-				let url = '/api/media/form'
-
-				if (formdata.id !== '') {
-					url += '/' + formdata.id
-				}
-
-				dispatch(ActionPost(POST_MEDIA_INFO, url, formdata, 'media', callback))
+			getList: (where) => {
+				console.log("getlist:ou where", where)
+				dispatch(ActionGet(GET_MEDIA_LIST, '/api/media/list' ,where, 'media'))
 			}
 		};
 	}
-)(MediaFormUI)
+)(MediaSelectUI)

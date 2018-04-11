@@ -8,13 +8,6 @@ import {
 //引入Action创建函数
 import {FetchGet} from '../actions/actions'
 
-//引入 Modal 弹出层
-import {Modal, Alert, Confirm} from './modal'
-import {Tabs, Tab} from './tabs'
-
-
-import {MediaSelect} from '../container/media/media'
-
 
 const UploadFile = (params) => {
 
@@ -297,64 +290,6 @@ export class Upload extends Component {
 					<input type="file" multiple="multiple" style={{'display':'none'}} onChange={this.onChangeEvent} ref='inputFile' name="files" />
 					<i className="icon-cloud-upload"></i><br />选择要上传的文件
 				</div>
-			</div>
-        );
-    }
-}
-
-
-
-export class Addmedia extends Component {
-	constructor(props) {
-		super(props)
-
-		this.state = {
-			path: [], // 已上传文件
-			isLoading: false
-		}
-
-		this.timeout;
-
-		//ES6 类中函数必须手动绑定
-		this.refCallback = this.refCallback.bind(this)
-
-	}
-
-	componentWillMount() {
-
-    }
-
-	refCallback(instance) {
-		this.mediaListModal = instance
-	}
-
-	selectEvent(e){
-
-
-	}
-
-	render() {
-
-		let {path} = this.state
-
-		let lists = path.map((v, i) => {
-			return (<li key={i}><img src={v.path} /></li>)
-		})
-
-        return (
-			<div>
-				<ul className="add-media">{lists}</ul>
-				<div><span className="button tiny label" onClick={()=>{this.mediaListModal.show()}}><i className="icon-plus"></i>选择媒体文件</span></div>
-				<Modal ref={this.refCallback} id="mediaListModal">
-					<Tabs className="tabs add-media-tbs" defaultMain="1">
-						<Tab toggler="选择媒体">
-							<MediaSelect selectEvent={this.selectEvent} />
-						</Tab>
-						<Tab toggler="添加媒体">
-							<Upload />
-						</Tab>
-					</Tabs>
-				</Modal>
 			</div>
         );
     }

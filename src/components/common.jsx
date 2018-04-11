@@ -9,6 +9,14 @@ import {resize, remove} from '../index.jsx'
 //引入Action创建函数
 import {FetchGet, FetchPost} from '../actions/actions'
 
+//引入 Modal 弹出层
+import {Modal, Alert, Confirm} from './modal'
+import {Tabs, Tab} from './tabs'
+import {Upload} from './upload'
+
+import {MediaSelect} from '../container/media/media'
+
+
 /**
  * 内面顶部标题栏
  */
@@ -831,6 +839,10 @@ export class Additems extends Component {
 
 	addItemEvent(e) {
 		if (!this.state.isFetching) {
+			if (this.state.text === '') {
+				Alert('标签名称不能为空！')
+				return false
+			}
 			this.setState({
 				isFetching: 1
 			})
@@ -880,20 +892,22 @@ export class Additems extends Component {
 		const list = this.state.data
 		const searchlist = this.state.searchData
 
-		console.log('render_data',this.state.searchData, this.state.data);
+		let value = []
 
 		let searchOptions = searchlist.map((v, i) => {
 			return <li onClick={this.addItemToList} key={i} data-val={v.id} data-name={v.name}>{v.name}</li>
 		})
 
 		let options = list.map((v, i) => {
-			return <li key={i}><span className="remove" data-val={v.id} onClick={this.removeHandle}>×</span>{v.name}<input name={this.props.name} type="hidden" value={v.id} /></li>
+			value.push(v.id)
+			return <li key={i}><span className="remove" data-val={v.id} onClick={this.removeHandle}>×</span>{v.name}</li>
 		})
 
 		return (
 			<div className="additem">
+				<input name={this.props.name} type="hidden" value={value.join(',')} />
 				<div className="additem-head">
-					<input type="text" name="media" value={this.state.text} onChange={this.handleChange} />&nbsp;
+					<input type="text" value={this.state.text} onChange={this.handleChange} />&nbsp;
 					<span onClick={this.addItemEvent} className={"button blue " + (this.state.isFetching ? 'loading' : '')}>添加</span>
 					<ul className={this.state.searchData.length > 0 ? 'additem-search-list' : 'hide'}>
 						{searchOptions}
@@ -905,4 +919,116 @@ export class Additems extends Component {
 			</div>
         )
 	}
+}
+
+
+
+/**
+ * MediaMain
+ */
+export class MediaMain extends Component {
+	render() {
+		const {list} = this.props
+		let lists = list.map((v, i) => {
+			let imgURL = '/' + v.path + '/' + v.name
+			return (
+				<li key={i} onClick={() => {this.props.selectEvent(v)}}>
+					<img src={imgURL} />
+				</li>
+			)
+		})
+		return (
+			<ul className="media-select-list clear">
+				{lists}
+			</ul>
+        )
+	}
+}
+
+
+/**
+ * Addmedia
+ */
+export class Addmedia extends Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			path: [], // 已上传文件
+			isLoading: false
+		}
+
+		this.timeout;
+
+		//ES6 类中函数必须手动绑定
+		this.refCallback = this.refCallback.bind(this)
+		this.selectEvent = this.selectEvent.bind(this)
+		this.cancleEvent = this.cancleEvent.bind(this)
+
+	}
+
+	componentWillMount() {
+
+    }
+
+	refCallback(instance) {
+		this.mediaListModal = instance
+	}
+
+	selectEvent(data){
+		console.log(data);
+		this.mediaListModal.hide()
+
+		let path = this.state.path
+
+		path.push({
+			id: data.id,
+			path: '/' + data.path + '/' + data.name
+		})
+
+		this.setState({
+			path
+		})
+	}
+
+	cancleEvent() {
+		this.setState({
+			path: []
+		})
+	}
+
+	render() {
+
+		let {path} = this.state
+
+		let paths = '', adds, value = []
+
+		if (path.length) {
+			paths = path.map((v, i) => {
+				value.push(v.path)
+				return (<li key={i}><img src={v.path} /></li>)
+			})
+			adds = <div className="control-actions align-center"><span className="button nini" onClick={this.cancleEvent}>取消媒体图片</span></div>
+		} else {
+			adds = <div className="control-actions align-center"><span className="button label blue" onClick={()=>{this.mediaListModal.show()}}><i className="icon-plus"></i>选择媒体文件</span></div>
+		}
+
+        return (
+			<div className={this.className}>
+				<input type="hidden" name={this.props.name} value={value.join(',')} />
+				<ul className="add-media">{paths}</ul>
+				{adds}
+				<Modal className="add-media-modal" ref={this.refCallback} id="addMediaModal">
+					<Tabs className="tabs add-media-tabs" defaultMain="1">
+						<Tab toggler="选择媒体">
+							<MediaSelect selectEvent={this.selectEvent} />
+						</Tab>
+						<Tab toggler="添加媒体">
+							<Upload />
+						</Tab>
+					</Tabs>
+				</Modal>
+			</div>
+        );
+    }
 }

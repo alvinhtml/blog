@@ -19,6 +19,7 @@ class CreateClassifysTable extends Migration
             $table->string('name')->index()->comment("名称");
             $table->string('slug')->index()->comment("别名");
             $table->integer('type')->index()->comment("类型"); //0： 类别，1：标签
+            $table->unique(['name', 'type']);
             $table->timestamps();
         });
     }

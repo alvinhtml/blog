@@ -86,15 +86,17 @@ class ArticleController extends Controller
             $data->favor = 0;
             $data->state = $request->input('state');
         }
+
         $results = ['error' => 0, 'message' => '创建成功!'];
 
         $data->title = $request->input('title');
         $data->classify_id = $request->input('classify_id');
-        $data->author = $request->input('author');
+        $data->author = $request->input('author', '');// alvin
         $data->media = $request->input('media');
-        $data->abstract = $request->input('abstract');
+        $data->abstract = $request->input('abstract', '');
         $data->content = $request->input('content');
         $data->markdown = $request->input('markdown');
+
 
 
         $data->save();
