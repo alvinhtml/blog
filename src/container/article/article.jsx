@@ -43,6 +43,22 @@ class ArticleListUI extends Component {
 	constructor(props) {
 		super(props)
 
+		this.actions = [{
+			type: 'link',
+			href: '/admin/article/form/{id}',
+			name: '编辑',
+			icon: 'icon-note',
+			bgcolor: 'green'
+		},{
+			type: 'button',
+			name: '删除',
+			icon: 'icon-trash',
+			bgcolor: 'red',
+			buttonEvent: id => {
+				this.props.deleteEvent(id)
+			}
+		}];
+
 		this.decorater = this.decorater.bind(this)
 	}
 
@@ -56,6 +72,8 @@ class ArticleListUI extends Component {
 	//值修饰器
 	decorater(key, value) {
 		switch(key) {
+			case 'state':
+				return value[key] == 1 ? <span className="color-green">已发布</span> : <span className="color-yellow">草稿</span>
 			default:
 				return value[key]
 		}
@@ -87,8 +105,8 @@ class ArticleListUI extends Component {
                             <Searcher getList={getList} updateConfigs={updateConfigs} configs={configs}></Searcher>
                         </div>
                         <div className="olist-header-r">
-                            <Link data-content="刷新" to="/ou/list"  className="tools bg-teal ititle"><i className="icon-refresh"></i></Link>
-                            <Link data-content="新建" to="/ou/form" className="tools bg-teal ititle"><i className="icon-plus"></i></Link>
+                            <Link data-content="刷新" to="/article/list"  className="tools bg-teal ititle"><i className="icon-refresh"></i></Link>
+                            <Link data-content="新建" to="/article/form" className="tools bg-teal ititle"><i className="icon-plus"></i></Link>
                         </div>
                     </div>
 					<div id="listTable" className="olist-main">
@@ -117,17 +135,10 @@ export const ArticleList = connect(
 		return {
 			getList: (where) => {
 				console.log("getlist:ou where", where)
-				dispatch(ActionGet(GET_ARTICLE_LIST, '/api/ou/list' ,where, 'article'))
+				dispatch(ActionGet(GET_ARTICLE_LIST, '/api/article/list' ,where, 'article'))
 			},
 			//更新配置
 			updateConfigs: (configs, isPost) => {
-				if (isPost) {
-					//更新数据库配置
-					FetchPost('/api/setting/list_configs', {
-						listPath: configs.listPath,
-						configs: JSON.stringify(configs)
-					})
-				}
 				//更新store配置
 				dispatch(ActionCreator(UPDATE_LIST_CONFIGS, configs, 'article'))
 			},
@@ -138,7 +149,7 @@ export const ArticleList = connect(
 			},
 			deleteEvent: (id) => {
 				//删除一条
-				dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + id, 'article'))
+				dispatch(ActionGet(DELETE_ARTICLE, '/api/article/del/' + id, 'article'))
 			},
 			toolsClickEvent: (value) => {
 				let idArray = []
@@ -154,13 +165,13 @@ export const ArticleList = connect(
 
 				switch (value) {
 					case '0':
-						dispatch(ActionGet(DELETE_ARTICLE, '/api/ou/del/' + idArray.join(','), 'article'))
+						dispatch(ActionGet(DELETE_ARTICLE, '/api/article/del/' + idArray.join(','), 'article'))
 						break;
 					case '1':
-						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 1}, 'article'))
+						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/article/form_state/' + idArray.join(','), {state: 1}, 'article'))
 						break;
 					case '2':
-						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), {state: 0}, 'article'))
+						dispatch(ActionGet(UPDATE_ARTICLE_STATE, '/api/article/form_state/' + idArray.join(','), {state: 0}, 'article'))
 						break;
 					default:
 				}
@@ -196,7 +207,9 @@ class ArticleFormUI extends Component {
 	}
 
 	componentWillMount() {
-        this.props.getInfo(this.props.match.params.id)
+		if(this.props.match.params.id) {
+			this.props.getInfo(this.props.match.params.id)
+		}
     }
 
 	componentDidMount() {
@@ -239,9 +252,9 @@ class ArticleFormUI extends Component {
 		}
 
 		console.log(formdata)
-		// this.props.submit(formdata, (data) => {
-			// this.props.history.push('/ou/list')
-		// })
+		this.props.submit(formdata, (data) => {
+			this.props.history.push('/admin/article/list')
+		})
 	}
 
 	render() {
@@ -339,7 +352,7 @@ export const ArticleForm = connect(
 				dispatch(ActionGet(GET_ARTICLE_INFO, '/api/article/info/' + id, 'article'))
 			},
 			submit: (formdata, callback) => {
-				let url = '/api/ou/edit'
+				let url = '/api/article/form'
 
 				if (formdata.id !== '') {
 					url += '/' + formdata.id

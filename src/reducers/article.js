@@ -39,34 +39,34 @@ const articleInitialState = {
             title: '标题',
             order: true,
             visibility: true,
-            width: 60,
-            resize: 0
+            width: 280,
+            resize: 1
         },{
             key: 'author',
             title: '作者',
             order: true,
             visibility: true,
-            width: 200,
+            width: 120,
             resize: 1
         },{
-            key: 'classify_id',
+            key: 'classify',
             title: '类型',
             order: true,
             visibility: true,
-            width: 200,
+            width: 120,
             resize: 1
         },{
-            key: 'tags',
-            title: '标签',
+            key: 'state',
+            title: '状态',
             order: true,
-            visibility: false,
-            width: 200,
+            visibility: true,
+            width: 80,
             resize: 1
         },{
             key: 'created_at',
             title: '时间',
             order: true,
-            visibility: false,
+            visibility: true,
             width: 200,
             resize: 1
         }]

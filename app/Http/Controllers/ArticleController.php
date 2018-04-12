@@ -19,6 +19,7 @@ class ArticleController extends Controller
     }
 
     public function list(Request $request) {
+
         $order_srt = $request->input('order');
         $search = $request->input('search');
         $limit = $request->input('limit', 10);
@@ -30,8 +31,8 @@ class ArticleController extends Controller
         if (empty($search)) {
             $user = new Article;
         } else {
-            $user = Article::where('name', 'like', '%'.$search.'%')
-                ->orWhere('email', 'like', '%'.$search.'%');
+            $user = Article::where('title', 'like', '%'.$search.'%')
+                ->orWhere('abstract', 'like', '%'.$search.'%');
         }
 
         //取出总条数
@@ -55,11 +56,15 @@ class ArticleController extends Controller
                 ->orderBy($order[0], $order[1]);
         }
 
-        $list = $datalist->select('id', 'name', 'photo', 'email', 'type', 'state', 'created_at')->get();
+        $datalist = $datalist->get();
 
-        //echo '<pre>';
-        // var_dump($list);
-        // die;
+        $list = [];
+        $datalist->each(function ($item) use (&$list) {
+            $list[] = array_merge($item->toArray(), [
+                'tags'=> $item->tags->toArray(),
+                'classify'=>$item->classify->name,
+            ]);
+        });
 
         //开始返回数据
         $result = ['error' => 0, 'message' => '获取用户列表信息成功!'];
@@ -96,10 +101,13 @@ class ArticleController extends Controller
         $data->abstract = $request->input('abstract', '');
         $data->content = $request->input('content');
         $data->markdown = $request->input('markdown');
-
-
+        $data->state = $request->input('state', 1);
 
         $data->save();
+
+        $IdArray = explode(',', $request->input("tags"));
+        //sync 方法可以用数组形式的 IDs 插入中间的数据表。任何一个不存在于给定数组的 IDs 将会在中间表内被删除。所以，操作完成之后，只有那些在给定数组内的 IDs 会被保留在中间表中。
+        $data->tags()->sync($IdArray);
 
 
         $results['info'] = $data->toArray();

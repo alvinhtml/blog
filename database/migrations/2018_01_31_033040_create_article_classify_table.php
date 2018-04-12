@@ -16,7 +16,6 @@ class CreateArticleClassifyTable extends Migration
         Schema::create('article_classify', function (Blueprint $table) {
             $table->integer('article_id')->index()->comment("文章id");
             $table->integer('classify_id')->index()->comment("标签id");
-            $table->timestamps();
         });
     }
 

@@ -176,20 +176,20 @@ class MediaSelectUI extends Component {
 		super(props)
 	}
 
-	componentWillMount() {
+	componentDidMount() {
         this.props.getList({
 			page: 1
 		})
     }
 
 	render() {
-		const {tools, actions, list, count, configs, getList} = this.props
+		const {tools, actions, list, count, configs, getList, updateConfigs} = this.props
 		return (
 			<div className="list-box media-select-box">
 				<div className="media-select-main clear">
-					<MediaMain list={list} selectEvent={this.props.selectEvent} />
+					<MediaMain updateConfigs={updateConfigs} list={list} configs={configs} selectEvent={this.props.selectEvent} />
 				</div>
-				<PageList getList={getList} count={parseInt(count)} configs={configs} />
+				<PageList getList={getList} updateConfigs={updateConfigs} count={parseInt(count)} configs={configs} />
 			</div>
 		)
 	}
@@ -207,7 +207,12 @@ export const MediaSelect = connect(
 			getList: (where) => {
 				console.log("getlist:ou where", where)
 				dispatch(ActionGet(GET_MEDIA_LIST, '/api/media/list' ,where, 'media'))
-			}
+			},
+			//更新配置
+			updateConfigs: (configs, isPost) => {
+				//更新store配置
+				dispatch(ActionCreator(UPDATE_LIST_CONFIGS, configs, 'media'))
+			},
 		};
 	}
 )(MediaSelectUI)

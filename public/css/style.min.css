@@ -2879,7 +2879,7 @@ a:hover { color: #50d2fa; }
     upload files
 ---------------------*/
 .upload { width: 100%; }
-.upload-add-file { margin:10px 0; width: 100%; box-sizing: border-box; border: 2px dashed #d1dae6; border-radius: 10px; line-height: 28px; color: #d1dae6; text-align: center; padding: 30px 0; font-size: 14px;}
+.upload-add-file { margin:10px 0; width: 100%; box-sizing: border-box; border: 2px dashed #d1dae6; border-radius: 10px; line-height: 28px; color: #d1dae6; text-align: center; padding: 100px 0; font-size: 14px;}
 .upload-add-file i { font-size: 28px;}
 .upload-add-file:hover {  border: 2px dashed #9ca8b0; color: #9ca8b0; cursor: pointer;}
 .upload-item { text-align: center; margin-bottom: 6px; position: relative; }

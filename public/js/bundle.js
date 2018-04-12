@@ -4064,14 +4064,10 @@ var Additems = exports.Additems = function (_Component11) {
 				);
 			});
 
-			var valueStr = value.join(',');
-
-			console.log(valueStr);
-
 			return _react2.default.createElement(
 				'div',
 				{ className: 'additem' },
-				_react2.default.createElement('input', { name: this.props.name, type: 'hidden', value: valueStr }),
+				_react2.default.createElement('input', { name: this.props.name, type: 'hidden', value: value.join(',') }),
 				_react2.default.createElement(
 					'div',
 					{ className: 'additem-head' },
@@ -4247,12 +4243,10 @@ var Addmedia = exports.Addmedia = function (_Component13) {
 				);
 			}
 
-			var valueStr = value.join(',');
-
 			return _react2.default.createElement(
 				'div',
 				{ className: this.className },
-				_react2.default.createElement('input', { type: 'hidden', name: this.props.name, value: valueStr }),
+				_react2.default.createElement('input', { type: 'hidden', name: this.props.name, value: value.join(',') }),
 				_react2.default.createElement(
 					'ul',
 					{ className: 'add-media' },
@@ -4267,13 +4261,13 @@ var Addmedia = exports.Addmedia = function (_Component13) {
 						{ className: 'tabs add-media-tabs', defaultMain: '1' },
 						_react2.default.createElement(
 							_tabs.Tab,
-							{ toggler: '\u9009\u62E9\u5A92\u4F53' },
-							_react2.default.createElement(_media.MediaSelect, { selectEvent: this.selectEvent })
+							{ toggler: '\u6DFB\u52A0\u5A92\u4F53' },
+							_react2.default.createElement(_upload.Upload, null)
 						),
 						_react2.default.createElement(
 							_tabs.Tab,
-							{ toggler: '\u6DFB\u52A0\u5A92\u4F53' },
-							_react2.default.createElement(_upload.Upload, null)
+							{ toggler: '\u9009\u62E9\u5A92\u4F53' },
+							_react2.default.createElement(_media.MediaSelect, { selectEvent: this.selectEvent })
 						)
 					)
 				)
@@ -9939,8 +9933,8 @@ var MediaSelectUI = function (_Component2) {
 	}
 
 	_createClass(MediaSelectUI, [{
-		key: 'componentWillMount',
-		value: function componentWillMount() {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
 			this.props.getList({
 				page: 1
 			});
@@ -9954,7 +9948,8 @@ var MediaSelectUI = function (_Component2) {
 			    list = _props3.list,
 			    count = _props3.count,
 			    configs = _props3.configs,
-			    getList = _props3.getList;
+			    getList = _props3.getList,
+			    updateConfigs = _props3.updateConfigs;
 
 			return _react2.default.createElement(
 				'div',
@@ -9962,9 +9957,9 @@ var MediaSelectUI = function (_Component2) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'media-select-main clear' },
-					_react2.default.createElement(_common.MediaMain, { list: list, selectEvent: this.props.selectEvent })
+					_react2.default.createElement(_common.MediaMain, { updateConfigs: updateConfigs, list: list, configs: configs, selectEvent: this.props.selectEvent })
 				),
-				_react2.default.createElement(_common.PageList, { getList: getList, count: parseInt(count), configs: configs })
+				_react2.default.createElement(_common.PageList, { getList: getList, updateConfigs: updateConfigs, count: parseInt(count), configs: configs })
 			);
 		}
 	}]);
@@ -9980,6 +9975,11 @@ var MediaSelect = exports.MediaSelect = (0, _reactRedux.connect)(function (state
 		getList: function getList(where) {
 			console.log("getlist:ou where", where);
 			dispatch((0, _actions.ActionGet)(_constants.GET_MEDIA_LIST, '/api/media/list', where, 'media'));
+		},
+		//更新配置
+		updateConfigs: function updateConfigs(configs, isPost) {
+			//更新store配置
+			dispatch((0, _actions.ActionCreator)(_constants.UPDATE_LIST_CONFIGS, configs, 'media'));
 		}
 	};
 })(MediaSelectUI);
@@ -21817,34 +21817,34 @@ var articleInitialState = {
             title: '标题',
             order: true,
             visibility: true,
-            width: 60,
-            resize: 0
+            width: 280,
+            resize: 1
         }, {
             key: 'author',
             title: '作者',
             order: true,
             visibility: true,
-            width: 200,
+            width: 120,
             resize: 1
         }, {
-            key: 'classify_id',
+            key: 'classify',
             title: '类型',
             order: true,
             visibility: true,
-            width: 200,
+            width: 120,
             resize: 1
         }, {
-            key: 'tags',
-            title: '标签',
+            key: 'state',
+            title: '状态',
             order: true,
-            visibility: false,
-            width: 200,
+            visibility: true,
+            width: 80,
             resize: 1
         }, {
             key: 'created_at',
             title: '时间',
             order: true,
-            visibility: false,
+            visibility: true,
             width: 200,
             resize: 1
         }]
@@ -29212,6 +29212,22 @@ var ArticleListUI = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, (ArticleListUI.__proto__ || Object.getPrototypeOf(ArticleListUI)).call(this, props));
 
+		_this.actions = [{
+			type: 'link',
+			href: '/admin/article/form/{id}',
+			name: '编辑',
+			icon: 'icon-note',
+			bgcolor: 'green'
+		}, {
+			type: 'button',
+			name: '删除',
+			icon: 'icon-trash',
+			bgcolor: 'red',
+			buttonEvent: function buttonEvent(id) {
+				_this.props.deleteEvent(id);
+			}
+		}];
+
 		_this.decorater = _this.decorater.bind(_this);
 		return _this;
 	}
@@ -29231,6 +29247,16 @@ var ArticleListUI = function (_Component) {
 		key: 'decorater',
 		value: function decorater(key, value) {
 			switch (key) {
+				case 'state':
+					return value[key] == 1 ? _react2.default.createElement(
+						'span',
+						{ className: 'color-green' },
+						'\u5DF2\u53D1\u5E03'
+					) : _react2.default.createElement(
+						'span',
+						{ className: 'color-yellow' },
+						'\u8349\u7A3F'
+					);
 				default:
 					return value[key];
 			}
@@ -29303,12 +29329,12 @@ var ArticleListUI = function (_Component) {
 							{ className: 'olist-header-r' },
 							_react2.default.createElement(
 								_reactRouterDom.Link,
-								{ 'data-content': '\u5237\u65B0', to: '/ou/list', className: 'tools bg-teal ititle' },
+								{ 'data-content': '\u5237\u65B0', to: '/article/list', className: 'tools bg-teal ititle' },
 								_react2.default.createElement('i', { className: 'icon-refresh' })
 							),
 							_react2.default.createElement(
 								_reactRouterDom.Link,
-								{ 'data-content': '\u65B0\u5EFA', to: '/ou/form', className: 'tools bg-teal ititle' },
+								{ 'data-content': '\u65B0\u5EFA', to: '/article/form', className: 'tools bg-teal ititle' },
 								_react2.default.createElement('i', { className: 'icon-plus' })
 							)
 						)
@@ -29339,17 +29365,10 @@ var ArticleList = exports.ArticleList = (0, _reactRedux.connect)(function (state
 	return {
 		getList: function getList(where) {
 			console.log("getlist:ou where", where);
-			dispatch((0, _actions.ActionGet)(_constants.GET_ARTICLE_LIST, '/api/ou/list', where, 'article'));
+			dispatch((0, _actions.ActionGet)(_constants.GET_ARTICLE_LIST, '/api/article/list', where, 'article'));
 		},
 		//更新配置
 		updateConfigs: function updateConfigs(configs, isPost) {
-			if (isPost) {
-				//更新数据库配置
-				(0, _actions.FetchPost)('/api/setting/list_configs', {
-					listPath: configs.listPath,
-					configs: JSON.stringify(configs)
-				});
-			}
 			//更新store配置
 			dispatch((0, _actions.ActionCreator)(_constants.UPDATE_LIST_CONFIGS, configs, 'article'));
 		},
@@ -29360,7 +29379,7 @@ var ArticleList = exports.ArticleList = (0, _reactRedux.connect)(function (state
 		},
 		deleteEvent: function deleteEvent(id) {
 			//删除一条
-			dispatch((0, _actions.ActionGet)(_constants.DELETE_ARTICLE, '/api/ou/del/' + id, 'article'));
+			dispatch((0, _actions.ActionGet)(_constants.DELETE_ARTICLE, '/api/article/del/' + id, 'article'));
 		},
 		toolsClickEvent: function toolsClickEvent(value) {
 			var idArray = [];
@@ -29376,13 +29395,13 @@ var ArticleList = exports.ArticleList = (0, _reactRedux.connect)(function (state
 
 			switch (value) {
 				case '0':
-					dispatch((0, _actions.ActionGet)(_constants.DELETE_ARTICLE, '/api/ou/del/' + idArray.join(','), 'article'));
+					dispatch((0, _actions.ActionGet)(_constants.DELETE_ARTICLE, '/api/article/del/' + idArray.join(','), 'article'));
 					break;
 				case '1':
-					dispatch((0, _actions.ActionGet)(_constants.UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), { state: 1 }, 'article'));
+					dispatch((0, _actions.ActionGet)(_constants.UPDATE_ARTICLE_STATE, '/api/article/form_state/' + idArray.join(','), { state: 1 }, 'article'));
 					break;
 				case '2':
-					dispatch((0, _actions.ActionGet)(_constants.UPDATE_ARTICLE_STATE, '/api/ou/edit_state/' + idArray.join(','), { state: 0 }, 'article'));
+					dispatch((0, _actions.ActionGet)(_constants.UPDATE_ARTICLE_STATE, '/api/article/form_state/' + idArray.join(','), { state: 0 }, 'article'));
 					break;
 				default:
 			}
@@ -29419,7 +29438,9 @@ var ArticleFormUI = function (_Component2) {
 	_createClass(ArticleFormUI, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {
-			this.props.getInfo(this.props.match.params.id);
+			if (this.props.match.params.id) {
+				this.props.getInfo(this.props.match.params.id);
+			}
 		}
 	}, {
 		key: 'componentDidMount',
@@ -29461,6 +29482,8 @@ var ArticleFormUI = function (_Component2) {
 	}, {
 		key: 'submitEvent',
 		value: function submitEvent(e) {
+			var _this3 = this;
+
 			var forms = document.forms.articleform;
 			var id = (0, _query2.default)(forms.id).val();
 
@@ -29468,15 +29491,16 @@ var ArticleFormUI = function (_Component2) {
 				id: forms.id.value,
 				title: (0, _validator2.default)(forms.title),
 				content: this.editor.getContent(),
-				media: forms.media.value,
+				classify_id: forms.classify_id.value,
 				tags: forms.tags.value,
+				media: forms.media.value,
 				markdown: this.editor.getMode()
 			};
 
 			console.log(formdata);
-			// this.props.submit(formdata, (data) => {
-			// this.props.history.push('/ou/list')
-			// })
+			this.props.submit(formdata, function (data) {
+				_this3.props.history.push('/admin/article/list');
+			});
 		}
 	}, {
 		key: 'render',
@@ -29681,7 +29705,7 @@ var ArticleForm = exports.ArticleForm = (0, _reactRedux.connect)(function (state
 			dispatch((0, _actions.ActionGet)(_constants.GET_ARTICLE_INFO, '/api/article/info/' + id, 'article'));
 		},
 		submit: function submit(formdata, callback) {
-			var url = '/api/ou/edit';
+			var url = '/api/article/form';
 
 			if (formdata.id !== '') {
 				url += '/' + formdata.id;

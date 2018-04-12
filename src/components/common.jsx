@@ -1020,11 +1020,11 @@ export class Addmedia extends Component {
 				{adds}
 				<Modal className="add-media-modal" ref={this.refCallback} id="addMediaModal">
 					<Tabs className="tabs add-media-tabs" defaultMain="1">
-						<Tab toggler="选择媒体">
-							<MediaSelect selectEvent={this.selectEvent} />
-						</Tab>
 						<Tab toggler="添加媒体">
 							<Upload />
+						</Tab>
+						<Tab toggler="选择媒体">
+							<MediaSelect selectEvent={this.selectEvent} />
 						</Tab>
 					</Tabs>
 				</Modal>
