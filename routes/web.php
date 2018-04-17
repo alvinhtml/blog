@@ -52,6 +52,11 @@ $router->get('/admin/media', 'HomeController@index');
 $router->get('/admin/media/list', 'HomeController@index');
 $router->get('/admin/media/upload', 'HomeController@index');
 
+$router->get('/admin/comment', 'HomeController@index');
+$router->get('/admin/comment/list', 'HomeController@index');
+$router->get('/admin/comment/form/{id}', 'HomeController@index');
+$router->get('/admin/comment/form', 'HomeController@index');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -93,10 +98,11 @@ $router->get('/api/media/del/{id}', ['middleware' => 'auth', 'uses' => 'MediaCon
 $router->get('/api/media/info/{id}', ['middleware' => 'auth', 'uses' => 'MediaController@info']);
 
 
-//media
-$router->get('/api/media/list', ['middleware' => 'auth', 'uses' => 'MediaController@list']);
-$router->get('/api/media/upload', ['middleware' => 'auth', 'uses' => 'MediaController@upload']);
-$router->get('/api/media/info', ['middleware' => 'auth', 'uses' => 'MediaController@info']);
+//comment
+$router->get('/api/comment/list', ['middleware' => 'auth', 'uses' => 'CommentController@list']);
+$router->post('/api/comment/form/{id}', ['middleware' => 'auth', 'uses' => 'CommentController@form']);
+$router->post('/api/comment/form', ['middleware' => 'auth', 'uses' => 'CommentController@form']);
+$router->get('/api/comment/info', ['middleware' => 'auth', 'uses' => 'CommentController@info']);
 
 
 

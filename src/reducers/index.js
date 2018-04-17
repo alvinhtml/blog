@@ -11,6 +11,7 @@ import {user} from './user'
 import {article} from './article'
 import {classify} from './classify'
 import {media} from './media'
+import {comment} from './comment'
 // import {view} from './view'
 
 
@@ -24,7 +25,7 @@ export default combineReducers({
 	article, //文章列表
 	classify, //文章分类列表
 	media, //媒体列表
-	//view, //视图
+	comment, //评论列表
 
     routing: routerReducer
 })

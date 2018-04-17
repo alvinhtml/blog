@@ -10,6 +10,7 @@ import {Home} from './container/home/home'
 import {UserList, UserForm} from './container/user/user'
 import {ClassifyList, ClassifyForm} from './container/article/classify'
 import {ArticleList, ArticleForm} from './container/article/article'
+import {CommentList, CommentForm} from './container/article/comment'
 import {MediaList} from './container/media/media'
 // import {TermView} from './container/company/termview'
 // import {OuList, OuForm} from './container/company/ou'
@@ -67,6 +68,9 @@ class Manage extends Component {
                     <Route path="/admin/classify/form" component={ClassifyForm}/>
 					<Route path="/admin/classify" component={ClassifyList}/>
 					<Route path="/admin/media" component={MediaList}/>
+					<Route path="/admin/comment/form/:id" component={CommentForm}/>
+					<Route path="/admin/comment/form" component={CommentForm}/>
+					<Route path="/admin/comment" component={CommentList}/>
                 </Switch>
             </div>
         )
@@ -103,30 +107,6 @@ class AppUI extends Component {
                 </Switch>
 			</Router>
 		)
-
-
-
-
-        // return (
-        //     <Router>
-        //         <ReactCSSTransitionGroup transitionName="fade" transitionEnterTimeout={3000} transitionLeaveTimeout={3000}>
-        //             <Switch>
-        //                 <Route key='/admin' exact path="/admin" render={(urls) => {
-        //                     let url = urls.location.search.split("=")[1]
-        //                     return this.props.logined ? <Redirect to={url} /> : <Login />
-        //                 }} />
-        //
-		// 				<Route key='/admin/login' path="/admin/login" render={(urls) => {
-        //                     let backurl = {
-        //                         pathname: '/admin/login',
-        //                         search: '?=' + urls.location.pathname
-        //                     }
-        //                     return this.props.logined ? <Manage /> : <Redirect to={backurl} />
-        //                 }} />
-        //             </Switch>
-        //         </ReactCSSTransitionGroup>
-        //     </Router>
-        // )
     }
 }
 
