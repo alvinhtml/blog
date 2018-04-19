@@ -33,7 +33,7 @@ const mediaInitialState = {
         checkboxs: true, //选择框 0->无, 1->有
         checked: false, //false->无, all->全选, []->单多选
         search: '',
-        order: [],
+        order: ['id', 'desc'],
         column: [{
             key: 'id',
             title: '序号',

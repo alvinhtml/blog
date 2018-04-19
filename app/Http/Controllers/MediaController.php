@@ -24,7 +24,7 @@ class MediaController extends Controller
         $limit = $request->input('limit', 10);
         $page = $request->input('page', 1);
 
-        $order = isset($order_srt) ? explode(',', $order_srt) : [];
+        $order = isset($order_srt) ? explode(',', $order_srt) : ['id', 'desc'];
 
         //搜索
         if (empty($search)) {

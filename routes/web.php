@@ -29,6 +29,14 @@ $router->get('/register', 'UserController@register');
 |--------------------------------------------------------------------------
 |
 */
+
+
+$router->get('/article', 'HomeController@index');
+$router->get('/classify', 'HomeController@index');
+$router->get('/tag', 'HomeController@index');
+
+
+
 $router->get('/admin', 'HomeController@index');
 $router->get('/admin/login', 'HomeController@index');
 $router->get('/admin/home', 'HomeController@index');
@@ -56,6 +64,8 @@ $router->get('/admin/comment', 'HomeController@index');
 $router->get('/admin/comment/list', 'HomeController@index');
 $router->get('/admin/comment/form/{id}', 'HomeController@index');
 $router->get('/admin/comment/form', 'HomeController@index');
+
+
 
 
 /*

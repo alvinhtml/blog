@@ -55,151 +55,14 @@ const UploadFile = (params) => {
 
 }
 
-
-
-
-export class Uploads extends Component {
-
-	constructor(props) {
-		super(props)
-
-		this.state = {
-			path: [], // 已上传文件
-			list: [], //上传中的文件
-			isLoading: false
-		}
-
-		this.timeout;
-
-		//ES6 类中函数必须手动绑定
-		this.chooseFileEvent = this.chooseFileEvent.bind(this)
-		this.onChangeEvent = this.onChangeEvent.bind(this)
-
-	}
-
-	componentWillMount() {
-
-    }
-
-	componentWillUnmount() {
-
-	}
-
-	chooseFileEvent(e) {
-		this.refs.inputFile.click()
-		// console.log('upload-choose');
-	}
-
-	onChangeEvent(e) {
-		// console.log('upload-change');
-
-		let list  = []
-		let files  = e.target.files
-
-		//遍历多选
-		for (let i = 0; i < files.length; i++) {
-
-			let file = files[i]
-			let reader = new FileReader()
-
-			//如果是图片类型
-			if (/image\/\w+/.test(file.type)) {
-				reader.readAsDataURL(file)
-				reader.onload =  (e) => {
-					//向原有文件列表中添加新文件
-                    list[i] = {
-						name: file.name,
-						type: file.type,
-						size: file.size,
-						loaded: 0,
-						data: e.target.result
-					}
-					this.setState({
-						list: list
-					})
-                }
-			} else {
-				//向原有文件列表中添加新文件
-				list[i] = {
-					name: file.name,
-					type: file.type,
-					size: file.size,
-					loaded: 0,
-				}
-				this.setState({
-					list: list
-				})
-			}
-
-			UploadFile({
-				inputFile: file,
-				progress: (prams) => {
-					if(this.state.list[i]) {
-						this.state.list[i] = {
-							...prams,
-							...this.state.list[i]
-						}
-						this.setState()
-					}
-				},
-				complete: (data) => {
-					console.log("complete ", data);
-					let newPath = this.state.path
-					newPath.push({
-						id: data.info.id,
-						data: data.info.path + '/' + data.info.name
-					})
-					this.setState({
-						path: newPath
-					})
-				}
-			})
-		}
-
-
-
-
-	}
-
-	render() {
-
-		let {path, list} = this.state
-
-		console.log(path, list);
-
-		let paths = path.map((v, i) => {
-			let content = /image\/\w+/.test(v.type) ? <img src={v.data} /> : <p><i className="icon-doc"></i><span>{v.name}</span></p>
-			return (<div key={i} className="upload-item">{content}</div>)
-		})
-
-		let lists = list.map((v, i) => {
-			let content = /image\/\w+/.test(v.type) ? <img src={v.data} /> : <p><i className="icon-doc"></i><span>{v.name}</span></p>
-		return (<div key={i} className="upload-item">{content}<span className="loading">{v.loaded + '/' + v.size}</span></div>)
-		})
-
-        return (
-			<div className="upload">
-				<div className='upload-view show'>
-					{paths}{lists}
-				</div>
-				<div className="upload-add-file" onClick={this.chooseFileEvent}>
-					<input type="file" multiple="multiple" style={{'display':'none'}} onChange={this.onChangeEvent} ref='inputFile' name="files" />
-					<i className="icon-cloud-upload"></i><br />选择要上传的文件
-				</div>
-			</div>
-        );
-    }
-}
-
-
 export class Upload extends Component {
 
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			path: [], // 已上传文件
-			list: [], //上传中的文件
+			list: [], //上传中的文件列表
+			queue: 0,
 			isLoading: false
 		}
 
@@ -208,6 +71,7 @@ export class Upload extends Component {
 		//ES6 类中函数必须手动绑定
 		this.chooseFileEvent = this.chooseFileEvent.bind(this)
 		this.onChangeEvent = this.onChangeEvent.bind(this)
+		this.upload = this.upload.bind(this)
 
 	}
 
@@ -218,6 +82,10 @@ export class Upload extends Component {
 
 	onChangeEvent(e) {
 		// console.log('upload-change');
+		//
+		this.setState({
+			isLoading: true
+		})
 
 		let list  = []
 		let files  = e.target.files
@@ -236,12 +104,14 @@ export class Upload extends Component {
                     list[i] = {
 						name: file.name,
 						type: file.type,
-						size: file.size,
+						total: file.size,
 						loaded: 0,
 						data: e.target.result
 					}
+					this.upload(file, i) //开始上传
 					this.setState({
-						list: list
+						list: list,
+						queue: this.state.queue + 1 //上传队列加1
 					})
                 }
 			} else {
@@ -249,46 +119,82 @@ export class Upload extends Component {
 				list[i] = {
 					name: file.name,
 					type: file.type,
-					size: file.size,
+					total: file.size,
 					loaded: 0,
 				}
+				this.upload(file, i) //开始上传
 				this.setState({
-					list: list
+					list: list,
+					queue: this.state.queue + 1 //上传队列加1
 				})
 			}
-
-			UploadFile({
-				inputFile: file,
-				progress: (prams) => {
-					if(this.state.list[i]) {
-						this.state.list[i] = {
-							...prams,
-							...this.state.list[i]
-						}
-						this.setState()
-					}
-				},
-				complete: (data) => {
-					console.log("complete ", data);
-					let newPath = this.state.path
-					newPath.push({
-						id: data.info.id,
-						data: data.info.path + '/' + data.info.name
-					})
-					this.setState({
-						path: newPath
-					})
-				}
-			})
 		}
 	}
 
+	upload(file, key) {
+		UploadFile({
+			inputFile: file,
+			progress: (prams) => {
+				if (this.state.list[key]) {
+					Object.assign(this.state.list[key], prams)
+					this.setState({
+						list: this.state.list
+					})
+				}
+			},
+			complete: (data) => {
+				if (this.state.list[key]) {
+					Object.assign(this.state.list[key], {
+						id: data.info.id,
+						data: '/' + data.info.path + '/' + data.info.name
+					})
+					this.setState({
+						list: this.state.list,
+						queue: this.state.queue - 1 //上传队列减 1
+					})
+					if (this.state.queue < 1 && this.props.complete) {
+						this.props.complete(this.state.list)
+					}
+				}
+			}
+		})
+	}
+
 	render() {
+
+		const list = this.state.list
+
+		let lists = list.map((v, i) => {
+
+			let imgs
+
+			if (/image\/\w+/.test(v.type)) {
+				imgs = <div className="img-box"><img src={v.data} /></div>
+			} else {
+				imgs = <span><i className="icon-doc"></i><br />{v.name}</span>
+			}
+
+			let percent = v.percent
+
+			return (
+				<li key={i}>
+					{imgs}
+					<div className="loading"><div className="bar" style={{width: percent + '%'}}></div></div>
+					<div className="text">{v.loaded + ' / ' + v.total}</div>
+				</li>
+			)
+		})
+
         return (
 			<div className="upload">
-				<div className="upload-add-file" onClick={this.chooseFileEvent}>
-					<input type="file" multiple="multiple" style={{'display':'none'}} onChange={this.onChangeEvent} ref='inputFile' name="files" />
-					<i className="icon-cloud-upload"></i><br />选择要上传的文件
+				<div className="upload-file" onClick={this.chooseFileEvent}>
+					<ul className="upload-item" style={{display: list.length ? 'block' : 'none'}}>
+						{lists}
+					</ul>
+					<div className="upload-input" style={{display: list.length ? 'none' : 'block'}}>
+						<input type="file" multiple="multiple" style={{'display':'none'}} onChange={this.onChangeEvent} ref='inputFile' name="files" />
+						<i className="icon-cloud-upload"></i><br />选择要上传的文件
+					</div>
 				</div>
 			</div>
         );

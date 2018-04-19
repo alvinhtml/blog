@@ -11,7 +11,7 @@ import {UserList, UserForm} from './container/user/user'
 import {ClassifyList, ClassifyForm} from './container/article/classify'
 import {ArticleList, ArticleForm} from './container/article/article'
 import {CommentList, CommentForm} from './container/article/comment'
-import {MediaList} from './container/media/media'
+import {MediaList, MediaUpload} from './container/media/media'
 // import {TermView} from './container/company/termview'
 // import {OuList, OuForm} from './container/company/ou'
 
@@ -67,6 +67,7 @@ class Manage extends Component {
                     <Route path="/admin/classify/form/:id" component={ClassifyForm}/>
                     <Route path="/admin/classify/form" component={ClassifyForm}/>
 					<Route path="/admin/classify" component={ClassifyList}/>
+					<Route path="/admin/media/upload" component={MediaUpload}/>
 					<Route path="/admin/media" component={MediaList}/>
 					<Route path="/admin/comment/form/:id" component={CommentForm}/>
 					<Route path="/admin/comment/form" component={CommentForm}/>

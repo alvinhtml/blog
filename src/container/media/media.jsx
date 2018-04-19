@@ -18,6 +18,9 @@ import {ClassifySelect} from '../../components/select'
 import {Alert, Confirm} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 
+import {Upload} from '../../components/upload'
+
+
 //引入组件
 import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, MediaMain} from '../../components/common'
 
@@ -48,7 +51,8 @@ class MediaListUI extends Component {
 	componentWillMount() {
 		console.log("getlist:ou");
         this.props.getList({
-			page: 1
+			page: 1,
+			order: ['id', 'desc']
 		})
     }
 
@@ -95,7 +99,7 @@ class MediaListUI extends Component {
                         </div>
                         <div className="olist-header-r">
                             <Link data-content="刷新" to="/admin/media/list"  className="tools bg-teal ititle"><i className="icon-refresh"></i></Link>
-                            <Link data-content="新建" to="/admin/media/form" className="tools bg-teal ititle"><i className="icon-plus"></i></Link>
+                            <Link data-content="上传文件" to="/admin/media/upload" className="tools bg-teal ititle"><i className="icon-cloud-upload"></i></Link>
                         </div>
                     </div>
 					<div id="listTable" className="olist-main">
@@ -216,3 +220,35 @@ export const MediaSelect = connect(
 		};
 	}
 )(MediaSelectUI)
+
+
+
+export class MediaUpload extends Component {
+	constructor(props) {
+		super(props)
+
+		//ES6 类中函数必须手动绑定
+		this.complete = this.complete.bind(this)
+	}
+
+	complete() {
+		this.props.history.push('/admin/media')
+	}
+
+	render() {
+		return (
+			<div className="main-box">
+				<div className="page-bar clear">
+	                <div className="page-bar-left crumbs-box">
+						<div className="crumbs-first"><b>上传媒体文件</b> / 首页</div>
+						<div className="crumbs-arrow bg-orange"><i className="fa fa-angle-right"></i></div>
+	                </div>
+	                <div className="page-bar-right"><i className="icon-calendar"></i> Wed Aug 10 2016 10:51:20 GMT+0800</div>
+	            </div>
+				<div className="form-box">
+					<Upload complete={this.complete} />
+				</div>
+            </div>
+		)
+	}
+}

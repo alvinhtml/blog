@@ -290,12 +290,6 @@ class ArticleFormUI extends Component {
 									<label className="input-prepend labled inline-span12"><input type="text" name="title" value={this.state.title} onChange={this.handleChange} placeholder="请输入文章标题" /><span className="add-on"><i className="icon-notebook"></i></span></label>
 								</div>
 								<div className="row" id="editorInitBox"></div>
-								<div className="row">
-									<Tabs className="tabs" defaultMain="1">
-										<Tab toggler="选择媒体">1</Tab>
-										<Tab toggler="添加媒体">2</Tab>
-									</Tabs>
-								</div>
 							</div>
 							<div className="col-span3 article-sidebar">
 								<section className="section">

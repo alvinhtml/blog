@@ -56,8 +56,7 @@ class SidebarUI extends Component {
 						</li>
 						<li className="nav-item"><Link to="/admin/comment" className="nav-link"><i className="icon-bubble"></i><span className="text">评论</span><span className="arrow"></span></Link>
 							<ul className="sub-nav">
-								<li className="nav-item"><Link to="/admin/media" className="nav-link">评论列表</Link></li>
-	                            <li className="nav-item"><Link to="/admin/media/upload" className="nav-link">上传</Link></li>
+								<li className="nav-item"><Link to="/admin/comment" className="nav-link">评论列表</Link></li>
 	                        </ul>
 						</li>
 	                    <li className="nav-item"><Link to="/admin/user" className="nav-link"><i className="icon-user"></i><span className="text">用户管理</span></Link></li>

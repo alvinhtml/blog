@@ -996,6 +996,20 @@ export class Addmedia extends Component {
 			path: []
 		})
 	}
+	complete(data) {
+		this.mediaListModal.hide()
+
+		let path = this.state.path
+
+		path.push({
+			id: data[0].id,
+			path: '/' + data[0].path + '/' + data[0].name
+		})
+
+		this.setState({
+			path
+		})
+	}
 
 	render() {
 
@@ -1021,7 +1035,7 @@ export class Addmedia extends Component {
 				<Modal className="add-media-modal" ref={this.refCallback} id="addMediaModal">
 					<Tabs className="tabs add-media-tabs" defaultMain="1">
 						<Tab toggler="添加媒体">
-							<Upload />
+							<Upload complete={this.complete} />
 						</Tab>
 						<Tab toggler="选择媒体">
 							<MediaSelect selectEvent={this.selectEvent} />
