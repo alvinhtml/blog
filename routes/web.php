@@ -31,9 +31,12 @@ $router->get('/register', 'UserController@register');
 */
 
 
-$router->get('/article', 'HomeController@index');
-$router->get('/classify', 'HomeController@index');
-$router->get('/tag', 'HomeController@index');
+$router->get('/home', 'WebController@index');
+$router->get('/article', 'WebController@articles');
+$router->get('/article/list', 'WebController@articles');
+$router->get('/article/id/{id}', 'WebController@article');
+$router->get('/classify', 'WebController@classify');
+$router->get('/tag', 'WebController@tag');
 
 
 
@@ -116,5 +119,5 @@ $router->get('/api/comment/info', ['middleware' => 'auth', 'uses' => 'CommentCon
 
 
 
-
-//$router->get('/admin', ['middleware' => 'auth', 'uses' => 'UserController@index']);
+//默认
+$router->get('/', 'WebController@index');

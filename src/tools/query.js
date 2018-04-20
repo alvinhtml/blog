@@ -48,8 +48,8 @@ Object.assign(Query.prototype, {
     //返回元素在同辈元素中的位置
     index() {
         var elems = this.nodeList[0].parentNode.children;
-        for(let i = 0; i < elems.length; i++){
-            if( elems[i] == this.nodeList[0] ){
+        for(let i = 0; i < elems.length; i++) {
+            if( elems[i] == this.nodeList[0] ) {
                 return i;
             }
         }
@@ -93,21 +93,21 @@ Object.assign(Query.prototype, {
     },
 
     //位置
-    offset(){
-        let getOffsetTop = function( elements ){
+    offset() {
+        let getOffsetTop = function( elements ) {
     	    var top = elements.offsetTop;
     	    var parent = elements.offsetParent;
-    	    while( parent != null ){
+    	    while ( parent != null ) {
     	        top += parent.offsetTop;
     	        parent = parent.offsetParent;
     	    };
     	    return top;
     	};
 
-    	let getOffsetLeft = function( elements ){
+    	let getOffsetLeft = function( elements ) {
     	    var left = elements.offsetLeft;
     	    var parent = elements.offsetParent;
-    	    while( parent != null ){
+    	    while ( parent != null ) {
     	        left += parent.offsetLeft;
     	        parent = parent.offsetParent;
     	    };
@@ -121,7 +121,7 @@ Object.assign(Query.prototype, {
     },
 
     //取值
-    val(){
+    val() {
         let element = this.nodeList[0]
         if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
             return element.value
@@ -131,7 +131,25 @@ Object.assign(Query.prototype, {
             return element.options[element.selectedIndex].value
         }
 
-    }
+    },
+
+    //文本
+    text() {
+        let element = this.nodeList[0]
+        return element.textContent
+    },
+
+    //html
+    html(html) {
+        let element = this.nodeList[0]
+
+        if (typeof html === 'undefined') {
+            return element.innerHTML
+        } else {
+            element.innerHTML = html
+            return this
+        }
+    },
 })
 
 

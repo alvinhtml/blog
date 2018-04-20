@@ -2889,7 +2889,7 @@ a:hover { color: #50d2fa; }
 .upload-item li img {max-width: 120px; max-height: 120px; vertical-align: middle; -webkit-transition: all 0.4s ease-in-out;}
 .upload-item .loading { border-radius: 6px; padding: 4px; background-color: #f4f6f9; margin-top: 6px;}
 .upload-item .bar { border-radius: 4px; background-color: #00a2ca; height: 4px; }
-.upload-item .text { margin-top: 6px; font-size: 12px; }
+.upload-item .text { margin-top: 6px; font-size: 12px;}
 
 /* add media */
 .add-media li { width: 240px; height: 240px; background-color: #f4f6f9; border: 1px solid #f4f6f9;  text-align: center; line-height: 240px; overflow: hidden; margin: 10px auto;}
