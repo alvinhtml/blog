@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="main-box clear">
-    	<div class="content">
+    	<div class="content-box">
             <section class="section">
                 <h3 class="section-head"><a href="">{{ $article['title'] }}</a></h3>
                 <p>{{ $article['abstract'] }}</p>

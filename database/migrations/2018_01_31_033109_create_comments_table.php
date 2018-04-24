@@ -23,6 +23,7 @@ class CreateCommentsTable extends Migration
             $table->string('email')->comment("邮箱");
             $table->string('url')->comment("网址");
             $table->string('ip')->comment("IP");
+            $table->integer('favor')->comment("赞同");
             $table->integer('state')->comment("状态");
             $table->text('content')->comment("内容");
             $table->timestamps();

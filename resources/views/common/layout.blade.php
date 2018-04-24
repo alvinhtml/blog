@@ -10,7 +10,6 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width; initial-scale=1.0">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ $csrf_token }}">
@@ -23,12 +22,27 @@
     <link type="text/css" rel="stylesheet" href="/public/css/index.min.css">
     <link type="text/css" rel="stylesheet" href="/public/css/simple-line-icons.min.css">
     <title>{{ $title }}</title>
+    <script>
+        var deviceWidth = parseInt(window.screen.width);  //获取当前设备的屏幕宽度
+        var deviceScale = deviceWidth / 640;  //得到当前设备屏幕与640之间的比例，之后我们就可以将网页宽度固定为640px
+        var ua = navigator.userAgent;
+        //获取当前设备类型（安卓或苹果）
+        if (/Android (\d+\.\d+)/.test(ua)) {
+        var version = parseFloat(RegExp.$1);
+        if (version > 2.3) {
+            document.write('<meta name="viewport" content="width=640,initial-scale=' + deviceScale + ', minimum-scale = ' + deviceScale + ', maximum-scale = ' + deviceScale + ', target-densitydpi=device-dpi">');
+        } else {
+            document.write('<meta name="viewport" content="width=640,initial-scale=0.75,maximum-scale=0.75,minimum-scale=0.75,target-densitydpi=device-dpi" />');
+        }
+        } else {
+            document.write('<meta name="viewport" content="width=640, user-scalable=no">');
+        }
+    </script>
 
     <!-- Scripts -->
     <script>
         window.csrf_token = "{{ $csrf_token }}";
     </script>
-
 </head>
 
 <body>
@@ -49,7 +63,7 @@
     <div class="header-menu">
         <ul class="site-menu clear">
             <li><a href="/">首页</a></li>
-            <li><a href="/">日志</a></li>
+            <li><a href="/article/list">日志</a></li>
             <li><a href="/">笔记</a></li>
             <li><a href="/">关于博主</a></li>
         </ul>
@@ -65,9 +79,6 @@
             <div class="Copyright">© 2018 你爱谁如鲸向海</div>
         </div>
     </footer>
-
-
-    <!-- JavaScript -->
     <script type="text/javascript" src="/public/js/index.js"></script>
 </body>
 

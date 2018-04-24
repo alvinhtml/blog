@@ -16,4 +16,9 @@ class Comment extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function belongsToCmment()
+    {
+        return $this->belongsTo('App\Comment', 'comment_id');
+    }
 }

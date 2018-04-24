@@ -35,6 +35,11 @@ $router->get('/home', 'WebController@index');
 $router->get('/article', 'WebController@articles');
 $router->get('/article/list', 'WebController@articles');
 $router->get('/article/id/{id}', 'WebController@article');
+$router->post('/comment/add', 'WebController@addComment');
+
+
+
+
 $router->get('/classify', 'WebController@classify');
 $router->get('/tag', 'WebController@tag');
 
