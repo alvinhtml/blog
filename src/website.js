@@ -189,10 +189,12 @@ export const Alert = (content = '', title = '提示信息') => {
 }
 
 
+
 /*
     评论
  */
  document.getElementById('submitComment').onclick = function(e) {
+
      var forms = document.forms.commentForm;
 
      var formData = {
@@ -208,7 +210,27 @@ export const Alert = (content = '', title = '提示信息') => {
 
      http.post('/comment/add', formData, function(data) {
          if (data.error === 0) {
+            forms.name.value = ''
+            forms.email.value = ''
+            forms.url.value = ''
+            forms.content.value = ''
+            var commentData = data.info;
+            var newComment = '<div class="comments">'
+                    + '<div class="comments-info">'
+                    + '<span class="comments-photo"><img src="' + commentData.photo + '" /></span> '
+                    + '<span class="comments-name">'
+                    + (window.replay_target_name ? (commentData.name + ' <span class="color-gray">回复</span> ' + replay_target_name) : commentData.name)
+                    + '</span>'
+                    + '<span class="comments-time"' + commentData.created_at + '</span>'
+                    + '</div>'
+                    + '<div class="comments-content">' + commentData.content + '</div>'
+                    + '<div class="entry-aside">'
+                    + '<span><a><i class="icon-like"></i>12</a></span>'
+                    + '<span data-id="' + commentData.id + '" data-name="' + commentData.name + '" class="replay-button"><i class="icon-action-undo"></i>回复</span>'
+                    + '</div>'
+                    + '</div>';
 
+            document.getElementById('commentlist').innerHTML += newComment;
          } else {
              Alert(data.message);
          }
@@ -225,14 +247,17 @@ export const Alert = (content = '', title = '提示信息') => {
 document.getElementById('commentlist').onclick = function(e) {
     if(e.target.classList.contains('replay-button')) {
         var id = e.target.getAttribute('data-id');
-        var name = e.target.getAttribute('data-name');
+        window.replay_target_name = e.target.getAttribute('data-name');
         document.getElementById('commentId').value = id;
-        document.getElementById('commentTitle').innerHTML = '回复 ' + name;
+        document.getElementById('commentTitle').innerHTML = '回复 ' + window.replay_target_name;
         document.getElementById('cancelReplay').style.display = 'inline';
+        var scrolltop = Query('#commentTitle').offset();
+        Query(document).scrollTop(scrolltop.top);
     }
 }
 document.getElementById('cancelReplay').onclick = function(e) {
     document.getElementById('commentId').value = '';
+    window.replay_target_name = undefined;
     document.getElementById('commentTitle').innerHTML = '发表评论';
     document.getElementById('cancelReplay').style.display = 'none';
 }

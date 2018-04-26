@@ -34,7 +34,7 @@
                         <span class="comments-time">{{ $item->created_at }}</span>
                     </div>
                     <div class="comments-content">
-                        {{ $item->content }}
+                        {!! $item->content !!}
                     </div>
                     <div class="entry-aside">
                         <span><a><i class="icon-like"></i>12</a></span>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="row control">
                         <span class="button blue" id="submitComment">提交</span>
-                        <a id="cancelReplay">&nbsp 取消回复</a>
+                        <a class="cancel-replay" id="cancelReplay">&nbsp 取消回复</a>
                          &nbsp;
                         <label><input type="checkbox" name="remember" /> 记住个人信息</label>
                     </div>
@@ -67,4 +67,5 @@
             </div>
         </div>
     </div>
+    
 @stop

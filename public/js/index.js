@@ -504,6 +504,7 @@ var Alert = exports.Alert = function Alert() {
     评论
  */
 document.getElementById('submitComment').onclick = function (e) {
+
 	var forms = document.forms.commentForm;
 
 	var formData = {
@@ -518,7 +519,16 @@ document.getElementById('submitComment').onclick = function (e) {
 	console.log(formData, window.http);
 
 	http.post('/comment/add', formData, function (data) {
-		if (data.error === 0) {} else {
+		if (data.error === 0) {
+			forms.name.value = '';
+			forms.email.value = '';
+			forms.url.value = '';
+			forms.content.value = '';
+			var commentData = data.info;
+			var newComment = '<div class="comments">' + '<div class="comments-info">' + '<span class="comments-photo"><img src="' + commentData.photo + '" /></span> ' + '<span class="comments-name">' + (window.replay_target_name ? commentData.name + ' <span class="color-gray">回复</span> ' + replay_target_name : commentData.name) + '</span>' + '<span class="comments-time"' + commentData.created_at + '</span>' + '</div>' + '<div class="comments-content">' + commentData.content + '</div>' + '<div class="entry-aside">' + '<span><a><i class="icon-like"></i>12</a></span>' + '<span data-id="' + commentData.id + '" data-name="' + commentData.name + '" class="replay-button"><i class="icon-action-undo"></i>回复</span>' + '</div>' + '</div>';
+
+			document.getElementById('commentlist').innerHTML += newComment;
+		} else {
 			Alert(data.message);
 		}
 	});
@@ -534,14 +544,17 @@ document.getElementById('submitComment').onclick = function (e) {
 document.getElementById('commentlist').onclick = function (e) {
 	if (e.target.classList.contains('replay-button')) {
 		var id = e.target.getAttribute('data-id');
-		var name = e.target.getAttribute('data-name');
+		window.replay_target_name = e.target.getAttribute('data-name');
 		document.getElementById('commentId').value = id;
-		document.getElementById('commentTitle').innerHTML = '回复 ' + name;
+		document.getElementById('commentTitle').innerHTML = '回复 ' + window.replay_target_name;
 		document.getElementById('cancelReplay').style.display = 'inline';
+		var scrolltop = (0, _query2.default)('#commentTitle').offset();
+		(0, _query2.default)(document).scrollTop(scrolltop.top);
 	}
 };
 document.getElementById('cancelReplay').onclick = function (e) {
 	document.getElementById('commentId').value = '';
+	window.replay_target_name = undefined;
 	document.getElementById('commentTitle').innerHTML = '发表评论';
 	document.getElementById('cancelReplay').style.display = 'none';
 };
@@ -573,7 +586,7 @@ var Query = exports.Query = function Query(selector) {
         }
     } else {
         //如果 selector 是 dom 对象
-        if (selector instanceof HTMLElement) {
+        if (selector instanceof HTMLElement || document instanceof Document) {
             this.nodeList.push(selector);
         } else {
             if (selector instanceof HTMLCollection) {
@@ -690,6 +703,34 @@ Object.assign(Query.prototype, {
     },
 
 
+    //滚动条水平位置
+    scrollLeft: function scrollLeft(value) {
+        var element = this.nodeList[0];
+        if (!element.tagName) {
+            element = document.scrollingElement || document.documentElement;
+        }
+        if (value) {
+            element.scrollLeft = value;
+        } else {
+            return element.scrollLeft;
+        }
+    },
+
+    //滚动条垂直位置
+    scrollTop: function scrollTop(value) {
+        var element = this.nodeList[0];
+        console.log(element);
+        if (!element.tagName) {
+            element = document.scrollingElement || document.documentElement;
+        }
+        if (value) {
+            element.scrollTop = value;
+        } else {
+            return element.scrollTop;
+        }
+    },
+
+
     //取值
     val: function val() {
         var element = this.nodeList[0];
@@ -720,6 +761,108 @@ Object.assign(Query.prototype, {
             element.innerHTML = _html;
             return this;
         }
+    },
+
+
+    //动画
+    animate: function animate(css, speed, easing, fn) {
+
+        //获取元素的全局样式 （包括 style 属性和 class 中定义的 css）
+        var getStyle = function getStyle(element, prop) {
+            if (element.currentStyle) {
+                //IE下用 currentStyle ，非IE用 getComputedStyle
+                return element.currentStyle[prop];
+            } else {
+                return document.defaultView.getComputedStyle(element, null)[prop];
+            }
+        };
+
+        //缓动求值函数, 这里只定义了三个常用，可以从 tween.js 里扩充
+        var ease = void 0;
+        if (easing) {
+            switch (easing) {
+                case 'easein':
+                    ease = function ease(t, b, c, d) {
+                        return c * (t /= d) * t + b;
+                    };
+                    break;
+                case 'easeOut':
+                    ease = function ease(t, b, c, d) {
+                        return -c * (t /= d) * (t - 2) + b;
+                    };
+                    break;
+                case 'easeInOut':
+                    ease = function ease(t, b, c, d) {
+                        if ((t /= d / 2) < 1) return c / 2 * t * t + b;
+                        return -c / 2 * (--t * (t - 2) - 1) + b;
+                    };
+                    break;
+                default:
+                    ease = function ease(t, b, c, d) {
+                        return c * t / d + b;
+                    };
+            }
+        } else {
+            ease = function ease(t, b, c, d) {
+                return c * t / d + b;
+            };
+        }
+
+        var time = 0,
+            timeout = speed / 1000;
+
+        var animate = function animate(element, css) {
+
+            //清除之前的 Interval
+            clearInterval(element.timer);
+
+            //当前样式
+            var currentStyle = {};
+
+            //变化量
+            var changeStyle = {};
+
+            for (var prop in css) {
+                if (prop == "opacity") {
+                    currentStyle["opacity"] = Math.round(parseFloat(getStyle(element, prop)) * 100);
+                    changeStyle[prop] = css[prop] * 100 - currentStyle[prop];
+                } else {
+                    currentStyle[prop] = parseInt(getStyle(element, prop));
+                    changeStyle[prop] = css[prop] - currentStyle[prop];
+                }
+            }
+
+            element.timer = setInterval(function () {
+
+                if (time > speed) {
+                    time = speed;
+                } else {
+                    time = time + 16;
+                }
+
+                for (var _prop in css) {
+                    var value = ease(time / 1000, currentStyle[_prop], changeStyle[_prop], timeout);
+                    if (_prop == "opacity") {
+                        element.style.opacity = value / 100;
+                    } else {
+                        element.style[_prop] = value + 'px';
+                    }
+                }
+
+                if (time == speed) {
+                    clearInterval(element.timer);
+                    if (typeof fn === 'function') {
+                        fn();
+                    }
+                }
+            }, 16);
+        };
+
+        this.each(function (index, element) {
+            animate(element, css);
+        });
+
+        return this;
     }
 });
 

@@ -248,7 +248,16 @@ a:hover {
 
 .comment-form { font-size: 14px; }
 .comment-hr { width: 33%; margin: 24px auto; border:0; border-top: 1px solid #eee; }
+.cancel-replay { display: none; cursor: pointer; }
 
+.testbox {
+    position: fixed;
+    z-index: 200;
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    left: 0; top: 48%;
+}
 
 
 /*--------------------

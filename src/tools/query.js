@@ -11,7 +11,7 @@ export class Query {
             }
         } else {
             //如果 selector 是 dom 对象
-            if ( selector instanceof HTMLElement ) {
+            if ( selector instanceof HTMLElement || document instanceof Document ) {
                 this.nodeList.push(selector)
             } else {
                 if ( selector instanceof HTMLCollection ) {
@@ -120,6 +120,33 @@ Object.assign(Query.prototype, {
         }
     },
 
+    //滚动条水平位置
+    scrollLeft(value) {
+        let element = this.nodeList[0]
+        if (!element.tagName) {
+             element = document.scrollingElement || document.documentElement;
+        }
+        if (value) {
+            element.scrollLeft = value
+        } else {
+            return element.scrollLeft;
+        }
+    },
+    //滚动条垂直位置
+    scrollTop(value) {
+        let element = this.nodeList[0]
+        console.log(element);
+        if (!element.tagName) {
+             element = document.scrollingElement || document.documentElement;
+        }
+        if (value) {
+            element.scrollTop = value
+        } else {
+            return element.scrollTop;
+        }
+    },
+
+
     //取值
     val() {
         let element = this.nodeList[0]
@@ -150,6 +177,103 @@ Object.assign(Query.prototype, {
             return this
         }
     },
+
+    //动画
+    animate(css, speed, easing, fn) {
+
+        //获取元素的全局样式 （包括 style 属性和 class 中定义的 css）
+        const getStyle = (element, prop) => {
+            if (element.currentStyle) {
+                //IE下用 currentStyle ，非IE用 getComputedStyle
+                return element.currentStyle[prop]
+            } else {
+                return document.defaultView.getComputedStyle(element, null)[prop]
+            }
+        }
+
+        //缓动求值函数, 这里只定义了三个常用，可以从 tween.js 里扩充
+        let ease;
+        if (easing) {
+            switch (easing) {
+                case 'easein':
+                    ease = function(t,b,c,d){
+                        return c*(t/=d)*t + b;
+                    }
+                    break;
+                case 'easeOut':
+                    ease = function(t,b,c,d){
+                        return -c *(t/=d)*(t-2) + b;
+                    }
+                    break;
+                case 'easeInOut':
+                    ease = function(t,b,c,d){
+                        if ((t/=d/2) < 1) return c/2*t*t + b;
+                        return -c/2 * ((--t)*(t-2) - 1) + b;
+                    }
+                    break;
+                default:
+                    ease = function(t,b,c,d){ return c*t/d + b; }
+            }
+        } else {
+            ease = function(t,b,c,d){ return c*t/d + b; }
+        }
+
+        let time = 0, timeout = speed / 1000
+
+        const animate = (element, css) => {
+
+            //清除之前的 Interval
+            clearInterval(element.timer)
+
+            //当前样式
+            let currentStyle = {}
+
+            //变化量
+            let changeStyle = {}
+
+            for (let prop in css) {
+                if (prop == "opacity") {
+                    currentStyle["opacity"] = Math.round(parseFloat(getStyle(element, prop)) * 100)
+                    changeStyle[prop] = css[prop] * 100 - currentStyle[prop]
+                } else {
+                    currentStyle[prop] = parseInt(getStyle(element, prop))
+                    changeStyle[prop] = css[prop] - currentStyle[prop]
+                }
+            }
+
+            element.timer = setInterval(function(){
+
+                if (time > speed) {
+                    time = speed
+                } else {
+                    time = time + 16
+                }
+
+                for (let prop in css) {
+                    let value = ease(time / 1000, currentStyle[prop], changeStyle[prop], timeout)
+                    if (prop == "opacity") {
+                        element.style.opacity = value / 100
+                    } else {
+                        element.style[prop] = value + 'px'
+                    }
+                }
+
+                if (time == speed) {
+                    clearInterval(element.timer)
+                    if (typeof fn === 'function') {
+                        fn()
+                    }
+                }
+
+            }, 16)
+        }
+
+        this.each(function(index, element) {
+            animate(element, css)
+        })
+
+        return this
+    }
 })
 
 
