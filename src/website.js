@@ -237,14 +237,9 @@ export const Alert = (content = '', title = '提示信息') => {
      })
  }
 
-//回复
-// Query('.replay-button').each(function(index, element) {
-//     element.onclick = function(e){
-//         var comment_id = element.getAttribute('data-comment_id')
-//     }
-// })
 
 document.getElementById('commentlist').onclick = function(e) {
+    // 回复
     if(e.target.classList.contains('replay-button')) {
         var id = e.target.getAttribute('data-id');
         window.replay_target_name = e.target.getAttribute('data-name');
@@ -254,10 +249,27 @@ document.getElementById('commentlist').onclick = function(e) {
         var scrolltop = Query('#commentTitle').offset();
         Query(document).scrollTop(scrolltop.top);
     }
+
+    // 点赞
+    if(e.target.classList.contains('favor-button')) {
+        var comment_id = e.target.getAttribute('data-id');
+        http.get('/favor/comment_id/' + comment_id, {}, function(data) {
+            e.target.innerHTML = '<i class="icon-like"></i>' + data.info.favor;
+        })
+    }
+    console.log(e.target);
 }
 document.getElementById('cancelReplay').onclick = function(e) {
     document.getElementById('commentId').value = '';
     window.replay_target_name = undefined;
     document.getElementById('commentTitle').innerHTML = '发表评论';
     document.getElementById('cancelReplay').style.display = 'none';
+}
+
+//点赞
+var article_id = document.getElementById('article_id').value;
+document.getElementById('favor').onclick = function(e) {
+    http.get('/favor/article_id/' + article_id, {}, function(data) {
+        document.getElementById('favorNum').textContent = data.info.favor;
+    })
 }

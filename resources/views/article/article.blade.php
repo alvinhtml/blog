@@ -5,20 +5,20 @@
     <div class="main-box article-content-box clear">
         <h1 class="article-title">{{ $article->title }}</h1>
         <aside class="entry-aside">
-            <span><i class="icon-calendar"></i>{{ $article->created_at }}</span>
+            <span><i class="icon-calendar"></i>{{ Date('Y-m-d', strtotime($article->created_at)) }}</span>
             <span class="phone-none"><i class="icon-user"></i>{{ $article->author }}</span>
-            <span class="phone-none"><i class="icon-folder"></i><a href="/classify/list/{{ $classify->id }}" rel="category">{{ $classify->name }}</a></span>
+            <span class="phone-none"><i class="icon-folder"></i><a href="/classify/{{ $classify->id }}" rel="category">{{ $classify->name }}</a></span>
             <span class="phone-none"><i class="icon-tag"></i>
 @foreach ($tag as $item)
-                <a href="/tag/list/{{ $item->id }}" rel="category">{{ $item->name }}</a>
+                <a rel="category">{{ $item->name }}</a>
 @endforeach
             </span>
             <span><i class="icon-like"></i>{{ $article->favor }} 赞</span>
-            <span class="phone-none" ><a href="#commentlist"><i class="icon-bubble"></i>{{ $comment_count }}</a></span>
+            <span class="phone-none" ><a href="#favor"><i class="icon-bubble"></i>{{ $comment_count }}</a></span>
         </aside>
         <div class="article-content">{!! $article->content !!}</div>
 
-        <div class="article-favor"><span class="button green"><i class="icon-heart"></i> | 24</span></div>
+        <div class="article-favor"><span id="favor" data-id="{{ $article->id }}" name="favor" class="favor"><i class="icon-like"></i><em id="favorNum">{{ $article->favor }}</em></span></div>
 
         <div class="article-comment">
             <div class="comment-list" name="commentlist" id="commentlist">
@@ -37,7 +37,7 @@
                         {!! $item->content !!}
                     </div>
                     <div class="entry-aside">
-                        <span><a><i class="icon-like"></i>12</a></span>
+                        <span data-id="{{ $item->id }}" class="favor-button"><i class="icon-like"></i>{{ $item->favor }}</span>
                         <span data-id="{{ $item->id }}" data-name="{{ $item->name }}" class="replay-button"><i class="icon-action-undo"></i>回复</span>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                 <hr class="comment-hr" />
                 <h3 id="commentTitle">发表评论</h3>
                 <form class="form" id="commentForm" name="commentForm">
-                    <input type="hidden" name="article_id" value="{{ $article->id }}" />
+                    <input id="article_id" type="hidden" name="article_id" value="{{ $article->id }}" />
                     <input id="commentId" type="hidden" name="comment_id" value="" />
                     <div class="row control">
                         <label class="input-prepend inline-span4"><input type="text" name="name" placeholder="名称" /><span class="add-on"><i class="icon-user"></i></span></label>
@@ -67,5 +67,5 @@
             </div>
         </div>
     </div>
-    
+
 @stop

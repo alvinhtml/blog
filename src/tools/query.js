@@ -59,6 +59,7 @@ Object.assign(Query.prototype, {
     eq(n) {
         return new Query(this.nodeList[n < 0 ? n = 0 : n > this.nodeList.length ? n  = this.nodeList.length : n])
     }
+
 }, {
     /* 以下是操作相关的方法 */
 
@@ -96,22 +97,22 @@ Object.assign(Query.prototype, {
     offset() {
         let getOffsetTop = function( elements ) {
     	    var top = elements.offsetTop;
-    	    var parent = elements.offsetParent;
+    	    var parent = elements.offsetParent
     	    while ( parent != null ) {
     	        top += parent.offsetTop;
-    	        parent = parent.offsetParent;
+    	        parent = parent.offsetParent
     	    };
-    	    return top;
+    	    return top
     	};
 
     	let getOffsetLeft = function( elements ) {
-    	    var left = elements.offsetLeft;
-    	    var parent = elements.offsetParent;
+    	    var left = elements.offsetLeft
+    	    var parent = elements.offsetParent
     	    while ( parent != null ) {
-    	        left += parent.offsetLeft;
-    	        parent = parent.offsetParent;
+    	        left += parent.offsetLeft
+    	        parent = parent.offsetParent
     	    };
-    	    return left;
+    	    return left
     	};
 
         return {
@@ -124,28 +125,30 @@ Object.assign(Query.prototype, {
     scrollLeft(value) {
         let element = this.nodeList[0]
         if (!element.tagName) {
-             element = document.scrollingElement || document.documentElement;
+             element = document.scrollingElement || document.documentElement
         }
         if (value) {
             element.scrollLeft = value
+            return this
         } else {
-            return element.scrollLeft;
+            return element.scrollLeft
         }
     },
+
     //滚动条垂直位置
     scrollTop(value) {
         let element = this.nodeList[0]
         console.log(element);
         if (!element.tagName) {
-             element = document.scrollingElement || document.documentElement;
+             element = document.scrollingElement || document.documentElement
         }
         if (value) {
             element.scrollTop = value
+            return this
         } else {
-            return element.scrollTop;
+            return element.scrollTop
         }
     },
-
 
     //取值
     val() {
@@ -157,13 +160,17 @@ Object.assign(Query.prototype, {
         if (element.tagName === 'SELECT') {
             return element.options[element.selectedIndex].value
         }
-
     },
 
     //文本
-    text() {
+    text(text) {
         let element = this.nodeList[0]
-        return element.textContent
+        if (typeof text === 'undefined') {
+            return element.textContent
+        } else {
+            element.textContent = text
+            return this
+        }
     },
 
     //html
@@ -193,6 +200,7 @@ Object.assign(Query.prototype, {
 
         //缓动求值函数, 这里只定义了三个常用，可以从 tween.js 里扩充
         let ease;
+
         if (easing) {
             switch (easing) {
                 case 'easein':
@@ -274,6 +282,7 @@ Object.assign(Query.prototype, {
 
         return this
     }
+
 })
 
 

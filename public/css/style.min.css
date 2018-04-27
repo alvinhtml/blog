@@ -125,7 +125,7 @@ a {
   text-decoration: none;
 }
 a:focus {
-  outline: thin dotted #333;
+  outline: thin dotted #373d41;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -282,31 +282,30 @@ h3,
 h4,
 h5,
 h6 {
-  line-height: 1.7142em;
+  line-height: 1.28571428em;
   font-weight: normal;
-  margin: 1em 0;
+  margin: 12px 0;
 }
 h1 {
-  font-size: 2.5714em;
+  font-size: 2em;
 }
 h2 {
-  font-size: 2.1428em;
+  font-size: 1.71428571em;
 }
 h3 {
-  font-size: 1.7142em;
+  font-size: 1.28571428em;
 }
 h4 {
-  font-size: 1.2857em;
+  font-size: 1.14285714em;
 }
 h5 {
   font-size: 1em;
 }
 h6 {
-  font-size: 0.8571em;
+  font-size: 0.85714286em;
 }
 p {
   margin: 1em 0;
-  text-indent: 2em;
 }
 ul,
 ol,
@@ -945,20 +944,18 @@ code span.hashkey {
 [class*="col-grid"]:first-child {
   margin-left: 0;
 }
-section,
-header,
-footer {
-  padding-left: 1.5625%;
-  padding-right: 1.5625%;
-}
 .section {
   background-color: #ffffff;
-  padding: 0 1.5625%;
+  padding: 0 3%;
   margin: 1em 0;
 }
 .section-head {
   border-bottom: 1px solid #f4f6f9;
   padding: 0.5em 0;
+}
+.section-head h3,
+h3.section-head {
+  margin: 0;
 }
 .control {
   line-height: 36px;

@@ -16,7 +16,7 @@ import {Popup} from '../../components/popup'
 //import {Editor} from '../../components/editor'
 
 import {Iselect} from '../../components/select'
-import {Alert, Confirm} from '../../components/modal'
+import {Alert, Confirm, Modal} from '../../components/modal'
 import {Radios, Radio} from '../../components/radios'
 import {Tabs, Tab} from '../../components/tabs'
 
@@ -37,6 +37,36 @@ import {
 
 //引入Action创建函数
 import {ActionCreator, ActionGet, ActionPost, FetchPost} from '../../actions/actions'
+
+
+let auditModal;
+
+// class CommentAudit extends Component {
+//
+// 	constructor(props) {
+// 		super(props)
+// 	}
+//
+// 	render() {
+// 		return (
+// 			<Modal className="add-media-modal" ref={this.refCallback} id="addMediaModal">
+// 				<span className="modal-close close" onClick={()=>{auditModal.hide()}}>×</span>
+// 				<div className="modal-header">批量审核</div>
+// 				<div className="content">
+// 					将所选评论批量修改为：
+// 					<select>
+// 						<option value="0">已审核</option>
+// 						<option value="1">未审核</option>
+// 					</select>
+// 				</div>
+// 				<div className="actions">
+// 					<span className="button green close" onClick={()=>{auditModal.hide()}}>取消</span>
+// 					<span className="button green close" onClick={this.auditEvent}>确定</span>
+// 				</div>
+// 			</Modal>
+// 		)
+// 	}
+// }
 
 class CommentListUI extends Component {
 
@@ -60,6 +90,9 @@ class CommentListUI extends Component {
 		}];
 
 		this.decorater = this.decorater.bind(this)
+		this.refCallback = this.refCallback.bind(this)
+		this.selectRefCallback = this.selectRefCallback.bind(this)
+		this.auditEvent = this.auditEvent.bind(this)
 	}
 
 	componentWillMount() {
@@ -73,10 +106,24 @@ class CommentListUI extends Component {
 	decorater(key, value) {
 		switch(key) {
 			case 'state':
-				return value[key] == 1 ? <span className="color-green">已审核</span> : <span className="color-yellow">未审核</span>
+				return value[key] == 0 ? <span className="color-green">已审核</span> : <span className="color-yellow">未审核</span>
 			default:
 				return value[key]
 		}
+	}
+
+	refCallback(instance) {
+		auditModal = instance
+	}
+
+	selectRefCallback(instance) {
+		this.auditSelect = instance
+	}
+
+	auditEvent() {
+		auditModal.hide();
+		let selectValue = this.auditSelect.options[this.auditSelect.selectedIndex].value
+		this.props.auditEvent(selectValue);
 	}
 
 	render() {
@@ -117,12 +164,25 @@ class CommentListUI extends Component {
                     </div>
 					<PageList getList={getList} updateConfigs={updateConfigs} count={parseInt(count)} configs={configs} />
 				</div>
+				<Modal className="add-media-modal" ref={this.refCallback} id="addMediaModal">
+					<span className="modal-close close" onClick={()=>{auditModal.hide()}}>×</span>
+					<div className="modal-header">批量审核</div>
+					<div className="content">
+						将所选评论批量修改为：
+						<select ref={this.selectRefCallback}>
+							<option value="0">已审核</option>
+							<option value="1">未审核</option>
+						</select>
+					</div>
+					<div className="actions">
+						<span className="button close" onClick={()=>{auditModal.hide()}}>取消</span>
+						<span className="button green close" onClick={this.auditEvent}>确定</span>
+					</div>
+				</Modal>
             </div>
 		)
 	}
 }
-
-
 
 export const CommentList = connect(
 	(state) => {
@@ -151,6 +211,15 @@ export const CommentList = connect(
 				//删除一条
 				dispatch(ActionGet(DELETE_COMMENT, '/api/comment/del/' + id, 'comment'))
 			},
+			auditEvent: (v) => {
+				//审核
+				let idArray = []
+				let checkboxArray = Query("#list_body .input-checkbox:checked")
+				checkboxArray.each((ii, element) => {
+					idArray.push(element.value)
+				})
+				dispatch(ActionGet(UPDATE_COMMENT_STATE, '/api/comment/update_state/' + idArray.join(','),  {state: v}, 'comment'))
+			},
 			toolsClickEvent: (value) => {
 				let idArray = []
 				let checkboxArray = Query("#list_body .input-checkbox:checked")
@@ -168,10 +237,7 @@ export const CommentList = connect(
 						dispatch(ActionGet(DELETE_COMMENT, '/api/comment/del/' + idArray.join(','), 'comment'))
 						break;
 					case '1':
-						dispatch(ActionGet(UPDATE_COMMENT_STATE, '/api/comment/form_state/' + idArray.join(','), {state: 1}, 'comment'))
-						break;
-					case '2':
-						dispatch(ActionGet(UPDATE_COMMENT_STATE, '/api/comment/form_state/' + idArray.join(','), {state: 0}, 'comment'))
+						auditModal.show()
 						break;
 					default:
 				}
@@ -180,6 +246,8 @@ export const CommentList = connect(
 		};
 	}
 )(CommentListUI)
+
+
 
 
 

@@ -212,6 +212,32 @@ a:hover {
 .entry-aside a {
     color: #999;
 }
+.favor {
+    display: inline-block;
+    line-height: 16px;
+    padding: 12px 24px;
+    border-radius: 20px;
+    color: #f48804;
+    border: 1px solid #f48804;
+    cursor: pointer;
+}
+.favor em {
+    font-style: normal;
+    display: inline-block;
+    font-size: 16px;
+    margin-left: 12px; border-left: 1px solid #f48804; padding-left: 12px;
+}
+
+.favor:hover {
+    background-color: rgba(244,136,4,.05);
+}
+
+.favor-button {
+    display: inline-block;
+    cursor: pointer;
+}
+
+
 /*--------------------
         comment
 ---------------------*/
@@ -299,6 +325,7 @@ a:hover {
     font-size: 12px;
     padding-bottom: 20px;
 }
+
 @media screen and (max-width:768px) {
     body {
         background-color: #ffffff;

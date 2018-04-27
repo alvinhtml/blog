@@ -118,24 +118,32 @@ class CommentController extends Controller
     }
 
     public function info(Request $request, $id) {
-        //查询数据库中是否已经存了对应的配置
-        $datalist = Comment::where('id', $id)
-            ->get();
 
-        $results = ['error' => 0, 'message' => '获取用户信息成功!'];
+        //查询数据库中是否已经存了对应的配置
+        $datalist = Comment::where('id', $id)->get();
+
+        $results = ['error' => 0, 'message' => '获取评论信息成功!'];
 
         $results['info'] = $datalist->first();
 
         return response()->json($results);
     }
 
-    public function viewList(Request $request) {
+    public function update_state(Request $request, $id) {
 
+        $idArray = explode(',', $id);
+
+        $results = ['error' => 0, 'message' => '更新成功!'];
+
+        $state = (int)$request->input("state");
+
+        Comment::whereIn('id', $idArray)
+            ->update(['state' => $state]);
+
+
+        $results['ids'] = $idArray;
+        $results['state'] = $state;
+
+        return response()->json($results);
     }
-    public function viewInfo(Request $request) {
-
-    }
-
-
-
 }

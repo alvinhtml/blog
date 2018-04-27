@@ -32,18 +32,21 @@ class WebController extends Controller
 
         $classify = Classify::where('type', 0)->orderBy('updated_at', 'asc')->select('id', 'name', 'slug')->get()->toArray();
 
-        // echo('<pre>');
-        // print_r($classify);
-        //
-        // exit;
+        $classifylist = [];
+        foreach ($classify as $item) {
+            $item['article_count'] = Article::where('classify_id', $item['id'])->count();
+            $classifylist[] = $item;
+        }
 
 
         return view('home.index',[
             'title' => '你爱谁如鲸向海 - 首页',
+            'description' => '你爱谁如鲸向海的网络日志。',
+            'keywords' => '你爱谁如鲸向海,博客,日志',
             'csrf_token' => $token,
             'article' => $article,
             'list' => $list,
-            'classify' => $classify,
+            'classify' => $classifylist,
         ]);
     }
 
@@ -58,19 +61,15 @@ class WebController extends Controller
 
         $count = $articles->count();
 
-
-
         $list = $articles->get();
-
-        // echo('<pre>');
-        // print_r($count);
-        //
-        // exit;
 
 
         return view('article.list',[
             'title' => '你爱谁如鲸向海 - 日志列表',
+            'description' => '你爱谁如鲸向海的网络日志。',
+            'keywords' => '你爱谁如鲸向海,博客,日志列表',
             'csrf_token' => $token,
+            'subhead' => '日志列表',
             'count' => $count,
             'list' => $list,
         ]);
@@ -91,21 +90,18 @@ class WebController extends Controller
             $comment = Comment::where('article_id', $id)->with('belongsToCmment')->get();
             $comment_count = $comment->count();
 
-
-
-
-            // echo('<pre>');
-            //
-            // $comment->each(function ($item, $key) {
-            //     var_dump($item->belongsToCmment['name']);
-            //     echo('<br />--------------------------------------------------------------------------<br />');
-            // });
-            //
-            //
-            // die;exit;
+            $description = empty($article->abstract) ? $article->title : $article->abstract;
+            $tagArray = $tag->toArray();
+            $keyword = [];
+            foreach ($tagArray as $tagItem) {
+                $keyword[] = $tagItem['name'];
+            }
+            $keywords = empty($keyword) ? $article->title : join(",",$keyword);
 
             return view('article.article',[
                 'title' => $article->title,
+                'description' => $description,
+                'keywords' => $keywords,
                 'csrf_token' => $token,
                 'article' => $article,
                 'comment' => $comment,
@@ -180,5 +176,90 @@ class WebController extends Controller
         $results['info'] = $data->toArray();
 
         return response()->json($results);
+    }
+    /**
+     * 点赞文章
+     */
+    public function articleFavor(Request $request, $id) {
+
+        if (isset($id)) {
+
+            $data = Article::find($id);
+
+            $data->favor = $data->favor + 1;
+
+            $data->save();
+
+            $results['info'] = $data->toArray();
+
+            return response()->json($results);
+        }
+    }
+    /**
+     * 点赞评论
+     */
+    public function commentFavor(Request $request, $id) {
+
+        if (isset($id)) {
+
+            $data = Comment::find($id);
+
+            $data->favor = $data->favor + 1;
+
+            $data->save();
+
+            $results['info'] = $data->toArray();
+
+            return response()->json($results);
+        }
+    }
+
+    /**
+     * 分类列表
+     */
+    public function classifyList(Request $request) {
+
+        $token = $request->session()->get('_token');
+
+        $classify = Classify::where('type', 0)->orderBy('updated_at', 'asc')->select('id', 'name', 'slug')->get()->toArray();
+
+        $list = [];
+        foreach ($classify as $item) {
+            $item['article_count'] = Article::where('classify_id', $item['id'])->count();
+            $list[] = $item;
+        }
+
+
+
+        return view('article.classify',[
+            'title' => '你爱谁如鲸向海 - 分类列表',
+            'description' => '你爱谁如鲸向海的网络日志。',
+            'keywords' => '你爱谁如鲸向海,博客,分类列表',
+            'csrf_token' => $token,
+            'classify' => $list,
+        ]);
+    }
+    public function classify(Request $request, $id) {
+
+        $token = $request->session()->get('_token');
+
+        $articles = Article::where('classify_id', $id)->orderBy('created_at', 'asc')->limit(10)->select('id', 'title', 'classify_id', 'author', 'media', 'abstract', 'favor', 'year', 'created_at');
+
+        $count = $articles->count();
+
+
+
+        $list = $articles->get();
+
+
+        return view('article.list',[
+            'title' => '你爱谁如鲸向海 - 日志列表',
+            'description' => '你爱谁如鲸向海的网络日志。',
+            'keywords' => '你爱谁如鲸向海,博客,日志列表',
+            'csrf_token' => $token,
+            'subhead' => '日志列表',
+            'count' => $count,
+            'list' => $list,
+        ]);
     }
 }

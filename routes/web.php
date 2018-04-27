@@ -36,12 +36,10 @@ $router->get('/article', 'WebController@articles');
 $router->get('/article/list', 'WebController@articles');
 $router->get('/article/id/{id}', 'WebController@article');
 $router->post('/comment/add', 'WebController@addComment');
-
-
-
-
-$router->get('/classify', 'WebController@classify');
-$router->get('/tag', 'WebController@tag');
+$router->get('/classify', 'WebController@classifyList');
+$router->get('/classify/{id}', 'WebController@classify');
+$router->get('/favor/article_id/{id}', 'WebController@articleFavor');
+$router->get('/favor/comment_id/{id}', 'WebController@commentFavor');
 
 
 
@@ -120,7 +118,9 @@ $router->get('/api/media/info/{id}', ['middleware' => 'auth', 'uses' => 'MediaCo
 $router->get('/api/comment/list', ['middleware' => 'auth', 'uses' => 'CommentController@list']);
 $router->post('/api/comment/form/{id}', ['middleware' => 'auth', 'uses' => 'CommentController@form']);
 $router->post('/api/comment/form', ['middleware' => 'auth', 'uses' => 'CommentController@form']);
-$router->get('/api/comment/info', ['middleware' => 'auth', 'uses' => 'CommentController@info']);
+$router->get('/api/comment/del/{id}', ['middleware' => 'auth', 'uses' => 'CommentController@del']);
+$router->get('/api/comment/info/{id}', ['middleware' => 'auth', 'uses' => 'CommentController@info']);
+$router->get('/api/comment/update_state/{id}', ['middleware' => 'auth', 'uses' => 'CommentController@update_state']);
 
 
 

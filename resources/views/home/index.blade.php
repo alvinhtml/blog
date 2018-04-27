@@ -13,7 +13,7 @@
                 <h3 class="section-head">最新文章</h3>
                 <ul class="article-list">
 @foreach ($list as $item)
-                    <li><span>{{ $item['created_at'] }} » </span><a href="/article/id/{{ $item['id'] }}">{{ $item['title'] }}</a></li>
+                    <li><span>{{ Date('Y年m月d日', strtotime($item['created_at'])) }} » </span><a href="/article/id/{{ $item['id'] }}">{{ $item['title'] }}</a></li>
 @endforeach
                 </ul>
                 <p><a href="/article/list">查看更多文章</a></p>
@@ -38,7 +38,7 @@
                 <div class="bar-content">
             		<ul class="side-list">
 @foreach ($classify as $item)
-                        <li><span><a href="">{{ $item['name'] }} (3)</a></li>
+                        <li><span><a href="/classify/{{ $item['id'] }}">{{ $item['name'] }} ({{ $item['article_count'] }})</a></li>
 @endforeach
                     </ul>
                 </div>
