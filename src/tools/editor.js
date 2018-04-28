@@ -123,13 +123,13 @@ Object.assign(Editor.prototype, {
     init(mode, editor) {
 
         if (mode === 'html') {
-
             this.setHtmlEditor(editor)
+            editor.innerHTML = this.value
         }
         if (mode === 'markdown') {
             this.setMarkdownEditor(editor)
+            editor.innerHTML = this.value
         }
-
     },
     setMarkdownEditor(editor) {
         this.addonsbox.innerHTML = this.addons

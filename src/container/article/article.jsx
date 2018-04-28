@@ -194,7 +194,7 @@ class ArticleFormUI extends Component {
 			classify_id: 1,
 			author: '',
 			media: '',
-			tags: '',
+			tags: [],
 			abstract: '',
 			content: '这是正文',
 			markdown: '',
@@ -224,7 +224,7 @@ class ArticleFormUI extends Component {
 			this.setState({
 		      id, title, classify_id, author, media, tags, abstract, content, markdown, state
 		    })
-			this.editor.setContent(content)
+			//this.editor.setContent(content)
 		}
 	}
 
@@ -252,6 +252,7 @@ class ArticleFormUI extends Component {
 		}
 
 		console.log(formdata)
+
 		this.props.submit(formdata, (data) => {
 			this.props.history.push('/admin/article/list')
 		})
@@ -260,6 +261,11 @@ class ArticleFormUI extends Component {
 	render() {
 
 		const {isFetching} = this.props
+
+
+		let {state, tags, media} = this.state
+
+		let stateDom = state == 0 ? <b className="color-green">已发布</b> : <b className="color-yellow">草稿</b>
 
 		const tagDataList = [{
 			id: 0,
@@ -274,6 +280,7 @@ class ArticleFormUI extends Component {
 			id: 3,
 			name: '标签四'
 		}]
+
 
 		return (
 			<div className="main-box">
@@ -296,11 +303,11 @@ class ArticleFormUI extends Component {
 									<h3 className="section-head">发布</h3>
 									<div className="control">
 										<span className="control-label">状态：</span>
-										<div className="controls"><b>草稿</b></div>
+										<div className="controls">{stateDom}</div>
 									</div>
 									<div className="control">
 										<span className="control-label">作者：</span>
-										<div className="controls"><b>Alvin</b></div>
+										<div className="controls"><b>{this.state.author}</b></div>
 									</div>
 									<div className="control-actions align-center">
 										<span className="button blue" data-val="0" onClick={this.submitEvent}>发布</span>
@@ -316,12 +323,12 @@ class ArticleFormUI extends Component {
 								<section className="section">
 									<h3 className="section-head">标签</h3>
 									<div className="control">
-										<Additems name="tags" />
+										<Additems datalist={tags} name="tags" />
 									</div>
 								</section>
 								<section className="section">
 									<h3 className="section-head">媒体</h3>
-									<Addmedia className="control" name="media" />
+									<Addmedia media={media} className="control" name="media" />
 								</section>
 							</div>
 						</div>
@@ -343,6 +350,7 @@ export const ArticleForm = connect(
 	(dispatch, ownProps) => {
 		return {
 			getInfo: (id) => {
+				console.log('getinfo');
 				dispatch(ActionGet(GET_ARTICLE_INFO, '/api/article/info/' + id, 'article'))
 			},
 			submit: (formdata, callback) => {

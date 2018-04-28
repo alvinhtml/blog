@@ -128,23 +128,20 @@ class ArticleController extends Controller
 
     public function info(Request $request, $id) {
         //查询数据库中是否已经存了对应的配置
-        $datalist = Article::where('id', $id)
-            ->get();
+        $datalist = Article::where('id', $id)->with(['tags' => function($query) {
+            $query->select('id', 'name');
+        }])->get();
+
+        //$tag = $datalist->tags;
+
+
 
         $results = ['error' => 0, 'message' => '获取用户信息成功!'];
 
+        //$results['info']['tags']
         $results['info'] = $datalist->first();
 
         return response()->json($results);
     }
-
-    public function viewList(Request $request) {
-
-    }
-    public function viewInfo(Request $request) {
-
-    }
-
-
 
 }

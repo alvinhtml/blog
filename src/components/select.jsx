@@ -25,7 +25,7 @@ export class Iselect extends Component {
 		this.state = {
 			opened: false,
 			search: '',
-			value: this.props.value ? this.props.value : '',
+			value: '',
 			text: '请选择',
 			data: this.props.datalist ? this.props.datalist : []
 		}
@@ -62,6 +62,30 @@ export class Iselect extends Component {
 			})
 		}
     }
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.value) {
+			this.setState({
+				value: nextProps.value
+			})
+			if (this.props.url) {
+				FetchGet(this.props.url, {value: this.state.value}, (data) => {
+					this.setState({
+						data: data.list
+					})
+					let list = data.list
+					for (let v of list) {
+						if (this.props.value == v.id) {
+							this.setState({
+								text: v.name
+							})
+							break;
+						}
+					}
+				})
+			}
+		}
+	}
 
 	componentWillUnmount() {
 		document.removeEventListener('mouseup', this.mouseupCallback)

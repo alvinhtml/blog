@@ -16833,7 +16833,7 @@ var Iselect = exports.Iselect = function (_Component) {
 		_this.state = {
 			opened: false,
 			search: '',
-			value: _this.props.value ? _this.props.value : '',
+			value: '',
 			text: '请选择',
 			data: _this.props.datalist ? _this.props.datalist : []
 		};
@@ -16896,6 +16896,54 @@ var Iselect = exports.Iselect = function (_Component) {
 			}
 		}
 	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			var _this3 = this;
+
+			if (nextProps.value) {
+				this.setState({
+					value: nextProps.value
+				});
+				if (this.props.url) {
+					(0, _actions.FetchGet)(this.props.url, { value: this.state.value }, function (data) {
+						_this3.setState({
+							data: data.list
+						});
+						var list = data.list;
+						var _iteratorNormalCompletion2 = true;
+						var _didIteratorError2 = false;
+						var _iteratorError2 = undefined;
+
+						try {
+							for (var _iterator2 = list[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+								var v = _step2.value;
+
+								if (_this3.props.value == v.id) {
+									_this3.setState({
+										text: v.name
+									});
+									break;
+								}
+							}
+						} catch (err) {
+							_didIteratorError2 = true;
+							_iteratorError2 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion2 && _iterator2.return) {
+									_iterator2.return();
+								}
+							} finally {
+								if (_didIteratorError2) {
+									throw _iteratorError2;
+								}
+							}
+						}
+					});
+				}
+			}
+		}
+	}, {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			document.removeEventListener('mouseup', this.mouseupCallback);
@@ -16932,7 +16980,7 @@ var Iselect = exports.Iselect = function (_Component) {
 	}, {
 		key: 'searchEvent',
 		value: function searchEvent(event) {
-			var _this3 = this;
+			var _this4 = this;
 
 			var value = event.target.value;
 
@@ -16943,10 +16991,10 @@ var Iselect = exports.Iselect = function (_Component) {
 			clearTimeout(this.timeout);
 
 			this.timeout = setTimeout(function () {
-				(0, _actions.FetchGet)(_this3.props.url, {
-					search: _this3.state.search
+				(0, _actions.FetchGet)(_this4.props.url, {
+					search: _this4.state.search
 				}, function (data) {
-					_this3.setState({
+					_this4.setState({
 						data: data.list
 					});
 				});
@@ -16955,7 +17003,7 @@ var Iselect = exports.Iselect = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this4 = this;
+			var _this5 = this;
 
 			var _props = this.props,
 			    name = _props.name,
@@ -16966,7 +17014,7 @@ var Iselect = exports.Iselect = function (_Component) {
 			var options = list.map(function (v, i) {
 				return _react2.default.createElement(
 					'li',
-					{ key: i, 'data-val': v.id, onClick: _this4.selectEvent },
+					{ key: i, 'data-val': v.id, onClick: _this5.selectEvent },
 					v.name
 				);
 			});
@@ -18528,7 +18576,7 @@ var Additems = exports.Additems = function (_Component11) {
 		_this15.state = {
 			text: '',
 			isFetching: 0,
-			data: _this15.props.datalist ? _this15.props.datalist : [],
+			data: [],
 			searchData: []
 		};
 
@@ -18543,6 +18591,15 @@ var Additems = exports.Additems = function (_Component11) {
 	}
 
 	_createClass(Additems, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			if (nextProps.datalist) {
+				this.setState({
+					data: nextProps.datalist
+				});
+			}
+		}
+	}, {
 		key: 'handleChange',
 		value: function handleChange(event) {
 			var _this16 = this;
@@ -18764,6 +18821,17 @@ var Addmedia = exports.Addmedia = function (_Component13) {
 	_createClass(Addmedia, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {}
+	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			if (nextProps.media) {
+				this.setState({
+					path: [{
+						path: nextProps.media
+					}]
+				});
+			}
+		}
 	}, {
 		key: 'refCallback',
 		value: function refCallback(instance) {
@@ -40561,10 +40629,11 @@ Object.assign(Editor.prototype, {
     init: function init(mode, editor) {
 
         if (mode === 'html') {
-
             this.setHtmlEditor(editor);
+            editor.innerHTML = this.value;
         }
         if (mode === 'markdown') {
+            editor.innerHTML = this.value;
             this.setMarkdownEditor(editor);
         }
     },
@@ -59935,7 +60004,7 @@ var ArticleFormUI = function (_Component2) {
 			classify_id: 1,
 			author: '',
 			media: '',
-			tags: '',
+			tags: [],
 			abstract: '',
 			content: '这是正文',
 			markdown: '',
@@ -59980,7 +60049,7 @@ var ArticleFormUI = function (_Component2) {
 				this.setState({
 					id: id, title: title, classify_id: classify_id, author: author, media: media, tags: tags, abstract: abstract, content: content, markdown: markdown, state: state
 				});
-				this.editor.setContent(content);
+				//this.editor.setContent(content)
 			}
 		}
 	}, {
@@ -60010,6 +60079,7 @@ var ArticleFormUI = function (_Component2) {
 			};
 
 			console.log(formdata);
+
 			this.props.submit(formdata, function (data) {
 				_this3.props.history.push('/admin/article/list');
 			});
@@ -60018,7 +60088,21 @@ var ArticleFormUI = function (_Component2) {
 		key: 'render',
 		value: function render() {
 			var isFetching = this.props.isFetching;
+			var _state = this.state,
+			    state = _state.state,
+			    tags = _state.tags,
+			    media = _state.media;
 
+
+			var stateDom = state == 0 ? _react2.default.createElement(
+				'b',
+				{ className: 'color-green' },
+				'\u5DF2\u53D1\u5E03'
+			) : _react2.default.createElement(
+				'b',
+				{ className: 'color-yellow' },
+				'\u8349\u7A3F'
+			);
 
 			var tagDataList = [{
 				id: 0,
@@ -60099,11 +60183,7 @@ var ArticleFormUI = function (_Component2) {
 										_react2.default.createElement(
 											'div',
 											{ className: 'controls' },
-											_react2.default.createElement(
-												'b',
-												null,
-												'\u8349\u7A3F'
-											)
+											stateDom
 										)
 									),
 									_react2.default.createElement(
@@ -60120,7 +60200,7 @@ var ArticleFormUI = function (_Component2) {
 											_react2.default.createElement(
 												'b',
 												null,
-												'Alvin'
+												this.state.author
 											)
 										)
 									),
@@ -60164,7 +60244,7 @@ var ArticleFormUI = function (_Component2) {
 									_react2.default.createElement(
 										'div',
 										{ className: 'control' },
-										_react2.default.createElement(_common.Additems, { name: 'tags' })
+										_react2.default.createElement(_common.Additems, { datalist: tags, name: 'tags' })
 									)
 								),
 								_react2.default.createElement(
@@ -60175,7 +60255,7 @@ var ArticleFormUI = function (_Component2) {
 										{ className: 'section-head' },
 										'\u5A92\u4F53'
 									),
-									_react2.default.createElement(_common.Addmedia, { className: 'control', name: 'media' })
+									_react2.default.createElement(_common.Addmedia, { media: media, className: 'control', name: 'media' })
 								)
 							)
 						)
@@ -60196,6 +60276,7 @@ var ArticleForm = exports.ArticleForm = (0, _reactRedux.connect)(function (state
 }, function (dispatch, ownProps) {
 	return {
 		getInfo: function getInfo(id) {
+			console.log('getinfo');
 			dispatch((0, _actions.ActionGet)(_constants.GET_ARTICLE_INFO, '/api/article/info/' + id, 'article'));
 		},
 		submit: function submit(formdata, callback) {

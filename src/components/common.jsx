@@ -796,9 +796,10 @@ export class Additems extends Component {
 		this.state = {
 			text: '',
 			isFetching: 0,
-			data: this.props.datalist ? this.props.datalist : [],
+			data: [],
 			searchData: [],
 		}
+
 
 		this.timeout;
 
@@ -807,6 +808,14 @@ export class Additems extends Component {
 		this.addItemEvent = this.addItemEvent.bind(this)
 		this.addItemToList = this.addItemToList.bind(this)
 		this.removeHandle = this.removeHandle.bind(this)
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.datalist) {
+			this.setState({
+				data: nextProps.datalist
+			})
+		}
 	}
 
 	handleChange(event) {
@@ -970,6 +979,16 @@ export class Addmedia extends Component {
 	componentWillMount() {
 
     }
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.media) {
+			this.setState({
+				path: [{
+					path: nextProps.media
+				}]
+			})
+		}
+	}
 
 	refCallback(instance) {
 		this.mediaListModal = instance
