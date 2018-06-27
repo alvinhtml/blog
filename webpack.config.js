@@ -47,10 +47,10 @@ module.exports = {
         extensions: ['.js', '.jsx'],
     },
     plugins: [
-        // new webpack.optimize.CommonsChunkPlugin({
-        //     name: 'init',
-        //     filename: 'init.min.js',
-        // }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'init',
+            filename: 'init.min.js',
+        }),
         new ExtractTextPlugin({
             filename: '../css/style.min.css'
         })

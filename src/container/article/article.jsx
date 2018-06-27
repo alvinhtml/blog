@@ -7,7 +7,7 @@ import Editor from '../../tools/editor.js'
 import Validator from '../../tools/validator.js'
 
 //引入下拉菜单组件
-import {Dropmenu, Droptool} from '../../components/dropdown'
+import {Droptool, Dropmenu} from '../../components/dropdown'
 
 //引入弹出提示组件
 import {Popup} from '../../components/popup'
@@ -99,8 +99,10 @@ class ArticleListUI extends Component {
 				<div className="list-box">
 					<div id="listHeader" className="olist-header clear">
                         <div className="olist-header-l">
-                            <Droptool icon="icon-wrench" bgColor="bg-red">
-								<Dropmenu options={tools} clickEvent={toolsClickEvent} />
+							<Droptool className="dropdown tools bg-red" icon="icon-wrench" onChange={toolsClickEvent}>
+								<ul className="menu drop">
+									<li data-value="0"><a><i className="icon-close"></i>批量删除</a></li>
+								</ul>
                             </Droptool>
                             <Searcher getList={getList} updateConfigs={updateConfigs} configs={configs}></Searcher>
                         </div>
@@ -196,8 +198,8 @@ class ArticleFormUI extends Component {
 			media: '',
 			tags: [],
 			abstract: '',
-			content: '这是正文',
-			markdown: '',
+			content: '',
+			markdown: 'html',
 			state: ''
 		}
 
@@ -213,8 +215,8 @@ class ArticleFormUI extends Component {
     }
 
 	componentDidMount() {
-		this.editor = Editor('editorInitBox', {
-			mode: 'html'
+		this.editor = Editor('ArticleEditor', {
+			mode: this.state.markdown
 		})
 	}
 
@@ -281,7 +283,7 @@ class ArticleFormUI extends Component {
 			name: '标签四'
 		}]
 
-
+		//id="editorInitBox"
 		return (
 			<div className="main-box">
 				<div className="page-bar clear">
@@ -296,7 +298,10 @@ class ArticleFormUI extends Component {
 								<div className="row article-title-size">
 									<label className="input-prepend labled inline-span12"><input type="text" name="title" value={this.state.title} onChange={this.handleChange} placeholder="请输入文章标题" /><span className="add-on"><i className="icon-notebook"></i></span></label>
 								</div>
-								<div className="row" id="editorInitBox"></div>
+
+								<div className="row">
+									<div id="ArticleEditor" style={{width: '100%'}}></div>
+								</div>
 							</div>
 							<div className="col-span3 article-sidebar">
 								<section className="section">

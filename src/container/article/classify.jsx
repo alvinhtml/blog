@@ -6,7 +6,7 @@ import Query from '../../tools/query.js'
 import Validator from '../../tools/validator.js'
 
 //引入下拉菜单组件
-import {Dropmenu, Droptool} from '../../components/dropdown'
+import {Droptool} from '../../components/dropdown'
 
 //引入弹出提示组件
 import {Popup} from '../../components/popup'
@@ -94,8 +94,10 @@ class ClassifyListUI extends Component {
 				<div className="list-box">
 					<div id="listHeader" className="olist-header clear">
                         <div className="olist-header-l">
-                            <Droptool icon="icon-wrench" bgColor="bg-red">
-								<Dropmenu options={tools} clickEvent={toolsClickEvent} />
+							<Droptool className="dropdown tools bg-red" icon="icon-wrench" onChange={toolsClickEvent}>
+								<ul className="menu drop">
+									<li data-value="0"><a><i className="icon-close"></i>批量删除</a></li>
+								</ul>
                             </Droptool>
                             <Searcher getList={getList} updateConfigs={updateConfigs} configs={configs}></Searcher>
                         </div>

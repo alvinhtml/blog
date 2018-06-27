@@ -12,11 +12,17 @@ import {
 	connect
 } from 'react-redux';
 
-
+//引入下拉菜单组件
+import {Dropmenu} from '../../components/dropdown'
 
 export class HomeUI extends Component {
 
 	render() {
+
+		let dropdownChange = (value, text) => {
+			console.log("dropdown onChange : ", value, text)
+		}
+
 		return (
 			<div className="main-box">
 				<div className="layout-row">
@@ -284,6 +290,59 @@ export class HomeUI extends Component {
 						<div className="row margin">
 	                        <textarea className="textarea inline-span8" name="textarea" defaultValue='文本'></textarea>
 	                    </div>
+	                </section>
+					<section className="section">
+	                    <h2 className="section-head">菜单</h2>
+	                    <div className="row">
+							<div className="col-span3">
+								<ul className="menu">
+									<li><a href=""><i className="icon-user"></i>My Profile</a></li>
+									<li><a href=""><i className="icon-calendar"></i>My Calendar</a></li>
+									<li><a href=""><i className="icon-envelope-open"></i>My Inbox<span className="badge bg-red">3</span></a></li>
+									<li><a href=""><i className="icon-rocket"></i>My Tasks<span className="badge bg-teal">7</span></a></li>
+									<li className="divider"> </li>
+									<li><a href=""><i className="icon-lock"></i>Lock Screen</a></li>
+									<li><a href=""><i className="icon-key"></i>Log Out</a></li>
+								</ul>
+							</div>
+							<div className="col-span3">
+								<ul className="menu white">
+									<li><a href=""><i className="icon-user"></i>My Profile</a></li>
+									<li><a href=""><i className="icon-calendar"></i>My Calendar</a></li>
+									<li><a href=""><i className="icon-envelope-open"></i>My Inbox<span className="badge bg-red">3</span></a></li>
+									<li><a href=""><i className="icon-rocket"></i>My Tasks<span className="badge bg-teal">7</span></a></li>
+									<li className="divider"> </li>
+									<li><a href=""><i className="icon-lock"></i>Lock Screen</a></li>
+									<li><a href=""><i className="icon-key"></i>Log Out</a></li>
+								</ul>
+							</div>
+							<div className="col-span3">
+								<br />
+								<ul className="menu drop">
+									<li><a href=""><i className="icon-user"></i>My Profile</a></li>
+									<li><a href=""><i className="icon-calendar"></i>My Calendar</a></li>
+								</ul>
+								<br />
+								<ul className="menu white drop">
+									<li><a href=""><i className="icon-user"></i>My Profile</a></li>
+									<li><a href=""><i className="icon-calendar"></i>My Calendar</a></li>
+								</ul>
+							</div>
+						</div>
+	                </section>
+	                <section className="section">
+	                    <h2 className="section-head">下拉选项</h2>
+	                    <h3>Dropdown1</h3>
+						<div className="row">
+							<Dropmenu name="phone" value="iphone" text="iphone" onChange={dropdownChange}>
+								<ul className="menu white">
+									<li data-value="iphone"><a>iphone</a></li>
+									<li data-value="ipad"><a>ipad</a></li>
+									<li data-value="Macbook Pro"><a>Macbook Pro</a></li>
+									<li data-value="windows phone"><a>windows phone</a></li>
+								</ul>
+							</Dropmenu>
+						</div>
 	                </section>
 	                <section className="section">
 	                    <h2 className="section-head">Message</h2>

@@ -81,6 +81,7 @@ $router->get('/admin/comment/form', 'HomeController@index');
 */
 
 $router->post('/api/admin/login', 'UserController@login');
+$router->get('/api/admin/logout', ['middleware' => 'auth', 'uses' => 'UserController@logout']);
 $router->get('/api/authinfo', ['middleware' => 'auth', 'uses' => 'UserController@authinfo']);
 
 //user

@@ -236,102 +236,76 @@ export class Searcher extends Component {
 }
 
 /**
- * 列表搜索组件
+ * 筛选
  */
-export class TermSearcher extends Component {
+export class Filtrate extends Component {
+ 	constructor(props) {
+ 		super(props)
 
-	constructor(props) {
-		super(props)
+ 		//设置 initial state
+ 		this.state = {
+ 			opened: false,
+			text: '全部',
+			total: 0,
+			color: 'blue'
+ 		}
 
-		//ES6 类中函数必须手动绑定
-		this.inputEnterEvent = this.inputEnterEvent.bind(this)
-		this.searchSubmitEvent = this.searchSubmitEvent.bind(this)
-		this.openTaggleEvent = this.openTaggleEvent.bind(this)
-		this.handleChange = this.handleChange.bind(this)
-
-		this.state = {
-			opened: false,
-			starch: ''
-		}
+ 		//ES6 类中函数必须手动绑定
+ 		this.handleClick = this.handleClick.bind(this)
+ 		this.mouseupCallback = this.mouseupCallback.bind(this)
+		document.addEventListener('mouseup', this.mouseupCallback)
+ 	}
+	componentWillUnmount() {
+		document.removeEventListener('mouseup', this.mouseupCallback)
 	}
 
-	openTaggleEvent() {
+	mouseupCallback(e) {
 		this.setState({
-			opened: !this.state.opened
+			opened: false
 		})
 	}
 
-	handleChange(e) {
-		console.log(e.target.value)
+ 	handleClick(event) {
+ 		this.setState({
+ 			opened: !this.state.opened
+ 		})
+ 	}
+
+	clickEvent(value, text, total, color) {
 		this.setState({
-			search: e.target.value
+			opend: true,
+			text,
+			total,
+			color
 		})
-	}
-
-    inputEnterEvent(event) {
-        if(event.charCode === 13){
-			this.searchSubmitEvent(event)
-        }
-    }
-
-    searchSubmitEvent(event) {
-		console.log("search", this.state)
-		this.props.updateConfigs({
-			...this.props.configs,
-			search: this.state.value
-		}, true)
 		this.props.getList({
-			search: this.state.value
-		})
-		this.setState({
-			opened: false,
-			search: this.state.value
-		})
-    }
+			page: 1,
 
-	render() {
+		})
+	}
 
+ 	render() {
+ 		const totalDom = this.state.text !== '全部' ? <span className={'badge ' + this.state.color}>{this.state.total}</span> : ''
+
+		const lists = this.props.filtrateData.map((v, i) => {
+			return <li key={i} data-value="online" onClick={() => this.clickEvent(v.value, v.text, v.total, v.color)}><a>{v.text} <span className="badge blue">{v.total}</span></a></li>
+		})
 
 		return (
-			<div className="tools olist-search">
-				<input type="text" className="form-control" onChange={this.handleChange} placeholder="搜索" value={this.state.search} onKeyPress={this.inputEnterEvent} />
-				<div className="search-toggle" onClick={this.openTaggleEvent}><i className="fa fa-angle-down"></i></div>
-				<span className="button blue" onClick={this.searchSubmitEvent} type="button"><i className="icon-magnifier"></i></span>
-				<div className="search-where ilinks" style={{display : this.state.opened ? "block" : "none"}}>
-					<span className="search-close animates rotate" onClick={this.openTaggleEvent}>×</span>
-					<dl className="search-where-line clear">
-						<dt>搜索模式：</dt>
-						<dd className="animates active"><span>精确搜索</span></dd>
-						<dd className="animates"><span>模糊搜索</span></dd>
-					</dl>
-					<dl className="search-where-line clear">
-						<dt>在线状态：</dt>
-						<dd className="animates"><span>全部</span><em className="color-blue">225</em></dd>
-						<dd className="animates active"><span>在线</span><em className="color-green">235</em></dd>
-						<dd className="animates"><span>离线</span><em className="color-blue">44</em></dd>
-					</dl>
-					<dl className="search-where-line clear">
-						<dt>告诉状态：</dt>
-						<dd className="animates"><span>全部</span><em className="color-blue">436</em></dd>
-						<dd className="animates"><span>告警</span><em className="color-red">34</em></dd>
-						<dd className="animates active"><span>正常</span><em className="color-green">235</em></dd>
-					</dl>
-					<dl className="search-where-line clear">
-						<dt>客户端：</dt>
-						<dd className="animates active"><span>全部</span><em className="color-blue">7023</em></dd>
-						<dd className="animates"><span>已安装</span><em className="color-green">6087</em></dd>
-						<dd className="animates"><span>未安装</span><em className="color-blue">0</em></dd>
-						<dd className="animates"><span>客户端在线</span><em className="color-blue">2446</em></dd>
-						<dd className="animates"><span>客户端离线</span><em className="color-blue">17</em></dd>
-					</dl>
-					<div className="search-where-footer spaced">
-						<button onClick={this.searchSubmitEvent} className="button teal">含条件搜索</button><button onClick={this.searchSubmitEvent} className="button blue">不含条件搜索</button>
-					</div>
+ 			<div className={this.state.opened ? 'dropdown list-filtrate open' : 'dropdown list-filtrate'}>
+ 				<div className="dropdown-toggler" onClick={this.handleClick}>
+					<span className="filtrate-label">{this.props.title} <i className="fa fa-angle-down"></i></span>
+					<span className="filtrate-text">{this.state.text} {totalDom}</span>
 				</div>
-			</div>
-        )
-	}
-}
+ 				<div className="dropdown-main dropdown-dark dropdown-menu">
+					<ul>
+						{lists}
+                    </ul>
+ 				</div>
+ 			</div>
+ 		)
+ 	}
+ }
 
 
 
@@ -1015,6 +989,7 @@ export class Addmedia extends Component {
 			path: []
 		})
 	}
+
 	complete(data) {
 		this.mediaListModal.hide()
 

@@ -67,6 +67,12 @@ class UserController extends Controller
 
         $request->session()->flush();
 
+        //返回退出成功后的 json 信息
+        $result = ['error' => 0, 'message' => '退出登录成功!'];
+        $result['logined'] = false;
+        $result['renew_csrf_token'] = 1;
+        return response()->json($result);
+
     }
 
     public function authinfo(Request $request) {
@@ -75,8 +81,8 @@ class UserController extends Controller
 
         $result = ['error' => 0, 'message' => '获取登录信息成功!'];
         $result['logined'] = true;
-        $result['name'] = $usersession['name'];
-        $result['email'] = $usersession['email'];
+        $result['adminname'] = $usersession['name'];
+        $result['adminemail'] = $usersession['email'];
 
         return response()->json($result);
 
