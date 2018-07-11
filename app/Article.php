@@ -14,7 +14,7 @@ class Article extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'classify_id', 'author', 'media', 'abstract', 'content', 'markdown', 'favor', 'year', 'month', 'day', 'state'
+        'title', 'classify_id', 'author', 'media', 'abstract', 'content', 'editmode', 'favor', 'year', 'month', 'day', 'state'
     ];
 
     public function tags()

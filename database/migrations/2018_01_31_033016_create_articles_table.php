@@ -22,7 +22,7 @@ class CreateArticlesTable extends Migration
             $table->string('media', 2000)->default('')->comment("媒体联接");
             $table->string('abstract', 1000)->default('')->comment("摘要");
             $table->text('content')->comment("内容");
-            $table->integer('markdown')->comment("md标识");
+            $table->string('editmode')->comment("编辑模式");
             $table->integer('favor')->comment("赞同");
             $table->integer('year')->index()->comment("年");
             $table->integer('month')->index()->comment("月");

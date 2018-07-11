@@ -199,7 +199,7 @@ class ArticleFormUI extends Component {
 			tags: [],
 			abstract: '',
 			content: '',
-			markdown: 'html',
+			editmode: 'html',
 			state: ''
 		}
 
@@ -216,17 +216,17 @@ class ArticleFormUI extends Component {
 
 	componentDidMount() {
 		this.editor = Editor('ArticleEditor', {
-			mode: this.state.markdown
+			mode: this.state.editmode
 		})
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.info) {
-			const {id, title, classify_id, author, media, tags, abstract, content, markdown, state} = nextProps.info
+			const {id, title, classify_id, author, media, tags, abstract, content, editmode, state} = nextProps.info
 			this.setState({
-		      id, title, classify_id, author, media, tags, abstract, content, markdown, state
+		      id, title, classify_id, author, media, tags, abstract, content, editmode, state
 		    })
-			//this.editor.setContent(content)
+			this.editor.setContent(content)
 		}
 	}
 

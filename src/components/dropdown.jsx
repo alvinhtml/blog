@@ -166,7 +166,7 @@ class Dropdown extends Component {
 		this.instance.classList.add('hidden')
 		this.instance.classList.remove('visible')
 		setTimeout(()=>{
-			this.instance.style.display = 'none'
+			if (this.instance) this.instance.style.display = 'none'
 		}, 300)
 		this.opend = false
 	}
@@ -175,12 +175,9 @@ class Dropdown extends Component {
 	show() {
 		this.instance.style.display = 'block'
 		setTimeout(()=>{
-			this.instance.classList.add('visible')
+			if (this.instance) this.instance.classList.add('visible')
 		}, 5)
 		this.opend = true
-		// setTimeout(()=>{
-		// 	this.instance.classList.remove('hidden')
-		// }, 300)
 	}
 
 	refCallback(instance) {
