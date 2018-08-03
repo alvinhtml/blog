@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="alvin.yang">
+<title>Canvas基础教程（一）：学习前的准备</title>
+<style>
+body { background-color: #000; font: 12px/1.8 'Microsoft YaHei', Arial, "\5b8b\4f53", sans-serif; text-align:center; padding:0; margin:0;  color:#fff;}
+#canvas { background-color:#fff; position:absolute; left:50%; top:50%; margin:-260px auto auto -400px;}
+a { color:#fff;}
+p { width:100%; position:absolute; top:50%; margin-top:260px;}
+</style>
+</head>
+<body>
+<p class=""><a href="http://www.alvinhtml.com" target="_blank">查看更多教程</a></p>
+<canvas id="canvas" width="800" height="520">
+	<p>你浏览器不支持Canvas画布元素,请用IE10+，Chrome 或 Firefox</p>
+</canvas>
+<script>
+	var canvas = document.getElementById("canvas"); //通过id获取canvas元素对象
+	var conText = canvas.getContext("2d"); //通过canvas获取上下文,这里我们选择2d
+
+	conText.font ="60px Arial ";  //设置字体为60像素，字体为 Arial
+    conText.fillText("Hello Canvas!", 100, 100);  //显示文字
+</script>
+</body>
+</html>

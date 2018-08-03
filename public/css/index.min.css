@@ -195,6 +195,12 @@ a:hover {
 .article-content {
     width: 100%;
 }
+
+.article-content img {
+    max-width: 100%;
+}
+
+
 .article-favor {
     text-align: center;
     margin: 2em;

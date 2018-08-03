@@ -56,7 +56,7 @@ class ArticleController extends Controller
                 ->orderBy($order[0], $order[1]);
         }
 
-        $datalist = $datalist->get();
+        $datalist = $datalist->select('id', 'title', 'classify_id', 'author', 'media', 'abstract', 'editmode', 'favor', 'year', 'month', 'day', 'state')->get();
 
         $list = [];
         $datalist->each(function ($item) use (&$list) {
@@ -100,7 +100,7 @@ class ArticleController extends Controller
         $data->media = $request->input('media');
         $data->abstract = $request->input('abstract', '');
         $data->content = $request->input('content');
-        $data->markdown = $request->input('markdown');
+        $data->editmode = $request->input('editmode');
         $data->state = $request->input('state', 1);
 
         $data->save();

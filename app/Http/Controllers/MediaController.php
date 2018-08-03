@@ -87,7 +87,7 @@ class MediaController extends Controller
             //保存存文件
             $filePath = 'public/uploads/'.date('Y').'/'.date('m');
             $fileName = 'v1-'.strtolower(str_random(32)).'.'.$extension;
-            $file = $requestFile->move($_SERVER['DOCUMENT_ROOT'].$filePath, $fileName);
+            $file = $requestFile->move($_SERVER['DOCUMENT_ROOT']."/".$filePath, $fileName);
 
 
             //图片存库

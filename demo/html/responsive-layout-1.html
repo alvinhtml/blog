@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="alvin.yang">
+<meta name=“viewport” content=“width=device-width; initial-scale=1.0”>
+<title>响应式布局</title>
+<style>
+body { background-color: #000; font: 12px/1.8 'Microsoft YaHei', Arial, "\5b8b\4f53", sans-serif; text-align:center; padding:0; margin:0;  color:#000;}
+.clear { *zoom: 1; }
+.clear:before, .clear:after { display: table; line-height: 0; content: ""; }
+.clear:after { clear: both; }
+a { color:#fff;}
+
+header,footer,section {margin:0;background:#CCC; text-align:center; font-size:2em; padding:1em 0;}
+header,footer { width:100%; background:#F36;}
+.left,.right { width:20%; height:400px; background:#963;}
+.center { width:60%; height:400px; background:#66C;}
+@media screen and (min-width:1280px){
+	.left,.right,.center { float:left;}
+}
+@media screen and (min-width:768px) and (max-width:1280px) {
+	.left { width:28%; float:left;}
+	.right { display:none;}
+	.center { width:72%; float:left;}
+}
+@media screen and (max-width:768px) {
+	.left,.right,.center { width:100%; float:left; min-width:360px;}
+	header,footer {min-width:360px;}
+}
+</style>
+</head>
+<body>
+<header>Header</header>
+	<div class="main clear">
+    	<section class="left">sidebarLeft</section>
+        <section class="center">Main</section>
+        <section class="right">sidebarRight</section>
+    </div>
+<footer>Footer <a href="http://www.alvinhtml.com" target="_blank">查看更多教程</a></footer>
+</body>
+</html>

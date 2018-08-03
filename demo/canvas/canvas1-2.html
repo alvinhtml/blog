@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="alvin.yang">
+<title>Canvas基础教程（二）：画布上的文字</title>
+<style>
+body { background-color: #000; font: 12px/1.8 'Microsoft YaHei', Arial, "\5b8b\4f53", sans-serif; text-align:center; padding:0; margin:0;  color:#fff;}
+#canvas { background-color:#fff; position:absolute; left:50%; top:50%; margin:-260px auto auto -400px;}
+a { color:#fff;}
+p { width:100%; position:absolute; top:50%; margin-top:260px;}
+</style>
+</head>
+<body>
+<p class=""><a href="http://www.xuehtml.com" target="_blank">查看更多教程</a></p>
+<canvas id="canvas" width="800" height="520">
+	<p>你浏览器不支持Canvas画布元素,请用IE10+，Chrome 或 Firefox</p>
+</canvas>
+<script>
+	var canvas = document.getElementById("canvas");  
+	var conText = canvas.getContext("2d");
+
+	var title = "程序员";
+	var song  ='在那山的这边海的那边有一群程序员;'
+				+'他们老实又腼腆;'
+				+'他们聪明但没钱;'
+				+'他们一天到晚坐在那里熬夜写软件;'
+				+'饿了就咬一口方便面'
+				+'哦苦命的程序员，哦苦命的程序员!;'
+				+'只要一改需求他们就要重新搞一遍;'
+				+'但是期限只剩下最后两天';
+
+	//把整首诗按“;”拆分，存到数组song_arr中
+	var song_arr = song.split(";"); 
+
+	conText.font = "28px Microsoft YaHei";
+	conText.textAlign="center"; // 左右居中
+	conText.textBaseline="maddle"; // 上下居中
+	conText.fillStyle = "#000000"
+	conText.fillText(title, 400, 100); //绘制标题
+
+	conText.font = "16px Microsoft YaHei"; //改变字号为16px
+	conText.fillStyle = "#444"
+
+	var i = 0;
+	//然每隔1秒绘制一句歌词
+	window.setInterval(function(){
+		if(i < song_arr.length){
+			conText.fillText(song_arr[i], 400, 150+i*40);
+		    i++;
+		}
+	},1000)
+</script>
+</body>
+</html>

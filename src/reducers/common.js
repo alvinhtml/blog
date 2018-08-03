@@ -14,8 +14,8 @@ const commonInitialState = {
     isFetching: 0,
     error: 0,
     version: '10.0.106',
-    logo: 'http://project.xuehtml.com/react-redux/src/images/login-logo.png',
-    logoname: "画方科技",
+    logo: '/public/images/photo.jpg',
+    logoname: "alvin's blog",
     message: '',
     classifyList: [{
         id: 0,

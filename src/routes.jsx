@@ -12,6 +12,7 @@ import {ClassifyList, ClassifyForm} from './container/article/classify'
 import {ArticleList, ArticleForm} from './container/article/article'
 import {CommentList, CommentForm} from './container/article/comment'
 import {MediaList, MediaUpload} from './container/media/media'
+import {Setting} from './container/common/setting'
 // import {TermView} from './container/company/termview'
 // import {OuList, OuForm} from './container/company/ou'
 
@@ -72,6 +73,7 @@ class Manage extends Component {
 					<Route path="/admin/comment/form/:id" component={CommentForm}/>
 					<Route path="/admin/comment/form" component={CommentForm}/>
 					<Route path="/admin/comment" component={CommentList}/>
+					<Route path="/admin/setting" component={Setting}/>
                 </Switch>
             </div>
         )

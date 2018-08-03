@@ -21,7 +21,7 @@ import {Radios, Radio} from '../../components/radios'
 import {Tabs, Tab} from '../../components/tabs'
 
 //引入组件
-import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, Additems, Addmedia} from '../../components/common'
+import {Crumbs, PageList, Searcher, Theader, Tbodyer, FetchButton, Additems, Addmedia, InsetMedio} from '../../components/common'
 
 //引入action类型常量名
 import {
@@ -107,8 +107,8 @@ class ArticleListUI extends Component {
                             <Searcher getList={getList} updateConfigs={updateConfigs} configs={configs}></Searcher>
                         </div>
                         <div className="olist-header-r">
-                            <Link data-content="刷新" to="/article/list"  className="tools bg-teal ititle"><i className="icon-refresh"></i></Link>
-                            <Link data-content="新建" to="/article/form" className="tools bg-teal ititle"><i className="icon-plus"></i></Link>
+                            <Link data-content="刷新" to="/admin/article/list"  className="tools bg-teal ititle"><i className="icon-refresh"></i></Link>
+                            <Link data-content="新建" to="/admin/article/form" className="tools bg-teal ititle"><i className="icon-plus"></i></Link>
                         </div>
                     </div>
 					<div id="listTable" className="olist-main">
@@ -206,6 +206,8 @@ class ArticleFormUI extends Component {
 		//ES6 类中函数必须手动绑定
 		this.handleChange = this.handleChange.bind(this)
 		this.submitEvent = this.submitEvent.bind(this)
+		this.refCallback = this.refCallback.bind(this)
+		this.insetPicture = this.insetPicture.bind(this)
 	}
 
 	componentWillMount() {
@@ -217,6 +219,10 @@ class ArticleFormUI extends Component {
 	componentDidMount() {
 		this.editor = Editor('ArticleEditor', {
 			mode: this.state.editmode
+		})
+		this.editor.addUpImgCallback(() => {
+			console.log('upimg - 3', this.insetMedior.open)
+			this.insetMedior.open()
 		})
 	}
 
@@ -250,14 +256,20 @@ class ArticleFormUI extends Component {
 			classify_id: forms.classify_id.value,
 			tags: forms.tags.value,
 			media: forms.media.value,
-			markdown: this.editor.getMode(),
+			editmode: this.editor.getMode(),
 		}
-
-		console.log(formdata)
 
 		this.props.submit(formdata, (data) => {
 			this.props.history.push('/admin/article/list')
 		})
+	}
+
+	refCallback(insetMedior) {
+		this.insetMedior = insetMedior
+	}
+
+	insetPicture(data) {
+		this.editor.insetPicture(data)
 	}
 
 	render() {
@@ -269,19 +281,9 @@ class ArticleFormUI extends Component {
 
 		let stateDom = state == 0 ? <b className="color-green">已发布</b> : <b className="color-yellow">草稿</b>
 
-		const tagDataList = [{
-			id: 0,
-			name: '标签一'
-		},{
-			id: 1,
-			name: '标签二'
-		},{
-			id: 2,
-			name: '标签三'
-		},{
-			id: 3,
-			name: '标签四'
-		}]
+
+
+		console.log('ref')
 
 		//id="editorInitBox"
 		return (
@@ -301,6 +303,7 @@ class ArticleFormUI extends Component {
 
 								<div className="row">
 									<div id="ArticleEditor" style={{width: '100%'}}></div>
+									<InsetMedio ref={this.refCallback} selectEvent={this.insetPicture}></InsetMedio>
 								</div>
 							</div>
 							<div className="col-span3 article-sidebar">
@@ -355,7 +358,6 @@ export const ArticleForm = connect(
 	(dispatch, ownProps) => {
 		return {
 			getInfo: (id) => {
-				console.log('getinfo');
 				dispatch(ActionGet(GET_ARTICLE_INFO, '/api/article/info/' + id, 'article'))
 			},
 			submit: (formdata, callback) => {

@@ -340,7 +340,7 @@ export const UserForm = connect(
 	},
 	(dispatch, ownProps) => {
 		return {
-			getUserInfo: (id) => {
+			getInfo: (id) => {
 				dispatch(ActionGet(GET_USER_INFO, '/api/user/info/' + id, 'user'))
 			},
 			submit: (formdata, callback) => {

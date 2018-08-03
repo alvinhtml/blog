@@ -47,19 +47,29 @@ class UserController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
 
-        $user = User::where('password',app('hash')->make($password))->orWhere('email', $email)->first(); // type > 0
+        $user = User::where('email', $email)->first();
 
-        if ( !empty($user) ) {
-            $request->session()->regenerate();
-            $request->session()->put('name', $user->name);
-            $request->session()->put('email', $user->email);
-            $token = $request->session()->get('_token');
-            User::where('email', $email)->update(['remember_token' => $token]);
-            $result = ['error' => 0, 'message' => '登录成功!'];
-            $result['logined'] = true;
-            $result['adminname'] = $user->name;
-            $result['adminemail'] = $user->email;
+        if (empty($user)) {
+            $result = ['error' => 100, 'message' => '用户名不存在!'];
+            $result['logined'] = false;
             return response()->json($result);
+        } else {
+            if (app('hash')->check($password, $user->password)) {
+                $request->session()->regenerate();
+                $request->session()->put('name', $user->name);
+                $request->session()->put('email', $user->email);
+                $token = $request->session()->get('_token');
+                User::where('email', $email)->update(['remember_token' => $token]);
+                $result = ['error' => 0, 'message' => '登录成功!'];
+                $result['logined'] = true;
+                $result['adminname'] = $user->name;
+                $result['adminemail'] = $user->email;
+                return response()->json($result);
+            } else {
+                $result = ['error' => 100, 'message' => '您输入的密码错误，请重新输入!'];
+                $result['logined'] = false;
+                return response()->json($result);
+            }
         }
     }
 

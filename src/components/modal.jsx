@@ -33,9 +33,12 @@ export class Modal extends Component {
 
 		this.modalbox.className += " visible"
 		this.dimmer.className += " visible"
+
+		console.log("show dimmer", this.dimmer);
 	}
 
 	hide() {
+		console.log("this.dimmer",this.dimmer)
 		this.modalbox.className = this.props.className + " modal animate"
 		this.dimmer.className = "dimmer"
 		setTimeout(()=>{

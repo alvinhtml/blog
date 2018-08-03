@@ -1,0 +1,54 @@
+<h2>Mac OS平台下面配置sz和rz命令</h2>
+<p>使用 mac 的开发人员，经常会用到lrzsz sz rz命令，但是 mac 自带的终端是不支持lrzsz的，因此需要下载安装iterm2，iterm2 是 mac 上一个非常好用的终端工具，下载地址：</p>
+<p>iTerm2: <a href="https://www.iterm2.com/downloads.html" target="_blank">https://www.iterm2.com/downloads.html</a></p>
+<p>当然你也可以直接使用 Homebrew 进行安装：</p>
+<pre><code class="cmd">brew cask install iterm2</code></pre>
+<p>如果你的 mac 还没有安装 homebrew，请先执行以下命令安装 <a href="https://brew.sh/index_zh-cn" target="_blank">homebrew</a>:</p>
+<pre><code class="cmd">/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</code></pre>
+<h3>安装lrzsz</h3>
+<p>lrzsz 软件包可以让我们实现在命令行中上传和下载文件，轻敲 rz 就可以弹出文件框让我们选择需要上传的文件，另一个命令 sz 也可以很方便的从服务器下载文件到客户端，使用 sz rz 需要先安装 lrzsz。</p>
+<p>这里使用 homebrew 进行安装，执行如下命令:</p>
+<pre><code class="cmd">brew install lrzsz</code></pre>
+<p>安装成功后显示如下：</p>
+<p>这个时候，虽然 lrzsz 安装成功了，但直接执行 rz 会出现卡死现象，解决这个问题还需要安装 iterm2-zmodem。</p>
+<h3>安装 iterm2-zmodem</h3>
+<p>iterm2-zmodem 可以通过 github 下载，<a href="https://github.com/mmastrac/iterm2-zmodem" target="_blank">mmastrac/iterm2-zmodem</a>，下载后将 iterm2-recv-zmodem.sh 和 iterm2-send-zmodem.sh copy 到 /usr/local/bin文件夹中。也可以通过 wget 命令获取。</p>
+<pre><code class="cmd">sudo wget https://raw.github.com/mmastrac/iterm2-zmodem/master/iterm2-send-zmodem.sh
+sudo wget https://raw.github.com/mmastrac/iterm2-zmodem/master/iterm2-recv-zmodem.sh</code></pre>
+<p>下载完成后，copy 到 /usr/local/bin/ 目录下：</p>
+<pre><code class="cmd">sudo mv iterm2-* /usr/local/bin/</code></pre>
+<p>设置刚刚移动的文件可执行权限</p>
+<pre><code class="cmd">sudo chmod 777 /usr/local/bin/iterm2-*</code></pre>
+<h3>给iTerm2添加触发器</h3>
+<p>接下来还需要最后一步，给iTerm2添加触发器，打开iTerm2，在状态栏点击 Profiles -> Open Profiles ->defalut（Profiles Name） -> Edit Profiles -> Adcanced -> Triggers -> Edit，打开后如下图：</p>
+<p>将以下参数填入 Triggers 下的选项</p>
+
+<table>
+    <thead>
+        <tr>
+            <th align="left">Regular Expression</th>
+            <th align="left">Action</th>
+            <th align="left">Parameters</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="left">\*\*B0100</td>
+            <td align="left">Run Silent Coprocess</td>
+            <td align="left">/usr/local/bin/iterm2-send-zmodem.sh</td>
+        </tr>
+        <tr>
+            <td align="left">\*\*B00000000000000</td>
+            <td align="left">Run Silent Coprocess</td>
+            <td align="left">/usr/local/bin/iterm2-recv-zmodem.sh</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>完成后，重启iTerm 2 ，就可以愉快的使用lszrz了。</p>
+<blockquote class="mui">
+    <ul class="mui">
+        <li>sz：将选定的文件发送（send）到本地机器</li>
+        <li>rz：运行该命令会弹出一个文件选择窗口，从本地选择文件上传到Linux服务器</li>
+    </ul>
+</blockquote>

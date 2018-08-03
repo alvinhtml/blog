@@ -38,7 +38,8 @@ class LoginUI extends Component {
 			<div className="container">
                 <div className="login">
                     <div className="logo">
-                        <img src={logo} alt={logoname} />
+                        <span><img src={logo} alt={logoname} /></span>
+						<div><b>Alvin's</b> Blog</div>
                     </div>
                     {
                         (error === 0 || error === 1) ? (

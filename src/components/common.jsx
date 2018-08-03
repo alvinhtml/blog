@@ -1040,3 +1040,79 @@ export class Addmedia extends Component {
         );
     }
 }
+
+
+/**
+ * InsetMedio
+ */
+export class InsetMedio extends Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			path: [], // 已上传文件
+			isLoading: false
+		}
+
+		this.timeout;
+
+		//ES6 类中函数必须手动绑定
+		this.refCallback = this.refCallback.bind(this)
+		this.selectEvent = this.selectEvent.bind(this)
+	}
+
+	componentWillMount() {
+
+    }
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.media) {
+			this.setState({
+				path: [{
+					path: nextProps.media
+				}]
+			})
+		}
+	}
+
+	refCallback(instance) {
+		this.mediaListModal = instance
+	}
+
+	selectEvent(data){
+		console.log(data);
+		this.mediaListModal.hide()
+
+		let path = this.state.path
+
+		this.props.selectEvent({
+			id: data.id,
+			path: '/' + data.path + '/' + data.name
+		})
+	}
+
+	open() {
+		this.mediaListModal.show()
+	}
+
+	complete(data) {
+
+	}
+
+	render() {
+        return (
+			<div className="editor-media">
+				<Modal className="add-media-modal" ref={this.refCallback} id="insetMediaModal">
+					<Tabs className="tabs add-media-tabs" defaultMain="1">
+						<Tab toggler="添加媒体">
+							<Upload complete={this.complete} />
+						</Tab>
+						<Tab toggler="选择媒体">
+							<MediaSelect selectEvent={this.selectEvent} />
+						</Tab>
+					</Tabs>
+				</Modal>
+			</div>
+        );
+    }
+}

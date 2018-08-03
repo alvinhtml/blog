@@ -50,9 +50,9 @@
                     <input id="article_id" type="hidden" name="article_id" value="{{ $article->id }}" />
                     <input id="commentId" type="hidden" name="comment_id" value="" />
                     <div class="row control">
-                        <label class="input-prepend inline-span4"><input type="text" name="name" placeholder="名称" /><span class="add-on"><i class="icon-user"></i></span></label>
-                        <label class="input-prepend inline-span4"><input type="text" name="email" placeholder="邮箱" /><span class="add-on"><i class="icon-envelope"></i></span></label>
-                        <label class="input-prepend inline-span4"><input type="text" name="url" placeholder="网址" /><span class="add-on"><i class="icon-globe"></i></span></label>
+                        <label class="input-prepend inline-span4"><input type="text" name="user-comment-name" placeholder="名称" /><span class="add-on"><i class="icon-user"></i></span></label>
+                        <label class="input-prepend inline-span4"><input type="text" name="user-comment-email" placeholder="邮箱" /><span class="add-on"><i class="icon-envelope"></i></span></label>
+                        <label class="input-prepend inline-span4"><input type="text" name="user-comment-url" placeholder="网址" /><span class="add-on"><i class="icon-globe"></i></span></label>
                     </div>
                     <div class="row control">
                         <textarea class="textarea col-span12" name="content"></textarea>

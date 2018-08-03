@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="alvin.yang">
+<meta name=“viewport” content=“width=device-width; initial-scale=1.0”>
+<link rel="stylesheet" type="text/css" href="/tools/style.css">
+<title>Canvas在线测试工具 V1</title>
+</head>
+<body class="canvas-tool">
+<table>
+	<tr>
+		<td width="800">
+			<h3 style="margin-bottom:1em; color:#02b4e7">运行结果：</h3>
+			<canvas id="canvas" width="800" height="560">你浏览器不支持Canvas画布元素,请用IE10+，Chrome 或 Firefox</canvas>
+		</td>
+		<td>
+			<h3 style="margin-bottom:1em; color:#02b4e7">编辑您的代码：</h3>
+			<p><textarea name="code" id="code">var canvas = document.getElementById("canvas");
+var conText = canvas.getContext("2d");
+
+</textarea></p>
+			<p><button id="submit" class="button blue">运行代码</button></p>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	function evalCanvas(){
+		var canvas = document.getElementById("canvas");
+		var conText = canvas.getContext("2d");
+		conText.clearRect(0,0,800,600);
+		document.getElementById("code").className = "";
+		try {
+			eval(document.getElementById("code").value);
+		} catch(e) {
+			alert("代码有错误！请修改后重新提交。");
+			document.getElementById("code").className = "error";
+		}
+	}
+	if (window.attachEvent) {
+		// ie
+		document.getElementById("submit").attachEvent("onclick", evalCanvas);
+	}
+	else {
+		// ff
+		document.getElementById("submit").addEventListener("click", evalCanvas, false); 
+	}
+</script>
+</body>
+</html>
