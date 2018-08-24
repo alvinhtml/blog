@@ -74,6 +74,7 @@ class Manage extends Component {
 					<Route path="/admin/comment/form" component={CommentForm}/>
 					<Route path="/admin/comment" component={CommentList}/>
 					<Route path="/admin/setting" component={Setting}/>
+					<Route exact path="/admin/*" component={Home}/>
                 </Switch>
             </div>
         )

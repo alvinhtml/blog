@@ -47,19 +47,19 @@
                 <hr class="comment-hr" />
                 <h3 id="commentTitle">发表评论</h3>
                 <form class="form" id="commentForm" name="commentForm">
-                    <input id="article_id" type="hidden" name="article_id" value="{{ $article->id }}" />
+                    <input type="hidden" id="article_id" name="article_id" value="{{ $article->id }}" />
                     <input id="commentId" type="hidden" name="comment_id" value="" />
                     <div class="row control">
-                        <label class="input-prepend inline-span4"><input type="text" name="user-comment-name" placeholder="名称" /><span class="add-on"><i class="icon-user"></i></span></label>
-                        <label class="input-prepend inline-span4"><input type="text" name="user-comment-email" placeholder="邮箱" /><span class="add-on"><i class="icon-envelope"></i></span></label>
-                        <label class="input-prepend inline-span4"><input type="text" name="user-comment-url" placeholder="网址" /><span class="add-on"><i class="icon-globe"></i></span></label>
+                        <label class="input-prepend inline-span4"><input type="text" name="name" placeholder="名称" /><span class="add-on"><i class="icon-user"></i></span></label>
+                        <label class="input-prepend inline-span4"><input type="text" name="email" placeholder="邮箱" /><span class="add-on"><i class="icon-envelope"></i></span></label>
+                        <label class="input-prepend inline-span4"><input type="text" name="url" placeholder="网址" /><span class="add-on"><i class="icon-globe"></i></span></label>
                     </div>
                     <div class="row control">
                         <textarea class="textarea col-span12" name="content"></textarea>
                     </div>
                     <div class="row control">
                         <span class="button blue" id="submitComment">提交</span>
-                        <a class="cancel-replay" id="cancelReplay">&nbsp 取消回复</a>
+                        <a id="cancelReplay">&nbsp 取消回复</a>
                          &nbsp;
                         <label><input type="checkbox" name="remember" /> 记住个人信息</label>
                     </div>

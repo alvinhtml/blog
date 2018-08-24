@@ -23680,7 +23680,8 @@ var Manage = function (_Component) {
                     _react2.default.createElement(_reactRouterDom.Route, { path: '/admin/comment/form/:id', component: _comment.CommentForm }),
                     _react2.default.createElement(_reactRouterDom.Route, { path: '/admin/comment/form', component: _comment.CommentForm }),
                     _react2.default.createElement(_reactRouterDom.Route, { path: '/admin/comment', component: _comment.CommentList }),
-                    _react2.default.createElement(_reactRouterDom.Route, { path: '/admin/setting', component: _setting.Setting })
+                    _react2.default.createElement(_reactRouterDom.Route, { path: '/admin/setting', component: _setting.Setting }),
+                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/admin/*', component: _home.Home })
                 )
             );
         }
@@ -27796,7 +27797,7 @@ var LoginUI = function (_Component) {
 						null,
 						_react2.default.createElement('input', { onKeyPress: function onKeyPress(e) {
 								return _onKeyPress(e, emailInput.value, passwordInput.value);
-							}, type: 'text', placeholder: 'Username', name: 'adminname', ref: function ref(n) {
+							}, defaultValue: 'alvinhtml@gmail.com', type: 'text', placeholder: 'Username', name: 'adminname', ref: function ref(n) {
 								return emailInput = n;
 							} })
 					),
@@ -27805,7 +27806,7 @@ var LoginUI = function (_Component) {
 						null,
 						_react2.default.createElement('input', { onKeyPress: function onKeyPress(e) {
 								return _onKeyPress(e, emailInput.value, passwordInput.value);
-							}, type: 'password', placeholder: 'Password', name: 'adminpassword', ref: function ref(n) {
+							}, defaultValue: '123456', type: 'password', placeholder: 'Password', name: 'adminpassword', ref: function ref(n) {
 								return passwordInput = n;
 							} })
 					),
@@ -31959,7 +31960,7 @@ var HeaderUI = function (_Component) {
 								_react2.default.createElement(
 									'span',
 									{ className: 'avatar' },
-									_react2.default.createElement('img', { src: 'http://laravel.xuehtml.com/public/images/admin.png' })
+									_react2.default.createElement('img', { src: '/public/images/admin.png' })
 								),
 								adminname
 							),
@@ -31970,50 +31971,30 @@ var HeaderUI = function (_Component) {
 									'li',
 									null,
 									_react2.default.createElement(
-										'a',
-										null,
-										_react2.default.createElement('i', { className: 'icon-user' }),
-										'My Profile'
+										_reactRouterDom.Link,
+										{ to: '/admin/article/form' },
+										_react2.default.createElement('i', { className: 'icon-notebook' }),
+										'\u65B0\u5EFA\u65E5\u5FD7'
 									)
 								),
 								_react2.default.createElement(
 									'li',
 									null,
 									_react2.default.createElement(
-										'a',
-										null,
-										_react2.default.createElement('i', { className: 'icon-calendar' }),
-										'My Calendar'
+										_reactRouterDom.Link,
+										{ to: '/admin/comment' },
+										_react2.default.createElement('i', { className: 'icon-bubbles' }),
+										'\u7BA1\u7406\u8BC4\u8BBA'
 									)
 								),
 								_react2.default.createElement(
 									'li',
 									null,
 									_react2.default.createElement(
-										'a',
-										null,
-										_react2.default.createElement('i', { className: 'icon-envelope-open' }),
-										'My Inbox',
-										_react2.default.createElement(
-											'span',
-											{ className: 'badge bg-red' },
-											'3'
-										)
-									)
-								),
-								_react2.default.createElement(
-									'li',
-									null,
-									_react2.default.createElement(
-										'a',
-										null,
-										_react2.default.createElement('i', { className: 'icon-rocket' }),
-										'My Tasks',
-										_react2.default.createElement(
-											'span',
-											{ className: 'badge bg-teal' },
-											'7'
-										)
+										_reactRouterDom.Link,
+										{ to: '/admin/user' },
+										_react2.default.createElement('i', { className: 'icon-people' }),
+										'\u7528\u6237\u7BA1\u7406'
 									)
 								),
 								_react2.default.createElement(
@@ -32025,10 +32006,10 @@ var HeaderUI = function (_Component) {
 									'li',
 									null,
 									_react2.default.createElement(
-										'a',
-										null,
+										_reactRouterDom.Link,
+										{ to: '/admin/user' },
 										_react2.default.createElement('i', { className: 'icon-lock' }),
-										'Lock Screen'
+										'\u4FEE\u6539\u5BC6\u7801'
 									)
 								),
 								_react2.default.createElement(
@@ -32038,7 +32019,7 @@ var HeaderUI = function (_Component) {
 										'a',
 										{ onClick: logoutEvent },
 										_react2.default.createElement('i', { className: 'icon-key' }),
-										'Log Out'
+										'\u9000\u51FA\u767B\u5F55'
 									)
 								)
 							)

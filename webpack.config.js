@@ -9,7 +9,7 @@ module.exports = {
     entry: {
         init: ['react', 'react-dom', 'react-router', 'redux', 'react-redux', 'react-router-redux', 'redux-thunk', 'isomorphic-fetch'],
         bundle: './src/index.jsx',
-        //index: './src/website.js',
+        // index: './src/website.js',
     },
     output: {
         path: path.resolve(__dirname, './public/js'),

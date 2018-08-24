@@ -43,35 +43,37 @@ $router->get('/favor/comment_id/{id}', 'WebController@commentFavor');
 
 
 
-$router->get('/admin', 'HomeController@index');
+
 $router->get('/admin/login', 'HomeController@index');
 $router->get('/admin/home', 'HomeController@index');
-
+//
 $router->get('/admin/user', 'HomeController@index');
 $router->get('/admin/user/list', 'HomeController@index');
 $router->get('/admin/user/form/{id}', 'HomeController@index');
 $router->get('/admin/user/form', 'HomeController@index');
-
+//
 $router->get('/admin/article', 'HomeController@index');
 $router->get('/admin/article/list', 'HomeController@index');
 $router->get('/admin/article/form/{id}', 'HomeController@index');
 $router->get('/admin/article/form', 'HomeController@index');
-
+//
 $router->get('/admin/classify', 'HomeController@index');
 $router->get('/admin/classify/list', 'HomeController@index');
 $router->get('/admin/classify/form/{id}', 'HomeController@index');
 $router->get('/admin/classify/form', 'HomeController@index');
-
+//
 $router->get('/admin/media', 'HomeController@index');
 $router->get('/admin/media/list', 'HomeController@index');
 $router->get('/admin/media/upload', 'HomeController@index');
-
+//
 $router->get('/admin/comment', 'HomeController@index');
 $router->get('/admin/comment/list', 'HomeController@index');
 $router->get('/admin/comment/form/{id}', 'HomeController@index');
 $router->get('/admin/comment/form', 'HomeController@index');
-
-
+//
+$router->get('/admin/comment/setting', 'HomeController@index');
+$router->get('/admin', 'HomeController@index');
+$router->get('/admin/{url}', 'HomeController@index');
 
 
 /*

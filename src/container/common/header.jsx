@@ -40,15 +40,14 @@ class HeaderUI extends Component {
 	            <div className="head-tools-box">
 	                <ul className="head-tools">
 						<li>
-							<a className="toggler"><span className="avatar"><img src="http://laravel.xuehtml.com/public/images/admin.png" /></span>{adminname}</a>
+							<a className="toggler"><span className="avatar"><img src="/public/images/admin.png" /></span>{adminname}</a>
 							<ul className="menu drop drop-right">
-								<li><a><i className="icon-user"></i>My Profile</a></li>
-								<li><a><i className="icon-calendar"></i>My Calendar</a></li>
-								<li><a><i className="icon-envelope-open"></i>My Inbox<span className="badge bg-red">3</span></a></li>
-								<li><a><i className="icon-rocket"></i>My Tasks<span className="badge bg-teal">7</span></a></li>
+								<li><Link to="/admin/article/form"><i className="icon-notebook"></i>新建日志</Link></li>
+								<li><Link to="/admin/comment"><i className="icon-bubbles"></i>管理评论</Link></li>
+								<li><Link to="/admin/user"><i className="icon-people"></i>用户管理</Link></li>
 								<li className="divider"> </li>
-								<li><a><i className="icon-lock"></i>Lock Screen</a></li>
-								<li><a onClick={logoutEvent}><i className="icon-key"></i>Log Out</a></li>
+								<li><Link to="/admin/user"><i className="icon-lock"></i>修改密码</Link></li>
+								<li><a onClick={logoutEvent}><i className="icon-key"></i>退出登录</a></li>
 							</ul>
 						</li>
 					</ul>

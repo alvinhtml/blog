@@ -48,8 +48,8 @@ class LoginUI extends Component {
                             <p className="error-message">{message}</p>
                         )
                     }
-                    <label><input onKeyPress={(e)=>onKeyPress(e,emailInput.value, passwordInput.value)} type="text" placeholder="Username" name="adminname" ref={n=>emailInput=n} /></label>
-                    <label><input onKeyPress={(e)=>onKeyPress(e,emailInput.value, passwordInput.value)} type="password" placeholder="Password" name="adminpassword" ref={n=>passwordInput=n} /></label>
+                    <label><input onKeyPress={(e)=>onKeyPress(e,emailInput.value, passwordInput.value)} defaultValue="alvinhtml@gmail.com" type="text" placeholder="Username" name="adminname" ref={n=>emailInput=n} /></label>
+                    <label><input onKeyPress={(e)=>onKeyPress(e,emailInput.value, passwordInput.value)} defaultValue="123456" type="password" placeholder="Password" name="adminpassword" ref={n=>passwordInput=n} /></label>
                     <button className="type-button" onClick={(e)=>onSubmit(emailInput.value, passwordInput.value)}>登录</button>
                     <p className="remember-me">软件版本：{version}</p>
                 </div>
