@@ -18,11 +18,10 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <!-- External CSS -->
-    <!-- External CSS -->
-    <!--<link type="text/css" rel="stylesheet" href="http://mui.xuehtml.com/src/css/miniui.min.css">-->
     <link type="text/css" rel="stylesheet" href="http://mui.xuehtml.com/src/css/font-awesome.min.css">
     <link type="text/css" rel="stylesheet" href="http://mui.xuehtml.com/src/css/simple-line-icons.css">
-    <title>{{ $title }}</title>
+    <link type="text/css" rel="stylesheet" href="/public/css/style.min.css">
+    <title>{{ $title }}1</title>
 
     <!-- Scripts -->
     <script>
@@ -35,7 +34,6 @@
     <div id="webApplication"></div>
 
     <!-- JavaScript -->
-    <script type="text/javascript" src="/public/js/init.min.js"></script>
     <script type="text/javascript" src="/public/js/bundle.js"></script>
 </body>
 

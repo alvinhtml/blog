@@ -2,8 +2,7 @@
 import {
     LOGIN,
     LOGOUT,
-    GET_AUTH_INFO,
-    GET_OU_IN_COMPONENT
+    GET_AUTH_INFO
 } from '../constants'
 
 
@@ -73,8 +72,8 @@ export function common(state = commonInitialState, action) {
             return {...state, ...action.payload}
         case GET_AUTH_INFO:
             return {...state, ...action.payload}
-        case GET_OU_IN_COMPONENT:
-            return {...state, ...action.payload}
+        // case GET_OU_IN_COMPONENT:
+        //     return {...state, ...action.payload}
         default:
             return { ...state }
     }

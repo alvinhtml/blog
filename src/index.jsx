@@ -4,16 +4,8 @@ import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 
 //引入样式文件
-import '../../mui/src/less/miniui.less'
-import '../public/css/style.css'
-
-
-var head = document.getElementsByTagName('head')[0];
-var link = document.createElement('link');
-link.type='text/css';
-link.rel = 'stylesheet';
-link.href = '/public/css/style.min.css';
-head.appendChild(link);
+import './less/miniui.less'
+import '..//public/css/style.css'
 
 
 //引入Action创建函数
@@ -33,9 +25,6 @@ import reducer from './reducers/index'
 //引入路由配置
 import App from './routes'
 
-//引入Redux调试工具DevTools
-import DevTools from './container/DevTools'
-
 //给增强后的store传入reducer
 const store = finalCreateStore(reducer)
 
@@ -44,7 +33,6 @@ render(
     <Provider store={store}>
         <div>
             <App />
-            <DevTools />
         </div>
     </Provider>,
 document.getElementById('webApplication'))
@@ -185,12 +173,6 @@ document.addEventListener('mouseup', (e) => {
             path: configs.listPath
         })
 
-        //更新数据库中的数据
-        // FetchPost('/api/setting/list_configs', {
-        //     listPath: listPath,
-        //     configs: JSON.stringify(configs)
-        // })
-
         resize.resizeing = false
     }
 
@@ -213,15 +195,6 @@ document.addEventListener('mouseup', (e) => {
 
             Query("#olist_table").removeClass("moving")
 
-            //更新数据库中的数据
-            // FetchPost('/api/setting/list_configs', {
-            //     listPath: configs.listPath,
-            //     configs: JSON.stringify({
-            //         ...configs,
-            //         column: newColumn
-            //     })
-            // })
-
             //更新store中的数据
             store.dispatch({
                 type: UPDATE_LIST_CONFIGS,
@@ -234,9 +207,5 @@ document.addEventListener('mouseup', (e) => {
 
         remove.moving = false
     }
-
-    //下拉菜单收起
-    // let ise = Query(".iselect.open").removeClass('open');
-    // console.log(ise);
 
 })
